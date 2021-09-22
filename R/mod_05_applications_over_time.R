@@ -49,7 +49,7 @@ mod_05_applications_over_time_server <- function(input, output, session) {
   output$plot_applications <- highcharter::renderHighchart({
     
     # Aggregate
-    plot_df <- lowincomeschemeucd::applications_df %>%
+    plot_df <- nhslowincomeschemescrollytell::applications_df %>%
       dplyr::group_by(FINANCIAL_YEAR) %>%
       dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
       dplyr::ungroup()

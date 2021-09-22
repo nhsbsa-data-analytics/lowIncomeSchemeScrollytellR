@@ -12,4 +12,3 @@ man
 /data/*
 !/data/.gitkeep
 rsconnect
-.Rbuildignore

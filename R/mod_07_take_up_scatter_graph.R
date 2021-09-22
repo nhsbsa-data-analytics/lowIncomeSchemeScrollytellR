@@ -43,8 +43,8 @@ mod_07_take_up_scatter_graph_server <- function(input, output, session, region_n
   output$plot_successful_individuals_by_la_imd = highcharter::renderHighchart({
     
     # Calculate %s
-    plot_df <- lowincomeschemeucd::adult_population_df %>%
-      dplyr::inner_join(lowincomeschemeucd::successful_individuals_by_la_df) %>%
+    plot_df <- nhslowincomeschemescrollytell::adult_population_df %>%
+      dplyr::inner_join(nhslowincomeschemescrollytell::successful_individuals_by_la_df) %>%
       dplyr::mutate(
         p = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000
       ) 
