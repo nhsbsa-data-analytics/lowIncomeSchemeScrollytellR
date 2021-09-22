@@ -1,0 +1,75 @@
+library(magrittr)
+source("data-raw/individuals_utils.R")
+
+# Set up connection to the DB
+con <- DBI::dbConnect(
+  odbc::odbc(),
+  Driver = "Oracle in OraClient19Home1",
+  DBQ = Sys.getenv("DB_CONNECTION"),
+  UID = Sys.getenv("DB_USERNAME"),
+  PWD = Sys.getenv("DB_PASSWORD")
+)
+
+# Create a lazy table from the low income scheme base query
+base_df <- dplyr::tbl(
+  src = con,
+  from = dbplyr::sql("SELECT * FROM KAYGO.INT_602_LOW_INCOME_SCHEME_BASE")
+)
+
+# Filter out NA COMPOSITE_IDs
+base_df <- base_df %>%
+  dplyr::filter(COMPOSITE_ID != 'na')
+
+# TOTAL_INDIVIDUALS per BAND_5YEARS 
+individuals_by_age_band_df <- base_df %>%
+  aggregate_individuals(., BAND_5YEARS, multiply_max_individuals = FALSE) %>%
+  dplyr::arrange(FINANCIAL_YEAR, desc(BAND_5YEARS))
+
+# TOTAL_INDIVIDUALS per CLIENTGROUP_DESC_FORMAT
+individuals_by_client_group_df <- base_df %>%
+  aggregate_individuals(., CLIENTGROUP_DESC_FORMAT, multiply_max_individuals = FALSE) %>%
+  dplyr::mutate(CLIENTGROUP_DESC_FORMAT = gsub("_", "/", CLIENTGROUP_DESC_FORMAT)) %>%
+  dplyr::collect()
+
+# TOTAL_INDIVIDUALS per INDEX_OF_MULT_DEPRIV_DECILE
+individuals_by_imd_df <- base_df %>%
+  aggregate_individuals(INDEX_OF_MULT_DEPRIV_DECILE, multiply_max_individuals = TRUE) %>%
+  dplyr::arrange(FINANCIAL_YEAR, INDEX_OF_MULT_DEPRIV_DECILE)
+
+# TOTAL_INDIVIDUALS per HEALTH_DEPRIVATION_DECILE
+individuals_by_health_df <- base_df %>%
+  aggregate_individuals(HEALTH_DEPRIVATION_DECILE, multiply_max_individuals = TRUE) %>%
+  dplyr::arrange(FINANCIAL_YEAR, HEALTH_DEPRIVATION_DECILE)
+
+# TOTAL_SUCCESSFUL_INDIVIDUALS per PCD_REGION_NAME
+successful_individuals_by_region_df <- base_df %>%
+  dplyr::filter(OUTCOME_LEVEL1 == "Successful") %>%
+  aggregate_individuals(
+    df = ., 
+    PCD_REGION_NAME, 
+    multiply_max_individuals = TRUE, 
+    total_col = "TOTAL_SUCCESSFUL_INDIVIDUALS"
+  ) %>%
+  dplyr::arrange(FINANCIAL_YEAR, PCD_REGION_NAME)
+
+# TOTAL_SUCCESSFUL_INDIVIDUALS per Local Authority
+successful_individuals_by_la_df <- base_df %>% 
+  dplyr::filter(OUTCOME_LEVEL1 == 'Successful') %>% 
+  aggregate_individuals(
+    df = .,
+    PCD_LAD_NAME,
+    PCD_LAD_IMD_RANK,
+    multiply_max_individuals = TRUE,
+    total_col = "TOTAL_SUCCESSFUL_INDIVIDUALS"
+  ) %>% 
+  dplyr::arrange(FINANCIAL_YEAR, PCD_LAD_NAME)
+
+
+usethis::use_data(individuals_by_age_band_df, overwrite = TRUE)
+usethis::use_data(individuals_by_client_group_df, overwrite = TRUE)
+usethis::use_data(individuals_by_imd_df, overwrite = TRUE)
+usethis::use_data(individuals_by_health_df, overwrite = TRUE)
+usethis::use_data(successful_individuals_by_region_df, overwrite = TRUE)
+usethis::use_data(successful_individuals_by_la_df, overwrite = TRUE)
+
+DBI::dbDisconnect(con)

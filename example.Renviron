@@ -1,0 +1,4 @@
+DB_CONNECTION = "blah:blah/blah"
+DB_USERNAME = "blah"
+DB_PASSWORD = "blah"
+STATXPLORE_API_KEY = "blah"
