@@ -19,9 +19,9 @@
 ## to change the name in the app_sys() function in app_config.R /!\
 ## 
 golem::fill_desc(
-  pkg_name = "lowincomeschemeucd", # The Name of the package containing the App 
-  pkg_title = "Low Income Scheme UCD", # The Title of the package containing the App 
-  pkg_description = "Low Income Scheme UCD.", # The Description of the package containing the App 
+  pkg_name = "nhslowincomeschemescrollytell", # The Name of the package containing the App 
+  pkg_title = "NHS Low Income Scheme Scrollytell", # The Title of the package containing the App 
+  pkg_description = "NHS Low Income Scheme Scrollytell.", # The Description of the package containing the App 
   author_first_name = "Adam", # Your First Name
   author_last_name = "Ivison", # Your Last Name
   author_email = "adam.ivison@nhs.net", # Your Email
@@ -33,7 +33,7 @@ golem::set_golem_options()
 
 ## Create Common Files ----
 ## See ?usethis for more information
-usethis::use_mit_license( "NHS Business Services Authority" )  # You can set another license here
+usethis::use_apache_license(version = 2, include_future = TRUE )  # You can set another license here
 usethis::use_readme_rmd( open = FALSE )
 usethis::use_code_of_conduct()
 usethis::use_lifecycle_badge( "Experimental" )

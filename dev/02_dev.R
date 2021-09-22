@@ -54,7 +54,7 @@ golem::add_css_file( "custom" )
 # Documentation
 
 ## Vignette ----
-usethis::use_vignette("int-602-low-income-scheme-ucd")
+usethis::use_vignette("nhs-low-income-scheme-scrollytell")
 devtools::build_vignettes()
 
 ## Code Coverage----
