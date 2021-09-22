@@ -1,0 +1,59 @@
+Package: lowincomeschemeucd
+Title: Low Income Scheme UCD
+Version: 0.0.0.9000
+Authors@R:
+    c(person(given = "DALL",
+             family = "",
+             role = c("aut", "cre"),
+             email = "dall@nhs.net"),
+      person(given = "Adam",
+             family = "Ivison",
+             role = c("ctb"),
+             email = "adam.ivison@nhs.net"),
+      person(given = "Kayoung",
+             family = "Goffe",
+             role = "ctb",
+             email = "kayoung.goffe1@nhs.net"),
+      person(given = "Adnan",
+             family = "Shroufi",
+             role = "ctb",
+             email = "adnan.shroufi@nhs.net"))
+Description: Low Income Scheme UCD.
+License: MIT + file LICENSE
+Imports: 
+    dplyr,
+    golem (>= 0.3.1),
+    highcharter,
+    htmltools,
+    janitor,
+    magrittr,
+    pkgload,
+    purrr,
+    readr,
+    shiny (>= 1.6.0),
+    scrollytell,
+    statxplorer,
+    shinyWidgets,
+    geojsonsf,
+    tidyr,
+    Rcpp,
+    sf,
+    udpipe,
+    tidytext,
+    textdata
+Remotes:
+    github::houseofcommonslibrary/statxplorer
+    github::statistiekcbs/scrollytell
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+Suggests: 
+    rmarkdown,
+    knitr,
+    spelling,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Language: en-US
+VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)

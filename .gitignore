@@ -1,0 +1,15 @@
+.Rproj.user
+.Rhistory
+.Rdata
+.httr-oauth
+.DS_Store
+inst/doc
+/doc/
+/Meta/
+.Renviron
+man
+!/data
+/data/*
+!/data/.gitkeep
+rsconnect
+.Rbuildignore

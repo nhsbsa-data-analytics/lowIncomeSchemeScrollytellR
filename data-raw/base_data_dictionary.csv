@@ -1,0 +1,166 @@
+FIELD,DESCRIPTION,QUESTIONS
+CASEREF,"Unique identifier used to identify a single application/certificate
+Used as the key field for linking many of the tables in LIS.",
+REGISTERED,Date the application was registered on the system,
+APPLICATION_MONTH,Derived from the REGISTERED date and in format of YYYYMM,
+CLAIMTYPE,"Identifier for the type of claim submitted
+0 = represents claims via HC1 (support)
+1 = represents claims via HC1 with a HC5
+3 = represents a HC5 claim (refund)",
+CERTTYPE,"Outcome of application: 
+AHC4 : HC4 – over capital limit
+HBDTC : Tax credit exemption
+HBD03 : Nass supported (asylum seeker)
+HBD08 : Passporting benefit
+AHC3 : HC3 partial help with health costs
+AHC2 : HC2 – full help with health costs
+AHC5 : HC5 - Refund. 
+
+This is for HC1 element only. Outcomes regarding refunds are dealt with in data enclosures",
+LASTASSESSMENTREC,Use this for the data assessment table so that you select the last assessment rec no for each case ref when looking at refunds. Join to data assessment/enclosures on case ref and assessment rec no,
+CASE_OUTCOME,"Derived from the status events:
+APPLICATION_ONGOING = certificate has not yet been printed and application received since 01-Jan-2021
+APPLICATION_WITHDRAWN = application explicitly withdrawn by customer
+APPLICATION_ABANDONED = certificate has not been printed and application received before 01-Jan-2021
+CERTIFICATE_ISSUED = certificate/response has been printed and issued to customer
+
+Please note, the response could be a LIS support certifcate HC2/HC3 or a letter informing them they will not get additional support.
+
+CERTIFICATE_ISSUED is the only outcome that represents a certificate being issued to the applicant.  Although cases with other outcomes may have a certificate record, these have not been issued to the customer.  For example, for APPLICATION_ONGOING the certificates may be currently sitting in a print queue whereas for APPLICATION_ABANDONED we may have requested additional information before printing the certificate but the applicant did not provide a response.",
+LATEST_STATUS,"The latest status code that can be identified for the application
+For cases where the certificate has been issued this will always be ""CERT_PRINTED""",
+LATEST_STATUS_DESC,"The description of the latest status code that can be identified for the application
+For cases where the certificate has been issued this will always be ""certificate issued to applicant""",
+RECTYPE,"The type of certificate produced based on the following options:
+HC2  = full help with health costs
+HC3  = partial assistance with health costs (excluding prescriptions)
+HC2A = full help with health costs (return to assessor - this is because there were original documents with the claim that will be returned with the certificate, only applies to HC2 because all HC3's are returned to the Assessor to be posted with a breakdown of why they did not get full help.) 
+HBD08 = Passporting benefit
+HBDTC = Tax credit exemption
+HC4  = Overcapital
+HBD03 = NASS Supported Asylum Seeker
+UNKNW = This status likely identifies a case that was assessed but was caught as needing further information during checking",
+CERT_GROUP,"Certificate grouping based on type of support offered.
+Derived from the RECTYPE field
+HC2-Full = HC2 certificate issued
+HC3-Partial = HC3 certificate issued
+No_BSA_Support = the certificate outcome represents a response where the BSA are not providing support
+No_Outcome = no corresponding certificate data for the case",
+VALIDFROM,The date the certificate is valid from,
+VALIDTO,The date the certificate is valid to,
+HC3DENTALAMOUNT,This represents the amount the applicant would have to pay for NHS Dental Treatment. It is 3x the excess income above the requirements determined by the Low Income Scheme Application.,
+HC3AMOUNT,"Derived from the HC3DENTALAMOUNT by dividing value by 3
+
+Represents the amount that the applicant is over the weekly requirements by (also called excess income). This figure is the amount the applicant would have to pay towards sight tests or travel to an NHS hospital, it's doubled for the contribution towards glasses/optical voucher and tripled for the contribution towards NHS Dental Treatment/NHS Wig or Fabric support. ",
+INDIVIDUALS_COVERED,"The number of people covered by the certificate
+This is the main applicant plus any additional dependants
+Dependants only include partners within the LIS database and therefore the number of individuals is typcially 1 or 2",
+APPLICANTID,"The applicant ID as derived within the system
+This is not unique to an individual",
+COMPOSITE_ID,"A derived identifier based on the applicants latest personal information
+Note, this is not guaranteed to be unique to an applicant but may be more accurate than the COMPOSITE_ID",
+CLIENTGROUP,"The group the applicant can be assigned to from the following options:
+0 = Student
+1 = Benefits
+2 = Earner
+3 = Pensioner
+4 = Other
+5 = Unknown
+6 = Asylum Seeker (not NAS)
+7 = Asylum Seeker
+
+All records relating to CLIENTGROUP = 7 should be excluded from any analysis as these are ring-fenced for LRS",
+GENDER,"The gender of the applicant as derived from the TITLE field (e.g. MR = male, MRS = female)",
+DOB,The applicants date of birth,
+AGE_AT_REGISTRATION,"The age at the date of registration
+Where the age is outside of expected age boundaries (less than 15 or older than 100) this has been hard-coded to -1 to reduce reporting of likely errors",
+BAND_5YEARS,5yr age bands linked to the AGE_AT_REGISTRATION,
+BAND_10YEARS,10yr age bands linked to the AGE_AT_REGISTRATION,
+POSTCODE,The applicants postcode,
+PCD_LSOA_CODE,"The Lower Super Output Area (LSOA) linked to the patients postcode
+Only available for valid English postcodes
+
+This geography layer is used to identify IMD characteristics",
+PCD_WARD_CODE,"The electoral ward (ONS coding) for the patient
+Linked to the LSOA code",
+PCD_WARD_NAME,"The electoral ward name for the patient
+Linked to the LSOA code",
+PCD_WARD_IMD_AVERAGE_SCORE,"Weighted aggregation based on LSOAs within the geopgraphy region to show an average IMD deprivation score.
+Please note values are not on a comparable scale (e.g. 40 is not twice as deprived as 20).
+A higher score represents a more deprived area.",
+PCD_WARD_IMD_RANK,"Ranking for each Ward nationally based on the PCD_WARD_IMD_AVERAGE_SCORE
+1 = most deprived Ward",
+PCD_CCG_CODE,"The CCG code (ONS coding) for the patient
+Linked to the LSOA code",
+PCD_CCG_ID,"The CCG code (ALT CODE) for the patient
+Linked to the LSOA code",
+PCD_CCG_NAME,"The CCG name for the patient
+Linked to the LSOA code",
+PCD_CCG_IMD_AVERAGE_SCORE,"Weighted aggregation based on LSOAs within the geopgraphy region to show an average IMD deprivation score.
+Please note values are not on a comparable scale (e.g. 40 is not twice as deprived as 20).
+A higher score represents a more deprived area.",
+PCD_CCG_IMD_RANK,"Ranking for each CCG nationally based on the PCD_CCG_IMD_AVERAGE_SCORE
+1 = most deprived CCG",
+PCD_LAD_CODE,"The Local Authority District (LAD) code (ONS coding) for the patient
+Linked to the LSOA code",
+PCD_LAD_NAME,"The Local Authority District name (ONS coding) for the patient
+Linked to the LSOA code",
+PCD_LAD_IMD_AVERAGE_SCORE,"Weighted aggregation based on LSOAs within the geopgraphy region to show an average IMD deprivation score.
+Please note values are not on a comparable scale (e.g. 40 is not twice as deprived as 20).
+A higher score represents a more deprived area.",
+PCD_LAD_IMD_RANK,"Ranking for each Local Authority nationally based on the PCD_LAD_IMD_AVERAGE_SCORE
+1 = most deprived Local Authority",
+PCD_REGION_CODE,"The Region code (ONS coding) for the patient
+Linked to the Local Authority",
+PCD_REGION_NAME,"The Region code name for the patient
+Linked to the Local Authority",
+INDEX_OF_MULT_DEPRIV_SCORE,"The Indices of Deprivation 2019 provide a set of relative measures of deprivation for small areas (Lower-layer Super Output Areas) across England, based on seven domains of deprivation. The domains were combined using the following weights to produce the overall Index of Multiple Deprivation:
+Income Deprivation (22.5%)
+Employment Deprivation (22.5%)
+Education, Skills and Training Deprivation (13.5%)
+Health Deprivation and Disability (13.5%)
+Crime (9.3%)
+Barriers to Housing and Services (9.3%)
+Living Environment Deprivation (9.3%)
+
+The scores used to determine the IMD rank.  These scores can not easily be interpreted and therefore should not be used for anything other than to rank LSOAs in order relating to IMD.",
+INDEX_OF_MULT_DEPRIV_RANK,"Rankings for each LSOA from 1 to 32844, based on IMD
+1 = most deprived",
+INDEX_OF_MULT_DEPRIV_DECILE,"The IMD decile 
+1=most deprived 10% of LSOAs
+10 = least deprived 10% of LSOAs",
+INCOME_SCORE,"The Income Deprivation Domain measures the proportion of the population experiencing deprivation relating to low income. The definition of low income used includes both those people that are out-of-work, and those that are in work but who have low earnings (and who satisfy the respective means tests).
+
+Please note: these scores do not represent the level of income deprivation and therefore can not be used to compare how income deprived are in relation to each other.
+
+For example, LSOA_1 may have 50% of people classified as income deprived but these may have higher income levels than LSOA_2 where only 10% of people are classified as income deprived.",
+INCOME_RANK,"Rankings for each LSOA from 1 to 32844, based on income deprivation
+1 = most deprived",
+INCOME_DECILE,"The Income Deprivation decile 
+1=most deprived 10% of LSOAs
+10 = least deprived 10% of LSOAs",
+HEALTH_DEPRIVATION_SCORE,"The Health Deprivation and Disability Domain measures the risk of premature death and the impairment of quality of life through poor physical or mental health. The domain measures morbidity, disability and premature mortality but not aspects of behaviour or environment that may be predictive of future health deprivation.
+
+The scores used to determine the Health Deprivation rank.  These scores can not easily be interpreted and therefore should not be used for anything other than to rank LSOAs in order relating to Health Deprivation.",
+HEALTH_DEPRIVATION_RANK,"Rankings for each LSOA from 1 to 32844, based on health deprivation
+1 = most deprived",
+HEALTH_DEPRIVATION_DECILE,"The Health Deprivation decile 
+1=most deprived 10% of LSOAs
+10 = least deprived 10% of LSOAs",
+INCOME_DEPRIV_CHILDREN_SCORE,"The Income Deprivation Affecting Children Index (IDACI) measures the proportion of all children aged 0 to 15 living in income deprived families.
+
+Please note: these scores do not represent the level of income deprivation and therefore can not be used to compare how income deprived are in relation to each other.",
+INCOME_DEPRIV_CHILDREN_RANK,"Rankings for each LSOA from 1 to 32844, based on health deprivation
+1 = most deprived",
+INCOME_DEPRIV_CHILDREN_DECILE,"The decile for income deprivation affecting children
+1=most deprived 10% of LSOAs
+10 = least deprived 10% of LSOAs",
+INCOME_DEPRIV_ELDERLY_SCORE,"The Income Deprivation Affecting Older People Index (IDAOPI) measures the proportion of all those aged 60 or over who experience income deprivation.
+
+Please note: these scores do not represent the level of income deprivation and therefore can not be used to compare how income deprived are in relation to each other.
+",
+INCOME_DEPRIV_ELDERLY_RANK,"Rankings for each LSOA from 1 to 32844, based on health deprivation
+1 = most deprived",
+INCOME_DEPRIV_ELDERLY_DECILE,"The decile for income deprivation affecting older people
+1=most deprived 10% of LSOAs
+10 = least deprived 10% of LSOAs",
