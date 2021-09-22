@@ -33,8 +33,8 @@ mod_07_take_up_scatter_text_server <- function(input, output, session, region_na
   
   
   # Calculate %s
-  plot_df <- reactive({lowincomeschemeucd::adult_population_df %>%
-    dplyr::inner_join(lowincomeschemeucd::successful_individuals_by_la_df) %>%
+  plot_df <- reactive({nhslowincomeschemescrollytell::adult_population_df %>%
+    dplyr::inner_join(nhslowincomeschemescrollytell::successful_individuals_by_la_df) %>%
     dplyr::mutate(
       p = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000
     ) %>%

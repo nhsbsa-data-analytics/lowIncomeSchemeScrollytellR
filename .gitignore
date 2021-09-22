@@ -1,3 +1,4 @@
+.Rbuildignore
 .Rproj.user
 .Rhistory
 .Rdata
@@ -12,4 +13,3 @@ man
 /data/*
 !/data/.gitkeep
 rsconnect
-.Rbuildignore

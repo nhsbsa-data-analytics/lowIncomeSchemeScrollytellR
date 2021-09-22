@@ -61,7 +61,7 @@ mod_04_what_help_does_lis_provide_server <- function(input, output, session) {
   output$plot_applications_by_outcome <- highcharter::renderHighchart({
     
     # Filter out Ongoing, aggregate, then calculate %s
-    plot_df <- lowincomeschemeucd::applications_df %>%
+    plot_df <- nhslowincomeschemescrollytell::applications_df %>%
       dplyr::filter(OUTCOME_LEVEL2 != "Ongoing") %>%
       dplyr::group_by(FINANCIAL_YEAR, OUTCOME_LEVEL2) %>%
       dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
