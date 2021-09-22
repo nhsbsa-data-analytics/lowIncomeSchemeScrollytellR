@@ -1,7 +1,23 @@
 Package: nhslowincomeschemescrollytell
 Title: NHS Low Income Scheme Scrollytell
 Version: 0.0.0.9000
-Authors@R: person('Adam', 'Ivison', email = 'adam.ivison@nhs.net', role = c('cre', 'aut'))
+Authors@R:
+    c(person(given = "DALL",
+             family = "",
+             role = c("aut", "cre"),
+             email = "nhsbsa.dall@nhs.net"),
+      person(given = "Adam",
+             family = "Ivison",
+             role = c("ctb"),
+             email = "adam.ivison@nhs.net"),
+      person(given = "Kayoung",
+             family = "Goffe",
+             role = "ctb",
+             email = "kayoung.goffe1@nhs.net"),
+      person(given = "Adnan",
+             family = "Shroufi",
+             role = "ctb",
+             email = "adnan.shroufi@nhs.net"))
 Description: NHS Low Income Scheme Scrollytell.
 License: Apache License (>= 2)
 Imports: 
@@ -23,8 +39,6 @@ Imports:
     Rcpp,
     sf,
     attempt,
-    DT,
-    glue,
     openxlsx,
     markdown
 Remotes:
