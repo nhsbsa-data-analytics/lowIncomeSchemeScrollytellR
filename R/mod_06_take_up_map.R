@@ -84,7 +84,13 @@ mod_06_take_up_map_ui <- function(id) {
           outputId = ns("plot_successful_individuals_by_region"),
           height = "700px"
         ),
-        mod_input_ui(id = ns("input_1"), max = "2019/20")
+        shiny::selectInput(
+          inputId = ns("input_year"),
+          label = "Financial Year:",
+          choices = c("2015/16", "2016/17", "2017/18", "2018/19", "2019/20"),
+          selected = "2019/20",
+          width = "80%"
+        )
       )
     )
     )
@@ -97,7 +103,7 @@ mod_06_take_up_map_server <- function(input, output, session) {
   ns <- session$ns
   
   # Pull the slider value
-  year <- reactive({callModule(mod_input_server, "input_1")})
+  year <- reactive({input$input_year})
  
   output$plot_successful_individuals_by_region = highcharter::renderHighchart({
     
