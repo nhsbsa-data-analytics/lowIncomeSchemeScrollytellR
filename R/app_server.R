@@ -10,8 +10,8 @@ app_server <- function( input, output, session ) {
   moduleServer("01_intro_1", mod_01_intro_server)
   moduleServer("02_what_is_lis_1", mod_02_what_is_lis_server)  
   moduleServer("03_who_applies_to_lis_1", mod_03_who_applies_to_lis_server)
-  moduleServer("04_what_help_does_lis_provide_1", mod_04_what_help_does_lis_provide_server)
-  moduleServer("05_applications_over_time_1", mod_05_applications_over_time_server)
+  moduleServer("04_applications_over_time_1", mod_04_applications_over_time_server)
+  moduleServer("05_what_help_does_lis_provide_1", mod_05_what_help_does_lis_provide_server)
   moduleServer("06_take_up_map_1", mod_06_take_up_map_server)
   # module 7 is where scrollytell is rendering. It throws error otherwise?
   moduleServer("08_spotlight_students_1", mod_08_spotlight_students_server)
