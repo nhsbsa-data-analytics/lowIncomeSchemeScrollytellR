@@ -35,9 +35,9 @@ mod_07_take_up_scatter_graph_server <- function(input, output, session, region_n
     region_name$input
   })
   
-  observe({
-    print(region_sel())
-  })
+  # observe({
+  #   print(region_sel())
+  # })
  
   
   output$plot_successful_individuals_by_la_imd = highcharter::renderHighchart({
@@ -56,17 +56,29 @@ mod_07_take_up_scatter_graph_server <- function(input, output, session, region_n
       dplyr::mutate(p = tidyr::replace_na(p)) %>%
       dplyr::group_by(PCD_REGION_NAME, PCD_LAD_NAME, PCD_LAD_IMD_RANK) %>%
       dplyr::do(sequence = .$p) %>% 
-    # Mutate one variable to reflect selected region
-      dplyr::mutate(selected_region = ifelse(PCD_REGION_NAME == region_sel(), "Selected", "Other LAs")
+    # Mutate to create color variable to reflect selected region with lightgrey and darkblue colour
+      dplyr::mutate(color = ifelse(PCD_REGION_NAME == region_sel(), "#003087", "#DDE1E4")
       )
     
     # Create plot
     plot_sequence_df %>%
       highcharter::hchart(
         type = "scatter", 
-        highcharter::hcaes(x = PCD_LAD_IMD_RANK, y = sequence , color = selected_region )
+        highcharter::hcaes(x = PCD_LAD_IMD_RANK, y = sequence , color = color )
       ) %>%
-      highcharter::hc_colors(colors = c("#003087","#768692")) %>% 
+      # Add two dummy series for the legend
+      highcharter::hc_add_series(
+        data = NULL, 
+        name = "Selected Region", 
+        showInLegend = TRUE,
+        color = "#003087"
+      ) %>% 
+      highcharter::hc_add_series(
+        data = NULL, 
+        name = "Other Regions", 
+        showInLegend = TRUE,
+        color = "#DDE1E4"
+      ) %>%
       highcharter::hc_motion(
         labels = unique(plot_df$FINANCIAL_YEAR),
         startIndex = 4
