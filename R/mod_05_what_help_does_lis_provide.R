@@ -1,4 +1,4 @@
-#' 04_what_help_does_lis_provide UI Function
+#' 05_what_help_does_lis_provide UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_04_what_help_does_lis_provide_ui <- function(id) {
+mod_05_what_help_does_lis_provide_ui <- function(id) {
   ns <- NS(id)
   tagList(
     h4("What level of help do applicants receive in England?"),
@@ -51,10 +51,10 @@ mod_04_what_help_does_lis_provide_ui <- function(id) {
   )
 }
 
-#' 04_what_help_does_lis_provide Server Function
+#' 05_what_help_does_lis_provide Server Function
 #'
 #' @noRd
-mod_04_what_help_does_lis_provide_server <- function(input, output, session) {
+mod_05_what_help_does_lis_provide_server <- function(input, output, session) {
   ns <- session$ns
   
   # Stacked column plot for outcome
@@ -100,7 +100,7 @@ mod_04_what_help_does_lis_provide_server <- function(input, output, session) {
 }
 
 ## To be copied in the UI
-# mod_04_what_help_does_lis_provide_ui("04_what_help_does_lis_provide_1")
+# mod_05_what_help_does_lis_provide_ui("05_what_help_does_lis_provide_1")
 
 ## To be copied in the server
-# callModule(mod_04_what_help_does_lis_provide_server, "04_what_help_does_lis_provide_1")
+# callModule(mod_05_what_help_does_lis_provide_server, "05_what_help_does_lis_provide_1")

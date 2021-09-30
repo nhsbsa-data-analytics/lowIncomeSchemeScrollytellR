@@ -6,8 +6,8 @@ region_map <- sf::read_sf("https://opendata.arcgis.com/api/v3/datasets/bafeb380d
   geojsonsf::sf_geojson()  %>% 
   jsonlite::fromJSON(simplifyVector = F)
 
-   
-  
+
+
 
 # Pull the local authority map (don't convert to geojson as we need it as a 
 # dataframe)
