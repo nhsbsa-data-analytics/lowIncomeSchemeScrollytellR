@@ -54,7 +54,9 @@ app_ui <- function(request) {
         )
       )
     ),
-    # What help does LIS provide
+    
+    
+    # Application over time
     scrollytell::scrolly_container(
       outputId = "scrolly_4",
       scrollytell::scrolly_graph(),
@@ -63,13 +65,12 @@ app_ui <- function(request) {
           id = "dummy"
         ),
         scrollytell::scrolly_section(
-          id = "04_what_help_does_lis_provide",
-          mod_04_what_help_does_lis_provide_ui("04_what_help_does_lis_provide_1")
+          id = "04_applications_over_time",
+          mod_04_applications_over_time_ui("04_applications_over_time_1")
         )
       )
     ),
-    
-    # Application over time
+    # What help does LIS provide
     scrollytell::scrolly_container(
       outputId = "scrolly_5",
       scrollytell::scrolly_graph(),
@@ -78,8 +79,8 @@ app_ui <- function(request) {
           id = "dummy"
         ),
         scrollytell::scrolly_section(
-          id = "05_applications_over_time",
-          mod_05_applications_over_time_ui("05_applications_over_time_1")
+          id = "05_what_help_does_lis_provide",
+          mod_05_what_help_does_lis_provide_ui("05_what_help_does_lis_provide_1")
         )
       )
     ),

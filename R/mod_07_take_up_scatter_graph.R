@@ -57,7 +57,7 @@ mod_07_take_up_scatter_graph_server <- function(input, output, session, region_n
       dplyr::group_by(PCD_REGION_NAME, PCD_LAD_NAME, PCD_LAD_IMD_RANK) %>%
       dplyr::do(sequence = .$p) %>% 
     # Mutate one variable to reflect selected region
-      dplyr::mutate(selected_region = ifelse(PCD_REGION_NAME == region_sel(), "Selected", "Other Regions")
+      dplyr::mutate(selected_region = ifelse(PCD_REGION_NAME == region_sel(), "Selected", "Other LAs")
       )
     
     # Create plot
@@ -66,6 +66,7 @@ mod_07_take_up_scatter_graph_server <- function(input, output, session, region_n
         type = "scatter", 
         highcharter::hcaes(x = PCD_LAD_IMD_RANK, y = sequence , color = selected_region )
       ) %>%
+      highcharter::hc_colors(colors = c("#003087","#768692")) %>% 
       highcharter::hc_motion(
         labels = unique(plot_df$FINANCIAL_YEAR),
         startIndex = 4
