@@ -73,16 +73,15 @@ mod_07_take_up_scatter_text_server <- function(input, output, session, region_na
   
   # Take-up of selected region 
   output$text = shiny::renderUI({
-    shiny::HTML(paste("<p>", "There are", "<b>", la_count(), " </b> local authorities in",
-                      "<b>", region_sel(), ".</b>",
+    shiny::HTML(paste("<p>", "There are", "<b>", la_count(), " </b> local authorities in the",
+                      "<b>", region_sel(), "</b>.",
                       "Of the",  "<b>", la_count(), " </b> local authorities,", 
-                      "<b>", highest_take_up_la()[1], "</b> is the highest take-up per ",
+                      "<b>", highest_take_up_la()[1], "</b> has the highest take-up per ",
                       "thousand of the general population.", 
-                      "Of the 314 local authorities in England,", "IMD rank in", highest_take_up_la()[1], "is",
+                      "Of the 314 local authorities in England,", "the IMD rank in", highest_take_up_la()[1], "is",
                       "<b>", highest_take_up_la()[2], "</b>.",
-                      "<b>", lowest_take_up_la()[1], " </b> is the lowest take-up.",
-                      "Of the 314 local authorities in England,", "IMD rank in", lowest_take_up_la()[1], "is",
-                      "<b>", lowest_take_up_la()[2], "</b>."))
+                      "<b>", lowest_take_up_la()[1], " </b> has the lowest take-up in the", region_sel(), 
+                      ", with an IMD rank of", "<b>", lowest_take_up_la()[2], " </b> out of the 314 local authorities in England."))
     
   })
   

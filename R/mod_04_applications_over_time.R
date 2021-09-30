@@ -1,4 +1,4 @@
-#' 05_applications_over_time UI Function
+#' 04_applications_over_time UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_05_applications_over_time_ui <- function(id) {
+mod_04_applications_over_time_ui <- function(id) {
   ns <- NS(id)
   tagList(
     h4("There is a decrease in applications in England over time"),
@@ -39,10 +39,10 @@ mod_05_applications_over_time_ui <- function(id) {
   )
 }
 
-#' 05_applications_over_time Server Function
+#' 04_applications_over_time Server Function
 #'
 #' @noRd
-mod_05_applications_over_time_server <- function(input, output, session) {
+mod_04_applications_over_time_server <- function(input, output, session) {
   ns <- session$ns
   
   # Time series plot
@@ -83,7 +83,7 @@ mod_05_applications_over_time_server <- function(input, output, session) {
 }
 
 ## To be copied in the UI
-# mod_05_applications_over_time_ui("05_applications_over_time_1")
+# mod_04_applications_over_time_ui("04_applications_over_time_1")
 
 ## To be copied in the server
-# callModule(mod_05_applications_over_time_server, "05_applications_over_time_1")
+# callModule(mod_04_applications_over_time_server, "04_applications_over_time_1")
