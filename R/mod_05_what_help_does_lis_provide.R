@@ -12,7 +12,7 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
   tagList(
     h4("What level of help do applicants receive in England?"),
     p(
-      "The level of help applicants receive depends on a ", 
+      "The level of help applicants receive depends on a ",
       tags$b("complex set of criteria"), " encompassing their weekly income, ",
       "necessary outgoings, plus any savings or investments."
     ),
@@ -28,17 +28,18 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
       "with prescription costs."
     ),
     p(
-      "Around ", tags$b("one in ten"), " applications are ", 
+      "Around ", tags$b("one in ten"), " applications are ",
       tags$b("withdrawn or abandoned"), " due to insufficient information ",
       "from the applicant."
     ),
-    p("
+    p(
+      "
       And the remaining applications are deemed unnecessary, either because ",
       "applicants:"
     ),
     tags$ul(
-      tags$li("Are already receiving other benefits (8%)"), 
-      tags$li("Have excess income too high to qualify (4%)"), 
+      tags$li("Are already receiving other benefits (8%)"),
+      tags$li("Have excess income too high to qualify (4%)"),
       tags$li(
         "Have more than £16 thousand in savings, investments or property (0.4%)"
       )
@@ -56,10 +57,10 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
 #' @noRd
 mod_05_what_help_does_lis_provide_server <- function(input, output, session) {
   ns <- session$ns
-  
+
   # Stacked column plot for outcome
   output$plot_applications_by_outcome <- highcharter::renderHighchart({
-    
+
     # Filter out Ongoing, aggregate, then calculate %s
     plot_df <- nhslowincomeschemescrollytell::applications_df %>%
       dplyr::filter(OUTCOME_LEVEL2 != "Ongoing") %>%
@@ -69,7 +70,7 @@ mod_05_what_help_does_lis_provide_server <- function(input, output, session) {
       dplyr::group_by(FINANCIAL_YEAR) %>%
       dplyr::mutate(p = TOTAL_APPLICATIONS / sum(TOTAL_APPLICATIONS) * 100) %>%
       dplyr::ungroup()
-    
+
     # Create  plot
     plot_df %>%
       highcharter::hchart(
@@ -84,9 +85,9 @@ mod_05_what_help_does_lis_provide_server <- function(input, output, session) {
       highcharter::hc_yAxis(
         max = 100,
         labels = list(
-          formatter = highcharter::JS("function(){ return this.value + '%' ;}") 
+          formatter = highcharter::JS("function(){ return this.value + '%' ;}")
         )
-      ) %>% 
+      ) %>%
       highcharter::hc_tooltip(
         shared = FALSE,
         formatter = highcharter::JS("function () { return '<b>Outcome: </b>' + this.series.name + '<br>' + '<b>Financial Year: </b>' + this.point.FINANCIAL_YEAR + '<br/>' + '<b>Percentage: </b>' + Math.round(this.point.y * 10) / 10 + '%';}")
@@ -94,9 +95,7 @@ mod_05_what_help_does_lis_provide_server <- function(input, output, session) {
       highcharter::hc_credits(
         enabled = TRUE
       )
-
   })
-  
 }
 
 ## To be copied in the UI

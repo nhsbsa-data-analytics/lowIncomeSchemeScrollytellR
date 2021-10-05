@@ -17,7 +17,7 @@ base_df <- dplyr::tbl(
 )
 
 # Applications
-applications_df <- base_df %>% 
+applications_df <- base_df %>%
   dplyr::group_by(
     FINANCIAL_YEAR,
     ACADEMIC_YEAR,
@@ -30,12 +30,12 @@ applications_df <- base_df %>%
     HELP_WITH_BAND_1,
     HELP_WITH_BAND_2,
     HELP_WITH_BAND_3
-  ) %>% 
-  dplyr::summarise(TOTAL_APPLICATIONS = n()) %>% 
+  ) %>%
+  dplyr::summarise(TOTAL_APPLICATIONS = n()) %>%
   dplyr::ungroup() %>%
   dplyr::collect() %>%
   dplyr::mutate(
-    
+
     # Order outcomes from reject to approve
     OUTCOME_LEVEL2 = ordered(
       x = OUTCOME_LEVEL2,
