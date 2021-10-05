@@ -20,9 +20,9 @@ jobs:
         with:
           use-public-rspm: true
 
-      - uses: r-lib/actions/setup-r-dependencies@v1
-        with:
-          extra-packages: styler
+      - name: Install styler
+        run: install.packages("styler")
+        shell: Rscript {0}
 
       - name: Lint
         run: styler::style_pkg(dry = "fail")
