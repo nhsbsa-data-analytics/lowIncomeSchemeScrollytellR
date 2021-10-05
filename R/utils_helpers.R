@@ -1,37 +1,37 @@
 #' NHSBSA highcharter theme
-#' 
-#' Note: Adding the credits through the theme doesn't work so for now these 
+#'
+#' Note: Adding the credits through the theme doesn't work so for now these
 #' must be manually added.
-#' 
+#'
 #' @param col_type
 #'
 #' @return
 #' @export
 theme_nhsbsa <- function(col_type = "normal", stacking = "normal") {
-  
+
   # Define the colour palettes
   col_palettes <- list(
     "highlight" = c("#E8EDEE", "#003087"),
     "normal" = c(
-      "#003087", 
-      "#ED8B00", 
-      "#41B6E6", 
-      "#00A499", 
-      "#FAE100", 
+      "#003087",
+      "#ED8B00",
+      "#41B6E6",
+      "#00A499",
+      "#FAE100",
       "#AE2573"
-    )  
+    )
   )
-  
-  # Check we have a valid colour type and allocate it 
+
+  # Check we have a valid colour type and allocate it
   stopifnot(col_type %in% names(col_palettes))
   col_palette <- col_palettes[[col_type]]
-  
+
   # Return the theme
   highcharter::hc_theme(
     colors = col_palette,
     colAxis = list(
       min = 0,
-      minColor = "#FFFFFF", 
+      minColor = "#FFFFFF",
       maxColor = "#003087"
     ),
     plotOptions = list(
@@ -86,10 +86,9 @@ theme_nhsbsa <- function(col_type = "normal", stacking = "normal") {
           fontFamily = "Frutiger W01 B"
         )
       )
-    )#,
-    #credits = list(
+    ) # ,
+    # credits = list(
     #  enabled = TRUE
-    #)
+    # )
   )
-  
 }

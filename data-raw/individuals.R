@@ -18,9 +18,9 @@ base_df <- dplyr::tbl(
 
 # Filter out NA COMPOSITE_IDs
 base_df <- base_df %>%
-  dplyr::filter(COMPOSITE_ID != 'na')
+  dplyr::filter(COMPOSITE_ID != "na")
 
-# TOTAL_INDIVIDUALS per BAND_5YEARS 
+# TOTAL_INDIVIDUALS per BAND_5YEARS
 individuals_by_age_band_df <- base_df %>%
   aggregate_individuals(., BAND_5YEARS, multiply_max_individuals = FALSE) %>%
   dplyr::arrange(FINANCIAL_YEAR, desc(BAND_5YEARS))
@@ -45,23 +45,23 @@ individuals_by_health_df <- base_df %>%
 successful_individuals_by_region_df <- base_df %>%
   dplyr::filter(OUTCOME_LEVEL1 == "Successful") %>%
   aggregate_individuals(
-    df = ., 
-    PCD_REGION_NAME, 
-    multiply_max_individuals = TRUE, 
+    df = .,
+    PCD_REGION_NAME,
+    multiply_max_individuals = TRUE,
     total_col = "TOTAL_SUCCESSFUL_INDIVIDUALS"
   ) %>%
   dplyr::arrange(FINANCIAL_YEAR, PCD_REGION_NAME)
 
 # TOTAL_SUCCESSFUL_INDIVIDUALS per Local Authority
-successful_individuals_by_la_df <- base_df %>% 
-  dplyr::filter(OUTCOME_LEVEL1 == 'Successful') %>% 
+successful_individuals_by_la_df <- base_df %>%
+  dplyr::filter(OUTCOME_LEVEL1 == "Successful") %>%
   aggregate_individuals(
     df = .,
     PCD_LAD_NAME,
     PCD_LAD_IMD_RANK,
     multiply_max_individuals = TRUE,
     total_col = "TOTAL_SUCCESSFUL_INDIVIDUALS"
-  ) %>% 
+  ) %>%
   dplyr::arrange(FINANCIAL_YEAR, PCD_LAD_NAME)
 
 
