@@ -11,7 +11,7 @@ mod_07_take_up_scatter_text_ui <- function(id) {
   ns <- NS(id)
   tagList(
     shiny::htmlOutput(
-      ns ("text")
+      ns("text")
     )
   )
 }
@@ -21,7 +21,7 @@ mod_07_take_up_scatter_text_ui <- function(id) {
 #' @noRd
 mod_07_take_up_scatter_text_server <- function(input, output, session, region_name) {
   ns <- session$ns
-  
+
   # Pull the drop down value to get region name
   region_sel <- reactive({
     region_name$input
@@ -29,62 +29,63 @@ mod_07_take_up_scatter_text_server <- function(input, output, session, region_na
 
   # Pull number of local authorities in the selected region.
   # get the highest take-up local authority, mention the deprivation rank
-  # get the lowest take-up local authority, mention the deprivation rank 
-  
-  
+  # get the lowest take-up local authority, mention the deprivation rank
+
+
   # Calculate %s
-  plot_df <- reactive({nhslowincomeschemescrollytell::adult_population_df %>%
-    dplyr::inner_join(nhslowincomeschemescrollytell::successful_individuals_by_la_df) %>%
-    dplyr::mutate(
-      p = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000
-    ) %>%
-    dplyr::filter(PCD_REGION_NAME == region_sel())
-    })
-  
+  plot_df <- reactive({
+    nhslowincomeschemescrollytell::adult_population_df %>%
+      dplyr::inner_join(nhslowincomeschemescrollytell::successful_individuals_by_la_df) %>%
+      dplyr::mutate(
+        p = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000
+      ) %>%
+      dplyr::filter(PCD_REGION_NAME == region_sel())
+  })
+
   la_count <- reactive({
     plot_df() %>%
-    dplyr::distinct(PCD_LAD_NAME) %>%   
-    dplyr::count()
+      dplyr::distinct(PCD_LAD_NAME) %>%
+      dplyr::count()
   })
-  
+
   # which is the highest take-up local authority in the selected region.
   highest_take_up_la <- reactive({
-    plot_df() %>% 
-      dplyr::filter(p == max(p)) %>% 
-      dplyr::select(PCD_LAD_NAME, PCD_LAD_IMD_RANK,p)
+    plot_df() %>%
+      dplyr::filter(p == max(p)) %>%
+      dplyr::select(PCD_LAD_NAME, PCD_LAD_IMD_RANK, p)
   })
-  
+
   # observe({
   #   print(paste(highest_take_up_la()[1], "&", highest_take_up_la()[2]))
   # })
-  
+
 
   # which is the lowest take-up local authority in the selected region.
   lowest_take_up_la <- reactive({
-    plot_df() %>% 
-      dplyr::filter(p == min(p)) %>% 
+    plot_df() %>%
+      dplyr::filter(p == min(p)) %>%
       dplyr::select(PCD_LAD_NAME, PCD_LAD_IMD_RANK, p)
   })
-  
+
   # observe({
   #   print(paste(lowest_take_up_la()[1], "&", lowest_take_up_la()[2]))
   # })
-  
-  
-  # Take-up of selected region 
-  output$text = shiny::renderUI({
-    shiny::HTML(paste("<p>", "There are", "<b>", la_count(), " </b> local authorities in the",
-                      "<b>", region_sel(), "</b>.",
-                      "Of the",  "<b>", la_count(), " </b> local authorities,", 
-                      "<b>", highest_take_up_la()[1], "</b> has the highest take-up per ",
-                      "thousand of the general population.", 
-                      "Of the 314 local authorities in England,", "the IMD rank in", highest_take_up_la()[1], "is",
-                      "<b>", highest_take_up_la()[2], "</b>.",
-                      "<b>", lowest_take_up_la()[1], " </b> has the lowest take-up in the", region_sel(), 
-                      ", with an IMD rank of", "<b>", lowest_take_up_la()[2], " </b> out of the 314 local authorities in England."))
-    
+
+
+  # Take-up of selected region
+  output$text <- shiny::renderUI({
+    shiny::HTML(paste(
+      "<p>", "There are", "<b>", la_count(), " </b> local authorities in the",
+      "<b>", region_sel(), "</b>.",
+      "Of the", "<b>", la_count(), " </b> local authorities,",
+      "<b>", highest_take_up_la()[1], "</b> has the highest take-up per ",
+      "thousand of the general population.",
+      "Of the 314 local authorities in England,", "the IMD rank in", highest_take_up_la()[1], "is",
+      "<b>", highest_take_up_la()[2], "</b>.",
+      "<b>", lowest_take_up_la()[1], " </b> has the lowest take-up in the", region_sel(),
+      ", with an IMD rank of", "<b>", lowest_take_up_la()[2], " </b> out of the 314 local authorities in England."
+    ))
   })
-  
 }
 
 ## To be copied in the UI

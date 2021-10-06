@@ -22,12 +22,12 @@ mod_10_footer_ui <- function(id) {
           width = 9,
           align = "left",
           p(
-            "Developed by the ", 
+            "Developed by the ",
             a(
               style = "color: #768692;",
-              "NHS Business Services Authority", 
+              "NHS Business Services Authority",
               href = "https://www.nhsbsa.nhs.uk/",
-              target="_blank"
+              target = "_blank"
             ),
             " and available to view on GitLab."
           )

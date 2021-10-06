@@ -19,7 +19,6 @@ mod_09_final_thoughts_ui <- function(id) {
 #' @noRd
 mod_09_final_thoughts_server <- function(input, output, session) {
   ns <- session$ns
-  
 }
 
 ## To be copied in the UI

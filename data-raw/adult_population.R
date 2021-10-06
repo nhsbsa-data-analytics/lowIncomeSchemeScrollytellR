@@ -17,19 +17,19 @@ adult_population_df <- dplyr::tbl(
 )
 
 # ONS over 16 population
-adult_population_df <- adult_population_df %>% 
+adult_population_df <- adult_population_df %>%
   dplyr::mutate(
     FINANCIAL_YEAR = dplyr::case_when(
-      POPULATION_YEAR == 2015 ~ '2015/16',
-      POPULATION_YEAR == 2016 ~ '2016/17',
-      POPULATION_YEAR == 2017 ~ '2017/18',
-      POPULATION_YEAR == 2018 ~ '2018/19',
-      POPULATION_YEAR == 2019 ~ '2019/20'
+      POPULATION_YEAR == 2015 ~ "2015/16",
+      POPULATION_YEAR == 2016 ~ "2016/17",
+      POPULATION_YEAR == 2017 ~ "2017/18",
+      POPULATION_YEAR == 2018 ~ "2018/19",
+      POPULATION_YEAR == 2019 ~ "2019/20"
     )
-  ) %>% 
+  ) %>%
   dplyr::select(
-    FINANCIAL_YEAR, 
-    PCD_LAD_NAME = LAD_NAME, 
+    FINANCIAL_YEAR,
+    PCD_LAD_NAME = LAD_NAME,
     PCD_REGION_NAME = RGN_NAME,
     TOTAL_ADULT_POPULATION = ONS_POPULATION
   ) %>%

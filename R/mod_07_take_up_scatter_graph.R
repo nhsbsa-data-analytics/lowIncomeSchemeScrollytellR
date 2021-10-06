@@ -11,16 +11,16 @@ mod_07_take_up_scatter_graph_ui <- function(id) {
   ns <- NS(id)
   tagList(
     fluidRow(
-        # offset = 1,
-        width = 5,
-        # align = "center",
-        style = "background-color: #FFFFFF;",
-        highcharter::highchartOutput(
-          outputId = ns("plot_successful_individuals_by_la_imd"),
-          height = "600px"
-          )
-        )
+      # offset = 1,
+      width = 5,
+      # align = "center",
+      style = "background-color: #FFFFFF;",
+      highcharter::highchartOutput(
+        outputId = ns("plot_successful_individuals_by_la_imd"),
+        height = "600px"
+      )
     )
+  )
 }
 
 #' 06_take_up Server Function
@@ -28,54 +28,53 @@ mod_07_take_up_scatter_graph_ui <- function(id) {
 #' @noRd
 mod_07_take_up_scatter_graph_server <- function(input, output, session, region_name) {
   ns <- session$ns
-  
-  
+
+
   # Pull the drop down value
   region_sel <- reactive({
     region_name$input
   })
-  
+
   # observe({
   #   print(region_sel())
   # })
- 
-  
-  output$plot_successful_individuals_by_la_imd = highcharter::renderHighchart({
-    
+
+
+  output$plot_successful_individuals_by_la_imd <- highcharter::renderHighchart({
+
     # Calculate %s
     plot_df <- nhslowincomeschemescrollytell::adult_population_df %>%
       dplyr::inner_join(nhslowincomeschemescrollytell::successful_individuals_by_la_df) %>%
       dplyr::mutate(
         p = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000
-      ) 
+      )
 
     # Format for highcharter animation
     plot_sequence_df <- plot_df %>%
-      tidyr::expand(FINANCIAL_YEAR, tidyr::nesting(PCD_REGION_NAME,PCD_LAD_NAME, PCD_LAD_IMD_RANK)) %>%
+      tidyr::expand(FINANCIAL_YEAR, tidyr::nesting(PCD_REGION_NAME, PCD_LAD_NAME, PCD_LAD_IMD_RANK)) %>%
       dplyr::left_join(plot_df) %>%
       dplyr::mutate(p = tidyr::replace_na(p)) %>%
       dplyr::group_by(PCD_REGION_NAME, PCD_LAD_NAME, PCD_LAD_IMD_RANK) %>%
-      dplyr::do(sequence = .$p) %>% 
-    # Mutate to create color variable to reflect selected region with lightgrey and darkblue colour
-      dplyr::mutate(color = ifelse(PCD_REGION_NAME == region_sel(), "#003087", "#DDE1E4")
-      )
-    
+      dplyr::do(sequence = .$p) %>%
+      # Mutate to create color variable to reflect selected region with lightgrey and darkblue colour
+      dplyr::mutate(color = ifelse(PCD_REGION_NAME == region_sel(), "#003087", "#DDE1E4"))
+
     # Create plot
     plot_sequence_df %>%
       highcharter::hchart(
-        type = "scatter", 
-        highcharter::hcaes(x = PCD_LAD_IMD_RANK, y = sequence , color = color )
+        type = "scatter",
+        highcharter::hcaes(x = PCD_LAD_IMD_RANK, y = sequence, color = color)
       ) %>%
       # Add two dummy series for the legend
       highcharter::hc_add_series(
-        data = NULL, 
-        name = "Selected Region", 
+        data = NULL,
+        name = "Selected Region",
         showInLegend = TRUE,
         color = "#003087"
-      ) %>% 
+      ) %>%
       highcharter::hc_add_series(
-        data = NULL, 
-        name = "Other Regions", 
+        data = NULL,
+        name = "Other Regions",
         showInLegend = TRUE,
         color = "#DDE1E4"
       ) %>%
@@ -120,9 +119,7 @@ mod_07_take_up_scatter_graph_server <- function(input, output, session, region_n
       highcharter::hc_credits(
         enabled = TRUE
       )
-    
   })
-  
 }
 
 ## To be copied in the UI

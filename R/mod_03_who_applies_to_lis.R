@@ -33,9 +33,9 @@ mod_03_who_applies_to_lis_ui <- function(id) {
         "Applicants are allocated a client group based on the main source ",
         "of household income. They are most likely to be categorised as ",
         actionLink(
-          inputId = ns("benefits_or_other_modal"), 
+          inputId = ns("benefits_or_other_modal"),
           label = "benefits/other"
-        ), 
+        ),
         " or earners."
       ),
       fluidRow(
@@ -50,7 +50,7 @@ mod_03_who_applies_to_lis_ui <- function(id) {
         "Individuals covered by the application are more likely to live in ",
         "areas of higher deprivation, as we can see in the below ",
         actionLink(
-          inputId = ns("imd_modal"), 
+          inputId = ns("imd_modal"),
           label = "English indices of deprivation"
         ),
         " decile chart."
@@ -69,13 +69,15 @@ mod_03_who_applies_to_lis_ui <- function(id) {
 #' @noRd
 mod_03_who_applies_to_lis_server <- function(input, output, session) {
   ns <- session$ns
-  
+
   # Create reactive benefits / other hyperlink
-  benefits_or_other_click <- reactive({ input$benefits_or_other_modal })
-  
+  benefits_or_other_click <- reactive({
+    input$benefits_or_other_modal
+  })
+
   # Benefits / other hyperlink modal
   observeEvent(
-    eventExpr = benefits_or_other_click(), 
+    eventExpr = benefits_or_other_click(),
     handlerExpr = {
       showModal(
         modalDialog(
@@ -92,13 +94,15 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       )
     }
   )
-  
+
   # Create IMD hyperlink
-  imd_click <- reactive({ input$imd_modal })
-  
+  imd_click <- reactive({
+    input$imd_modal
+  })
+
   # IMD hyperlink modal
   observeEvent(
-    eventExpr = imd_click(), 
+    eventExpr = imd_click(),
     handlerExpr = {
       showModal(
         modalDialog(
@@ -123,9 +127,9 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
           p(
             "Further information can be found ",
             a(
-              "here.", 
+              "here.",
               href = "https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019",
-              target="_blank"
+              target = "_blank"
             )
           ),
           easyClose = TRUE
@@ -133,22 +137,22 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       )
     }
   )
-  
+
   # Pyramid plot for age band
   output$plot_individuals_by_age_band <- highcharter::renderHighchart({
-    
+
     # Filter out Co-applicants and Unknowns, calculate %s
     plot_df <- nhslowincomeschemescrollytell::individuals_by_age_band_df %>%
       dplyr::filter(
-        !(BAND_5YEARS %in% c("Co-applicant", "Unknown")) 
+        !(BAND_5YEARS %in% c("Co-applicant", "Unknown"))
       ) %>%
-      dplyr::group_by(FINANCIAL_YEAR) %>% 
+      dplyr::group_by(FINANCIAL_YEAR) %>%
       dplyr::mutate(p = TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100) %>%
-      dplyr::ungroup() 
-    
+      dplyr::ungroup()
+
     # Pull the max p
     max_p <- max(abs(plot_df$p))
-    
+
     # Format for highcharter animation
     plot_series_list <- plot_df %>%
       tidyr::expand(FINANCIAL_YEAR, BAND_5YEARS) %>%
@@ -161,7 +165,7 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       dplyr::do(data = .$data) %>%
       dplyr::mutate(name = "Age Band (5 Year)") %>%
       highcharter::list_parse()
-    
+
     # Create plot
     highcharter::highchart() %>%
       highcharter::hc_chart(type = "column", marginBottom = 120) %>%
@@ -175,19 +179,19 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       highcharter::hc_title(
         text = "Age band of NHS Low Income Scheme lead applicants in England (2015/16 to 2020/21)"
       ) %>%
-        highcharter::hc_subtitle(
-          text = "Note: This excludes main applicants without an age band."
+      highcharter::hc_subtitle(
+        text = "Note: This excludes main applicants without an age band."
       ) %>%
       highcharter::hc_xAxis(
         categories = sort(unique(plot_df$BAND_5YEARS)),
         reversed = FALSE
-      ) %>% 
+      ) %>%
       highcharter::hc_yAxis(
         max = ceiling(max_p / 5) * 5,
         labels = list(
-          formatter = highcharter::JS("function(){ return Math.abs(this.value) + '%' ;}") 
+          formatter = highcharter::JS("function(){ return Math.abs(this.value) + '%' ;}")
         )
-      ) %>% 
+      ) %>%
       highcharter::hc_tooltip(
         shared = FALSE,
         formatter = highcharter::JS("function () { return '<b>Age band (5 years): </b>' + this.point.category + '<br/>' + '<b>Percentage: </b>' + Math.abs(Math.round(this.point.y * 10) / 10) + '%';}")
@@ -195,9 +199,8 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       highcharter::hc_credits(
         enabled = TRUE
       )
-    
   })
-  
+
   # Stacked column plot by client group
   output$plot_individuals_by_client_group <- highcharter::renderHighchart({
 
@@ -206,10 +209,10 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       dplyr::filter(
         !(CLIENTGROUP_DESC_FORMAT %in% c("Co-applicant", "Unknown"))
       ) %>%
-      dplyr::group_by(FINANCIAL_YEAR) %>% 
+      dplyr::group_by(FINANCIAL_YEAR) %>%
       dplyr::mutate(p = TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100) %>%
       dplyr::ungroup()
-    
+
     # Create plot
     plot_df %>%
       highcharter::hchart(
@@ -226,8 +229,8 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       highcharter::hc_yAxis(
         max = 100,
         labels = list(
-          formatter = highcharter::JS("function(){ return this.value + '%' ;}") 
-        )      
+          formatter = highcharter::JS("function(){ return this.value + '%' ;}")
+        )
       ) %>%
       highcharter::hc_tooltip(
         shared = FALSE,
@@ -236,12 +239,11 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       highcharter::hc_credits(
         enabled = TRUE
       )
-
   })
-  
+
   # Column plot by deprivation
   output$plot_individuals_by_deprivation <- highcharter::renderHighchart({
-    
+
     # Calculate %s
     plot_df <- nhslowincomeschemescrollytell::individuals_by_imd_df %>%
       dplyr::mutate(DEPRIVATION = "Index of Multiple Deprivation") %>%
@@ -254,10 +256,10 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       dplyr::group_by(FINANCIAL_YEAR, DEPRIVATION) %>%
       dplyr::mutate(p = TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100) %>%
       dplyr::ungroup()
-    
+
     # Pull the max p
     max_p <- max(abs(plot_df$p))
-    
+
     # Format for highcharter animation
     plot_series_list <- plot_df %>%
       tidyr::expand(FINANCIAL_YEAR, DECILE, DEPRIVATION) %>%
@@ -270,11 +272,11 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       dplyr::do(data = .$data) %>%
       dplyr::mutate(name = DEPRIVATION) %>%
       highcharter::list_parse()
-    
-    # Create plot    
+
+    # Create plot
     highcharter::highchart() %>%
       highcharter::hc_chart(type = "column", marginBottom = 120) %>%
-      highcharter::hc_add_series_list(x = plot_series_list) %>% 
+      highcharter::hc_add_series_list(x = plot_series_list) %>%
       highcharter::hc_motion(
         labels = unique(plot_df$FINANCIAL_YEAR),
         series = c(0, 1),
@@ -300,9 +302,7 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       highcharter::hc_credits(
         enabled = TRUE
       )
-    
   })
-  
 }
 
 ## To be copied in the UI
