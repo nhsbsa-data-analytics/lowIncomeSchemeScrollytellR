@@ -18,20 +18,20 @@ mod_06_take_up_map_ui <- function(id) {
       "qualifying benefits such as Universal Credit."
     ),
     p(
-      "We have used data from the ",       
+      "We have used data from the ",
       a(
-        "Family Resources Survey", 
+        "Family Resources Survey",
         href = "https://www.gov.uk/government/collections/family-resources-survey--2",
-        target="_blank"
-      ), 
+        target = "_blank"
+      ),
       ", to determine a proxy for the eligible population in England",
       " who could apply to the NHS Low Income Scheme. ",
       "This is the estimated number of individuals (excluding ",
       a(
-        "children", 
+        "children",
         href = "https://stat-xplore.dwp.gov.uk/webapi/metadata/HBAI/Type of Individual.html",
-        target="_blank"
-      ), 
+        target = "_blank"
+      ),
       "), whose net household income after housing costs is 60% below the ",
       "median AND:"
     ),
@@ -55,7 +55,7 @@ mod_06_take_up_map_ui <- function(id) {
         br(),
         p(
           "In the map we can see that estimated take-up relative to the ",
-          "eligible population, continues to be ", 
+          "eligible population, continues to be ",
           tags$b("highest in the North East of England"),
           " and the North in general. Although the North East rate has ",
           "declined from 19% in 2015/16 to 10% in 2019/20."
@@ -93,7 +93,7 @@ mod_06_take_up_map_ui <- function(id) {
         )
       )
     )
-    )
+  )
 }
 
 #' 06_take_up Server Function
@@ -101,12 +101,14 @@ mod_06_take_up_map_ui <- function(id) {
 #' @noRd
 mod_06_take_up_map_server <- function(input, output, session) {
   ns <- session$ns
-  
+
   # Pull the slider value
-  year <- reactive({input$input_year})
- 
-  output$plot_successful_individuals_by_region = highcharter::renderHighchart({
-    
+  year <- reactive({
+    input$input_year
+  })
+
+  output$plot_successful_individuals_by_region <- highcharter::renderHighchart({
+
     # Calculate take-up rate per region
     region_df <- nhslowincomeschemescrollytell::target_population_df %>%
       dplyr::filter(FINANCIAL_YEAR == year()) %>%
@@ -123,9 +125,9 @@ mod_06_take_up_map_server <- function(input, output, session) {
       dplyr::mutate(
         value = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_POPULATION * 100,
         drilldown = tolower(PCD_REGION_NAME)
-      ) %>% 
+      ) %>%
       dplyr::select(FINANCIAL_YEAR, PCD_REGION_NAME, value, drilldown)
-    
+
     # Calculate rate per 1k adult population of each Local Authority
     la_df <- nhslowincomeschemescrollytell::adult_population_df %>%
       dplyr::filter(FINANCIAL_YEAR == year()) %>%
@@ -136,11 +138,11 @@ mod_06_take_up_map_server <- function(input, output, session) {
         drilldown = tolower(PCD_REGION_NAME)
       ) %>%
       dplyr::select(FINANCIAL_YEAR, PCD_REGION_NAME, PCD_LAD_NAME, value, drilldown)
-    
+
     # Join the region to the local authority map
     la_map <- nhslowincomeschemescrollytell::la_map %>%
       dplyr::inner_join(nhslowincomeschemescrollytell::region_la_lookup)
-    
+
     # Create plot
     highcharter::highchart(type = "map") %>%
       highcharter::hc_add_series(
@@ -150,7 +152,8 @@ mod_06_take_up_map_server <- function(input, output, session) {
         name = "regional take-up",
         tooltip = list(
           headerFormat = "",
-          pointFormat = "<b>Region:</b> {point.PCD_REGION_NAME}<br><b>Take-up:</b> {point.value:.1f}% (of the eligible population)<br><br>Click for Local Authority breakdown")
+          pointFormat = "<b>Region:</b> {point.PCD_REGION_NAME}<br><b>Take-up:</b> {point.value:.1f}% (of the eligible population)<br><br>Click for Local Authority breakdown"
+        )
       ) %>%
       highcharter::hc_add_theme(hc_thm = theme_nhsbsa()) %>%
       highcharter::hc_title(
@@ -159,16 +162,16 @@ mod_06_take_up_map_server <- function(input, output, session) {
       highcharter::hc_colorAxis(max = 20) %>%
       highcharter::hc_drilldown(
         series = lapply(
-          X = region_df$PCD_REGION_NAME, 
+          X = region_df$PCD_REGION_NAME,
           FUN = function(x) {
             list(
               id = tolower(x),
-              data = la_df %>% 
+              data = la_df %>%
                 dplyr::filter(PCD_REGION_NAME == x) %>%
                 highcharter::list_parse(),
               mapData = la_map %>%
                 dplyr::filter(PCD_REGION_NAME == x) %>%
-                geojsonsf::sf_geojson() %>% 
+                geojsonsf::sf_geojson() %>%
                 jsonlite::fromJSON(simplifyVector = F),
               value = "value",
               joinBy = "PCD_LAD_NAME",
@@ -183,11 +186,7 @@ mod_06_take_up_map_server <- function(input, output, session) {
       highcharter::hc_credits(
         enabled = TRUE
       )
-    
   })
-  
-  
-  
 }
 
 ## To be copied in the UI
