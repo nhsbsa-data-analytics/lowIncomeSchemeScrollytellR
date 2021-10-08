@@ -94,7 +94,7 @@ mod_08_spotlight_students_server <- function(input, output, session) {
   output$plot_student_applications <- highcharter::renderHighchart({
     
     # Group data and aggregate
-    plot_df <- nhslowincomeschemescrollytell::applications_df %>%
+    plot_df <- lowIncomeSchemeScrollytellR::applications_df %>%
       dplyr::mutate(TYPE = ifelse(CLIENTGROUP_DESC == "Student", "Student", "Non-Student")) %>%
       dplyr::group_by(FINANCIAL_YEAR, TYPE) %>%
       dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
@@ -132,9 +132,9 @@ mod_08_spotlight_students_server <- function(input, output, session) {
   output$plot_successful_student_individuals_by_region <- highcharter::renderHighchart({
     
     # Calculate rate per region
-    plot_df <- nhslowincomeschemescrollytell::student_population_df %>%
+    plot_df <- lowIncomeSchemeScrollytellR::student_population_df %>%
       dplyr::filter(ACADEMIC_YEAR != "2014/15") %>% 
-      dplyr::inner_join(nhslowincomeschemescrollytell::successful_student_individuals_by_region_df) %>%
+      dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_student_individuals_by_region_df) %>%
       dplyr::mutate(
         value = TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS / TOTAL_STUDENT_POPULATION * 100
       )
@@ -176,7 +176,7 @@ mod_08_spotlight_students_server <- function(input, output, session) {
   output$plot_student_applications_per_month <- highcharter::renderHighchart({
     
     # Aggregate overall for line plot
-    plot_overall_df <- nhslowincomeschemescrollytell::applications_df %>%
+    plot_overall_df <- lowIncomeSchemeScrollytellR::applications_df %>%
       dplyr::filter(CLIENTGROUP_DESC == "Student") %>%
       dplyr::group_by(APPLICATION_MONTH) %>%
       dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
@@ -184,7 +184,7 @@ mod_08_spotlight_students_server <- function(input, output, session) {
       dplyr::mutate(MONTH = lubridate::ym(APPLICATION_MONTH))
     
     # Aggregate by benefit type (partial or full)
-    plot_benefit_df <- nhslowincomeschemescrollytell::applications_df %>%
+    plot_benefit_df <- lowIncomeSchemeScrollytellR::applications_df %>%
       dplyr::filter(
         CLIENTGROUP_DESC == 'Student',
         OUTCOME_LEVEL2 %in% c("Full benefit", "Partial benefit")
