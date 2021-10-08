@@ -13,12 +13,12 @@ We have used the `golem` framework to developed this scrollytelling article as a
 The package is structured as follows:
 
 ```
-nhslowincomeschemescrollytell
+lowIncomeSchemeScrollytellR
 ├── .gitignore                              # Currently ignoring all `data` files
 ├── .Renviron                               # Credential file (create from the template example.Renviron)
 ├── .Rbuildignore                           # Golem file
 ├── app.R                                   # Golem file
-├── data                                    # Data for the dashboard (accessible via nhslowincomeschemescrollytell::{name})
+├── data                                    # Data for the dashboard (accessible via lowIncomeSchemeScrollytellR::{name})
 ├── data-raw                                # Various scripts to produce `data` files
 ├── DESCRIPTION                             # Metadata of package
 ├── dev                                     # Golem files

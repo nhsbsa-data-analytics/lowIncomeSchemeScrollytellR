@@ -1,4 +1,4 @@
-Package: nhslowincomeschemescrollytell
+Package: lowIncomeSchemeScrollytellR
 Title: NHS Low Income Scheme Scrollytell
 Version: 0.0.0.9000
 Authors@R:
@@ -39,7 +39,6 @@ Imports:
     Rcpp,
     sf,
     attempt,
-    openxlsx,
     markdown
 Remotes:
     github::houseofcommonslibrary/statxplorer

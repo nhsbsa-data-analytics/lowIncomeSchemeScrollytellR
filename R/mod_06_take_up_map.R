@@ -12,41 +12,9 @@ mod_06_take_up_map_ui <- function(id) {
   tagList(
     h4("Estimated take-up is low and decreasing over time"),
     p(
-      "It is difficult to determine the eligible population for the NHS Low ",
-      "Income Scheme as we need to identify people living in relative poverty",
-      "after housing and other costs, who are not already receiving ",
-      "qualifying benefits such as Universal Credit."
-    ),
-    p(
-      "We have used data from the ",       
-      a(
-        "Family Resources Survey", 
-        href = "https://www.gov.uk/government/collections/family-resources-survey--2",
-        target="_blank"
-      ), 
-      ", to determine a proxy for the eligible population in England",
-      " who could apply to the NHS Low Income Scheme. ",
-      "This is the estimated number of individuals (excluding ",
-      a(
-        "children", 
-        href = "https://stat-xplore.dwp.gov.uk/webapi/metadata/HBAI/Type of Individual.html",
-        target="_blank"
-      ), 
-      "), whose net household income after housing costs is 60% below the ",
-      "median AND:"
-    ),
-    tags$ul(
-      tags$li(
-        "Who are not in receipt of Universal Credit/Equivalent or Pension ",
-        "Credit"
-      ),
-      tags$li("Who do not have savings over £16 thousand")
-    ),
-    br(),
-    p(
       "Take-up is the number of NHS Low Income Scheme individuals covered by ",
       "the application who have received full or partial benefit as a ",
-      "percentage of the eligible population."
+      "per thousand of the general population aged 16 or over years."
     ),
     fluidRow(
       column(
@@ -55,24 +23,15 @@ mod_06_take_up_map_ui <- function(id) {
         br(),
         p(
           "In the map we can see that estimated take-up relative to the ",
-          "eligible population, continues to be ", 
+          "general population, continues to be ", 
           tags$b("highest in the North East of England"),
           " and the North in general. Although the North East rate has ",
-          "declined from 19% in 2015/16 to 10% in 2019/20."
+          "declined from 13 in 2015/16 to 10 in 2019/20."
         ),
         br(),
         p(
-          "Although London has the greatest number of total applications, ",
-          "take-up relative to the eligible population, is ",
-          tags$b("lowest in the London region.")
-        ),
-        br(),
-        p(
-          "It is not possible to consider take-up at Local Authority level ",
-          "using the eligible population. But we can consider take-up per ",
-          "thousand of the general population aged 16+ years. Local authority ",
-          "rates can be viewed by selecting the region you wish to look at or ",
-          "viewing the scatterplot for the rate relative to deprivation."
+          "Take-up relative to the general population, is ",
+          tags$b("lowest in the South East region.")
         )
       ),
       column(
@@ -81,18 +40,11 @@ mod_06_take_up_map_ui <- function(id) {
         align = "center",
         style = "background-color: #FFFFFF;",
         highcharter::highchartOutput(
-          outputId = ns("plot_successful_individuals_by_region"),
+          outputId = ns("plot_successful_individuals_by_region"), # change this one to animation style
           height = "700px"
-        ),
-        shiny::selectInput(
-          inputId = ns("input_year"),
-          label = "Financial Year:",
-          choices = c("2015/16", "2016/17", "2017/18", "2018/19", "2019/20"),
-          selected = "2019/20",
-          width = "80%"
+        )
         )
       )
-    )
     )
 }
 
@@ -107,87 +59,50 @@ mod_06_take_up_map_server <- function(input, output, session) {
  
   output$plot_successful_individuals_by_region = highcharter::renderHighchart({
     
-    # Calculate take-up rate per region
-    region_df <- nhslowincomeschemescrollytell::target_population_df %>%
-      dplyr::filter(FINANCIAL_YEAR == year()) %>%
-      dplyr::filter(
-        TYPE != "Child" &
-          !(AGE_BAND %in% c("0 to 15", "16 to 19 child")) &
-          LOW_INCOME == 1 &
-          UC_OR_EQUIV + PC + SAVINGS == 0
-      ) %>%
+    # Calculate take-up rate per 1k adult population of each region
+    # Removed FRS population based on team discussion
+    # Now changed to student map style (with animation due to tooltip chart)
+    plot_df <- lowIncomeSchemeScrollytellR::adult_population_df %>%
+      # dplyr::filter(FINANCIAL_YEAR == year()) %>%
       dplyr::group_by(FINANCIAL_YEAR, PCD_REGION_NAME) %>%
-      dplyr::summarise(TOTAL_POPULATION = sum(TOTAL_POPULATION)) %>%
+      dplyr::summarise(TOTAL_POPULATION = sum(TOTAL_ADULT_POPULATION)) %>%
       dplyr::ungroup() %>%
-      dplyr::inner_join(nhslowincomeschemescrollytell::successful_individuals_by_region_df) %>%
+      dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_region_df) %>%
       dplyr::mutate(
-        value = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_POPULATION * 100,
-        drilldown = tolower(PCD_REGION_NAME)
-      ) %>% 
-      dplyr::select(FINANCIAL_YEAR, PCD_REGION_NAME, value, drilldown)
+        value = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_POPULATION * 1000
+      ) 
     
-    # Calculate rate per 1k adult population of each Local Authority
-    la_df <- nhslowincomeschemescrollytell::adult_population_df %>%
-      dplyr::filter(FINANCIAL_YEAR == year()) %>%
-      dplyr::inner_join(nhslowincomeschemescrollytell::region_la_lookup) %>%
-      dplyr::inner_join(nhslowincomeschemescrollytell::successful_individuals_by_la_df) %>%
-      dplyr::mutate(
-        value = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000,
-        drilldown = tolower(PCD_REGION_NAME)
-      ) %>%
-      dplyr::select(FINANCIAL_YEAR, PCD_REGION_NAME, PCD_LAD_NAME, value, drilldown)
-    
-    # Join the region to the local authority map
-    la_map <- nhslowincomeschemescrollytell::la_map %>%
-      dplyr::inner_join(nhslowincomeschemescrollytell::region_la_lookup)
+    # Format for highchater animation
+    # using tidyr::complete
+    plot_sequence_series <- plot_df %>% 
+      tidyr::complete(FINANCIAL_YEAR, PCD_REGION_NAME,
+                      fill = list(value = 0)) %>% 
+      dplyr::group_by(PCD_REGION_NAME) %>% 
+      dplyr::do(sequence = .$value) %>% 
+      highcharter::list_parse()
+
     
     # Create plot
-    highcharter::highchart(type = "map") %>%
+    highcharter::highchart(type = "map") %>% 
+      highcharter::hc_chart(marginBottom = 100) %>%
       highcharter::hc_add_series(
-        data = region_df,
-        mapData = nhslowincomeschemescrollytell::region_map,
+        data = plot_sequence_series,
+        mapData = lowIncomeSchemeScrollytellR::region_map,
         joinBy = "PCD_REGION_NAME",
-        name = "regional take-up",
         tooltip = list(
           headerFormat = "",
-          pointFormat = "<b>Region:</b> {point.PCD_REGION_NAME}<br><b>Take-up:</b> {point.value:.1f}% (of the eligible population)<br><br>Click for Local Authority breakdown")
-      ) %>%
-      highcharter::hc_add_theme(hc_thm = theme_nhsbsa()) %>%
-      highcharter::hc_title(
-        text = "Estimated take-up of NHS Low Income Scheme (2015/16 to 2019/20)"
-      ) %>%
-      highcharter::hc_colorAxis(max = 20) %>%
-      highcharter::hc_drilldown(
-        series = lapply(
-          X = region_df$PCD_REGION_NAME, 
-          FUN = function(x) {
-            list(
-              id = tolower(x),
-              data = la_df %>% 
-                dplyr::filter(PCD_REGION_NAME == x) %>%
-                highcharter::list_parse(),
-              mapData = la_map %>%
-                dplyr::filter(PCD_REGION_NAME == x) %>%
-                geojsonsf::sf_geojson() %>% 
-                jsonlite::fromJSON(simplifyVector = F),
-              value = "value",
-              joinBy = "PCD_LAD_NAME",
-              tooltip = list(
-                headerFormat = "",
-                pointFormat = "<b>Local Authority:</b> {point.PCD_LAD_NAME}<br><b>Take-up:</b> {point.value:.1f} (per thousand of the general population)"
-              )
-            )
-          }
-        )
-      ) %>%
-      highcharter::hc_credits(
-        enabled = TRUE
-      )
-    
+          pointFormat = "<b>Region:</b> {point.PCD_REGION_NAME}<br><b>Take-up:</b> {point.value:.1f} (per thousand of the general population)")
+      ) %>% 
+    highcharter::hc_motion(
+      labels = unique(plot_df$FINANCIAL_YEAR),
+      startIndex = 4
+    ) %>% 
+    highcharter::hc_add_theme(hc_thm = theme_nhsbsa()) %>%
+    highcharter::hc_title(
+      text = "Estimated take-up of NHS Low Income Scheme (2015/16 to 2019/20)"
+    ) %>%
+    highcharter::hc_colorAxis(min = 0, max = 20) 
   })
-  
-  
-  
 }
 
 ## To be copied in the UI
