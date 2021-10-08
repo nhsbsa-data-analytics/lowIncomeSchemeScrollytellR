@@ -12,7 +12,7 @@ mod_04_applications_over_time_ui <- function(id) {
   tagList(
     h4("There is a decrease in applications in England over time"),
     p(
-      "The total number of NHS Low Income Scheme applications in England has ", 
+      "The total number of NHS Low Income Scheme applications in England has ",
       "declined by 15% from 350 thousand in 2015/16 to 298 thousand in ",
       "2019/20, with further declines during the pandemic."
     ),
@@ -44,10 +44,10 @@ mod_04_applications_over_time_ui <- function(id) {
 #' @noRd
 mod_04_applications_over_time_server <- function(input, output, session) {
   ns <- session$ns
-  
+
   # Time series plot
   output$plot_applications <- highcharter::renderHighchart({
-    
+
     # Aggregate
     plot_df <- lowIncomeSchemeScrollytellR::applications_df %>%
       dplyr::group_by(FINANCIAL_YEAR) %>%
@@ -67,9 +67,9 @@ mod_04_applications_over_time_server <- function(input, output, session) {
       highcharter::hc_yAxis(
         min = 0,
         labels = list(
-          formatter = highcharter::JS("function(){ return Math.abs(this.value) / 1000 + 'k'; }") 
+          formatter = highcharter::JS("function(){ return Math.abs(this.value) / 1000 + 'k'; }")
         )
-      ) %>% 
+      ) %>%
       highcharter::hc_tooltip(
         shared = FALSE,
         formatter = highcharter::JS("function () { return '<b>Financial Year: </b>' + this.point.FINANCIAL_YEAR + '<br/>' + '<b>Total Applications: </b>' + Math.round(this.point.y / 500) * 500 / 1000 + 'k';}")
@@ -77,9 +77,7 @@ mod_04_applications_over_time_server <- function(input, output, session) {
       highcharter::hc_credits(
         enabled = TRUE
       )
-    
   })
-  
 }
 
 ## To be copied in the UI

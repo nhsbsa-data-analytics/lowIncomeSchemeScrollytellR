@@ -18,16 +18,16 @@ base_df <- dplyr::tbl(
 
 # Filter out NA COMPOSITE_IDs & to Student CLIENTGROUP_DESC
 student_base_df <- base_df %>%
-  dplyr::filter(COMPOSITE_ID != 'na' & CLIENTGROUP_DESC == "Student") 
+  dplyr::filter(COMPOSITE_ID != "na" & CLIENTGROUP_DESC == "Student")
 
 # TOTAL_SUCCESSFUL_INDIVIDUALS per PCD_REGION_NAME
 successful_student_individuals_by_region_df <- student_base_df %>%
   dplyr::filter(OUTCOME_LEVEL1 == "Successful") %>%
   aggregate_individuals(
-    df = ., 
-    PCD_REGION_NAME, 
-    multiply_max_individuals = TRUE, 
-    time_col = "ACADEMIC_YEAR", 
+    df = .,
+    PCD_REGION_NAME,
+    multiply_max_individuals = TRUE,
+    time_col = "ACADEMIC_YEAR",
     total_col = "TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS"
   ) %>%
   dplyr::arrange(ACADEMIC_YEAR, PCD_REGION_NAME)
@@ -37,4 +37,3 @@ usethis::use_data(successful_student_individuals_by_region_df, overwrite = TRUE)
 
 
 DBI::dbDisconnect(con)
-
