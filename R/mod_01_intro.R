@@ -19,7 +19,6 @@ mod_01_intro_ui <- function(id) {
 #' @noRd
 mod_01_intro_server <- function(input, output, session) {
   ns <- session$ns
-  
 }
 
 ## To be copied in the UI

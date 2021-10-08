@@ -12,24 +12,24 @@ mod_02_what_is_lis_ui <- function(id) {
   tagList(
     h4("What is the NHS Low Income Scheme?"),
     p(
-      "The ", 
+      "The ",
       a(
-        "NHS Low Income Scheme", 
+        "NHS Low Income Scheme",
         href = "https://www.nhsbsa.nhs.uk/nhs-low-income-scheme",
-        target="_blank"
-      ), 
-      " (LIS) provides income related help to people who are not ", 
+        target = "_blank"
+      ),
+      " (LIS) provides income related help to people who are not ",
       actionLink(
-        inputId = ns("modal"), 
+        inputId = ns("modal"),
         label = "already entitled to help with health costs"
-      ), 
+      ),
       " if they have a low income. It is broadly the same as a means tested ",
       "benefit but also takes into account council tax and housing costs."
     ),
     p("The scheme helps towards health costs related to:"),
     tags$ul(
-      tags$li("NHS prescription charges"), 
-      tags$li("NHS dental treatment charges"), 
+      tags$li("NHS prescription charges"),
+      tags$li("NHS dental treatment charges"),
       tags$li("The cost of sight tests, glasses and contact lenses"),
       tags$li("The cost of travelling to receive NHS treatment"),
       tags$li("NHS wigs and fabric supports")
@@ -46,13 +46,15 @@ mod_02_what_is_lis_ui <- function(id) {
 #' @noRd
 mod_02_what_is_lis_server <- function(input, output, session) {
   ns <- session$ns
-  
+
   # Create reactive eligibility hyperlink
-  eligibility_click <- reactive({ input$modal })
-  
+  eligibility_click <- reactive({
+    input$modal
+  })
+
   # Eligibility hyperlink modal
   observeEvent(
-    eventExpr = eligibility_click(), 
+    eventExpr = eligibility_click(),
     handlerExpr = {
       showModal(
         modalDialog(
@@ -63,7 +65,6 @@ mod_02_what_is_lis_server <- function(input, output, session) {
       )
     }
   )
-  
 }
 
 ## To be copied in the UI
