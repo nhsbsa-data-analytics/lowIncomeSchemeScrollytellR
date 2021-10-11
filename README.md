@@ -13,8 +13,33 @@ We have used the `golem` framework to developed this scrollytelling article as a
 The package is structured as follows:
 
 ```
-nhs-low-income-scheme-scrollytell
-├── .github                                 # Workflows for github actions
+lowIncomeSchemeScrollytellR
+├── .gitignore                              # Currently ignoring all `data` files
+├── .Renviron                               # Credential file (create from the template example.Renviron)
+├── .Rbuildignore                           # Golem file
+├── app.R                                   # Golem file
+├── data                                    # Data for the dashboard (accessible via lowIncomeSchemeScrollytellR::{name})
+├── data-raw                                # Various scripts to produce `data` files
+├── DESCRIPTION                             # Metadata of package
+├── dev                                     # Golem files
+│   ├── 01_start.R                          # Golem file (use to set up golem framework)
+│   ├── 02_dev.R                            # Golem file (use to develop package)
+│   ├── 03_deploy.R                         # Golem file (use to deploy package)
+│   └── run_dev.R                           # Golem file (use to test development of package)
+├── example.Renviron                        # Template credential file required for data-raw scripts
+├── inst                                    # Installed files...
+│   ├── app                                 # ... for the app...
+│   │   └── www                             # ... made available at runtime
+│   │       ├── colours.css                 # Define colour palette of NHS identity
+│   │       ├── eligibility.md              # Markdown text for eligibility modal / popup
+│   │       ├── logo.jpg                    # NHS logo
+│   │       ├── mod_{n}_*.md                # Markdown text for module
+│   │       └── style.css                   # CSS to defining the styling of the dashboard
+│   └── golem-config.yml                    # Golem file
+├── nhs-low-income-scheme-scrollytell.Rproj # R Project file
+├── LICENSE                                 # Apache
+├── man                                     # Automatically generated documentation by roxygen2
+├── NAMESPACE                               # Automatically generated documentation by roxygen2
 ├── R                                       # R code for the dashboard
 │   ├── _disable_auotload.R                 # Golem file
 │   ├── app_config.R                        # Golem file
@@ -26,29 +51,5 @@ nhs-low-income-scheme-scrollytell
 │   ├── run_app.R                           # Golem file
 │   ├── utils_helpers.R                     # NHSBSA highcharter theme
 │   └── utils-pipe.R                        # %>% operator
-├── data-raw                                # Various scripts to produce `data` files
-├── data                                    # Data for the dashboard (accessible via nhslowincomeschemescrollytell::{name})
-├── dev                                     # Golem files
-│   ├── 01_start.R                          # Golem file (use to set up golem framework)
-│   ├── 02_dev.R                            # Golem file (use to develop package)
-│   ├── 03_deploy.R                         # Golem file (use to deploy package)
-│   └── run_dev.R                           # Golem file (use to test development of package)
-├── inst                                    # Installed files...
-│   ├── app                                 # ... for the app...
-│   │   └── www                             # ... made available at runtime
-│   │       ├── colours.css                 # Define colour palette of NHS identity
-│   │       ├── eligibility.md              # Markdown text for eligibility modal / popup
-│   │       ├── logo.jpg                    # NHS logo
-│   │       ├── mod_{n}_*.md                # Markdown text for module
-│   │       └── style.css                   # CSS to defining the styling of the dashboard
-│   └── golem-config.yml                    # Golem file
-├── .Rbuildignore                           # Golem file
-├── .gitignore                              # Currently ignoring all `data` files
-├── DESCRIPTION                             # Metadata of package
-├── LICENSE                                 # Apache
-├── NAMESPACE                               # Automatically generated documentation by roxygen2
 ├── README.md                               # Brief overview of the package
-├── app.R                                   # Golem file
-├── example.Renviron                        # Template credential file required for data-raw scripts
-├── nhs-low-income-scheme-scrollytell.Rproj # R Project file
 ```

@@ -142,7 +142,7 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
   output$plot_individuals_by_age_band <- highcharter::renderHighchart({
 
     # Filter out Co-applicants and Unknowns, calculate %s
-    plot_df <- nhslowincomeschemescrollytell::individuals_by_age_band_df %>%
+    plot_df <- lowIncomeSchemeScrollytellR::individuals_by_age_band_df %>%
       dplyr::filter(
         !(BAND_5YEARS %in% c("Co-applicant", "Unknown"))
       ) %>%
@@ -205,7 +205,7 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
   output$plot_individuals_by_client_group <- highcharter::renderHighchart({
 
     # Filter out Co-applicants and Unknowns then calculate %s
-    plot_df <- nhslowincomeschemescrollytell::individuals_by_client_group_df %>%
+    plot_df <- lowIncomeSchemeScrollytellR::individuals_by_client_group_df %>%
       dplyr::filter(
         !(CLIENTGROUP_DESC_FORMAT %in% c("Co-applicant", "Unknown"))
       ) %>%
@@ -245,11 +245,11 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
   output$plot_individuals_by_deprivation <- highcharter::renderHighchart({
 
     # Calculate %s
-    plot_df <- nhslowincomeschemescrollytell::individuals_by_imd_df %>%
+    plot_df <- lowIncomeSchemeScrollytellR::individuals_by_imd_df %>%
       dplyr::mutate(DEPRIVATION = "Index of Multiple Deprivation") %>%
       dplyr::rename(DECILE = INDEX_OF_MULT_DEPRIV_DECILE) %>%
       rbind(
-        nhslowincomeschemescrollytell::individuals_by_health_df %>%
+        lowIncomeSchemeScrollytellR::individuals_by_health_df %>%
           dplyr::mutate(DEPRIVATION = "Health Deprivation") %>%
           dplyr::rename(DECILE = HEALTH_DEPRIVATION_DECILE)
       ) %>%

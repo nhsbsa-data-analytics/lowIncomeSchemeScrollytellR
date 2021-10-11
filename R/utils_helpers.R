@@ -69,7 +69,7 @@ theme_nhsbsa <- function(col_type = "normal", stacking = "normal") {
       lineColor = "#768692",
       tickColor = "#768692",
       title = list(
-        enabled = FALSE,
+        enabled = TRUE,
         style = list(
           fontFamily = "Frutiger W01 B"
         )
@@ -81,7 +81,7 @@ theme_nhsbsa <- function(col_type = "normal", stacking = "normal") {
       gridLineWidth = 0,
       lineWidth = 1,
       title = list(
-        enabled = FALSE,
+        enabled = TRUE,
         style = list(
           fontFamily = "Frutiger W01 B"
         )
