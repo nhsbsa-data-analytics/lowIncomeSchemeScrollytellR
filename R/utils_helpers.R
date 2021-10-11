@@ -92,5 +92,3 @@ theme_nhsbsa <- function(col_type = "normal", stacking = "normal") {
     # )
   )
 }
-
-

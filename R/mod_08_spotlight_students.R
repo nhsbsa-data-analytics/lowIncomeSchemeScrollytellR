@@ -13,7 +13,7 @@ mod_08_spotlight_students_ui <- function(id) {
     h4("Spotlight on student applicants in England"),
     p("Of student applicants in England:"),
     tags$ul(
-      tags$li("The majority (98%) apply as single applicants."), 
+      tags$li("The majority (98%) apply as single applicants."),
       tags$li(
         "Over half are aged 20 to 24 years and 37% are aged 15 to 19 years"
       )
@@ -22,7 +22,7 @@ mod_08_spotlight_students_ui <- function(id) {
     h6("A stronger downward trend in student applications in England"),
     p(
       "The total number of", tags$b(" student applications decreased by 29% "),
-      "between 2015/16 and 2019/20, and have decreased further since the ", 
+      "between 2015/16 and 2019/20, and have decreased further since the ",
       "pandemic. This compares to 15% overall."
     ),
     fluidRow(
@@ -45,12 +45,14 @@ mod_08_spotlight_students_ui <- function(id) {
     ),
     p(
       "Estimated take-up is the number of NHS Low Income Scheme individuals ",
-      "covered by student applications who have received full or partial ", 
+      "covered by student applications who have received full or partial ",
       "benefit as a percentage of the eligible population."
     ),
     p(
-      tags$b("Estimated take-up was around 4% in the 2015/16 Academic Year ",
-      "reducing to 2% in 2019/20.")
+      tags$b(
+        "Estimated take-up was around 4% in the 2015/16 Academic Year ",
+        "reducing to 2% in 2019/20."
+      )
     ),
     fluidRow(
       column(
@@ -59,14 +61,15 @@ mod_08_spotlight_students_ui <- function(id) {
         br(),
         br(),
         p(
-          "Estimated student take-up, continues to be somewhat", 
-          tags$b(" lower in the South East and London." ), "This is despite ",
+          "Estimated student take-up, continues to be somewhat",
+          tags$b(" lower in the South East and London."), "This is despite ",
           "London having in the largest proportion of student applicants."
         ),
         br(),
         p("And student take-up is", tags$b("highest in the North West.")),
         br(),
-        p("The take-up rate has", 
+        p(
+          "The take-up rate has",
           tags$b("decreased most in the East of England.")
         )
       ),
@@ -76,8 +79,8 @@ mod_08_spotlight_students_ui <- function(id) {
         align = "center",
         style = "background-color: #FFFFFF;",
         highcharter::highchartOutput(
-        outputId = ns("plot_successful_student_individuals_by_region"),
-        height = "700px"
+          outputId = ns("plot_successful_student_individuals_by_region"),
+          height = "700px"
         )
       )
     ),
@@ -89,17 +92,17 @@ mod_08_spotlight_students_ui <- function(id) {
 #' @noRd
 mod_08_spotlight_students_server <- function(input, output, session) {
   ns <- session$ns
-  
+
   # Stacked column of student applications over time
   output$plot_student_applications <- highcharter::renderHighchart({
-    
+
     # Group data and aggregate
     plot_df <- lowIncomeSchemeScrollytellR::applications_df %>%
       dplyr::mutate(TYPE = ifelse(CLIENTGROUP_DESC == "Student", "Student", "Non-Student")) %>%
       dplyr::group_by(FINANCIAL_YEAR, TYPE) %>%
       dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
       dplyr::ungroup()
-    
+
     # Create plot
     plot_df %>%
       highcharter::hchart(
@@ -110,12 +113,12 @@ mod_08_spotlight_students_server <- function(input, output, session) {
       highcharter::hc_title(
         text = "Number of NHS Low Income Scheme Student applications in England (2015/16 to 2020/21)"
       ) %>%
-      highcharter::hc_legend(reversed = TRUE) %>% 
+      highcharter::hc_legend(reversed = TRUE) %>%
       highcharter::hc_yAxis(
         labels = list(
-          formatter = highcharter::JS("function(){ return Math.abs(this.value) / 1000 + 'k'; }") 
+          formatter = highcharter::JS("function(){ return Math.abs(this.value) / 1000 + 'k'; }")
         )
-      ) %>% 
+      ) %>%
       highcharter::hc_tooltip(
         shared = FALSE,
         formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Total Applications: </b>' + Math.round(this.point.y / 500) * 500 / 1000 + 'k';}")
@@ -123,22 +126,21 @@ mod_08_spotlight_students_server <- function(input, output, session) {
       highcharter::hc_credits(
         enabled = TRUE
       )
-    
   })
-  
-  
-  
-  
+
+
+
+
   output$plot_successful_student_individuals_by_region <- highcharter::renderHighchart({
-    
+
     # Calculate rate per region
     plot_df <- lowIncomeSchemeScrollytellR::student_population_df %>%
-      dplyr::filter(ACADEMIC_YEAR != "2014/15") %>% 
+      dplyr::filter(ACADEMIC_YEAR != "2014/15") %>%
       dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_student_individuals_by_region_df) %>%
       dplyr::mutate(
         value = TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS / TOTAL_STUDENT_POPULATION * 100
       )
-    
+
     # Format for highcharter animation
     plot_sequence_series <- plot_df %>%
       tidyr::expand(ACADEMIC_YEAR, PCD_REGION_NAME) %>%
@@ -147,9 +149,9 @@ mod_08_spotlight_students_server <- function(input, output, session) {
       dplyr::group_by(PCD_REGION_NAME) %>%
       dplyr::do(sequence = .$value) %>%
       highcharter::list_parse()
-    
+
     # Create plot
-    highcharter::highchart(type = "map") %>% 
+    highcharter::highchart(type = "map") %>%
       highcharter::hc_chart(marginBottom = 100) %>%
       highcharter::hc_add_series(
         data = plot_sequence_series,
@@ -159,22 +161,21 @@ mod_08_spotlight_students_server <- function(input, output, session) {
           headerFormat = "",
           pointFormat = "<b>Region:</b> {point.PCD_REGION_NAME}<br><b>Take-up:</b> {point.value:.1f}% (of the student population)<br>"
         )
-      ) %>% 
+      ) %>%
       highcharter::hc_motion(
         labels = unique(plot_df$ACADEMIC_YEAR),
         startIndex = 4
-      ) %>% 
+      ) %>%
       highcharter::hc_add_theme(hc_thm = theme_nhsbsa()) %>%
       highcharter::hc_title(
         text = "Estimated take-up of NHS Low Income Scheme Student individuals by England region (2015/16 to 2019/20)"
       ) %>%
-      highcharter::hc_colorAxis(min = 0, max = 6) 
-    
+      highcharter::hc_colorAxis(min = 0, max = 6)
   })
-  
-  
+
+
   output$plot_student_applications_per_month <- highcharter::renderHighchart({
-    
+
     # Aggregate overall for line plot
     plot_overall_df <- lowIncomeSchemeScrollytellR::applications_df %>%
       dplyr::filter(CLIENTGROUP_DESC == "Student") %>%
@@ -182,11 +183,11 @@ mod_08_spotlight_students_server <- function(input, output, session) {
       dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
       dplyr::ungroup() %>%
       dplyr::mutate(MONTH = lubridate::ym(APPLICATION_MONTH))
-    
+
     # Aggregate by benefit type (partial or full)
     plot_benefit_df <- lowIncomeSchemeScrollytellR::applications_df %>%
       dplyr::filter(
-        CLIENTGROUP_DESC == 'Student',
+        CLIENTGROUP_DESC == "Student",
         OUTCOME_LEVEL2 %in% c("Full benefit", "Partial benefit")
       ) %>%
       dplyr::group_by(APPLICATION_MONTH, OUTCOME_LEVEL2) %>%
@@ -195,7 +196,7 @@ mod_08_spotlight_students_server <- function(input, output, session) {
       dplyr::mutate(MONTH = lubridate::ym(APPLICATION_MONTH)) %>%
       dplyr::inner_join(plot_overall_df) %>%
       dplyr::mutate(p = SUCCESSFUL_APPLICATIONS / TOTAL_APPLICATIONS * 100)
-    
+
     # Create plot
     highcharter::highchart() %>%
       highcharter::hc_add_series(
@@ -242,9 +243,7 @@ mod_08_spotlight_students_server <- function(input, output, session) {
       highcharter::hc_credits(
         enabled = TRUE
       )
-    
   })
-  
 }
 
 ## To be copied in the UI
