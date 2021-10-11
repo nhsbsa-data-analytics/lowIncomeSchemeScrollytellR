@@ -19,7 +19,7 @@
 ## to change the name in the app_sys() function in app_config.R /!\
 ## 
 golem::fill_desc(
-  pkg_name = "nhslowincomeschemescrollytell", # The Name of the package containing the App 
+  pkg_name = "lowIncomeSchemeScrollytellR", # The Name of the package containing the App 
   pkg_title = "NHS Low Income Scheme Scrollytell", # The Title of the package containing the App 
   pkg_description = "NHS Low Income Scheme Scrollytell.", # The Description of the package containing the App 
   author_first_name = "Adam", # Your First Name

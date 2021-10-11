@@ -55,7 +55,6 @@ app_ui <- function(request) {
         )
       ),
 
-
       # Application over time
       scrollytell::scrolly_container(
         outputId = "scrolly_4",
@@ -70,6 +69,7 @@ app_ui <- function(request) {
           )
         )
       ),
+
       # What help does LIS provide
       scrollytell::scrolly_container(
         outputId = "scrolly_5",
@@ -85,7 +85,7 @@ app_ui <- function(request) {
         )
       ),
 
-      # Take up - map section
+      # Take up - map section (only for region level)
       scrollytell::scrolly_container(
         outputId = "scrolly_6",
         scrollytell::scrolly_graph(),
@@ -100,19 +100,20 @@ app_ui <- function(request) {
         )
       ),
 
-      # Take up - scatterplot section & keep scatterplot as sticky graph
-      scrollytell::scrolly_container(
-        br(),
-        br(),
-        outputId = "scrolly_7",
-        # mod_input_region_ui("input_region_1", max = "North East"),
+      # Take-up LA - scatterplot text on the left
+      # scatterplot chart and zoomed LA map on the right
 
+      scrollytell::scrolly_container(
+        outputId = "scrolly_7",
         scrollytell::scrolly_graph(
-          shiny::HTML("<center>"),
           mod_input_region_ui("input_region_1", max = "North East"),
-          id = "07_take_up_scatter_graph",
-          mod_07_take_up_scatter_graph_ui("07_take_up_scatter_graph_1"),
-          shiny::HTML("</center>")
+          fluidRow(
+            column(
+              width = 12,
+              id = "07_take_up_scatter_graph",
+              mod_07_take_up_scatter_graph_ui("07_take_up_scatter_graph_1")
+            )
+          )
         ),
         scrollytell::scrolly_sections(
           scrollytell::scrolly_section(
@@ -124,9 +125,13 @@ app_ui <- function(request) {
               )
             )
           ),
+          br(),
+          br(),
+          br(),
           scrollytell::scrolly_section(
+            # here, i will use pre-defined text to show alongside with scatterpot change and map change.
             id = "07_take_up_scatter_text",
-            mod_07_take_up_scatter_text_ui("07_take_up_scatter_text_1")
+            mod_07_take_up_scatter_text_ui("07_take_up_scatter_text_1") # based on the selection of region, it will change dynamically
           )
         )
       ),
