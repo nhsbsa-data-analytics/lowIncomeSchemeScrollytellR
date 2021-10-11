@@ -94,8 +94,8 @@ mod_07_take_up_scatter_text_server <- function(input, output, session, region_na
         "<b>", highest_take_up_la()[2], "</b>.",
         "<b>", lowest_take_up_la()[1], " </b> has the lowest take-up in the", region_sel(),
         ", with an IMD rank of", "<b>", lowest_take_up_la()[2], " </b> out of the 314 local authorities in England.",
-        "Take-up is somewhat", "<b> lower, relative to deprivation </b>", "in five local authorities in the", "<b> North East </b>",
-        "<b> (Knowsley, Hyndburn, Halton, St Helens and Barrow in Furness and North East Lincolnshire Council."
+        "Take-up is somewhat", "<b> lower, relative to deprivation </b>", "in four local authorities in the", "<b> North West </b>",
+        "<b> (Knowsley, Hyndburn, Halton, St Helens and Barrow in Furness.)"
       ))
     } else if (region_sel() == "North East") {
       shiny::HTML(paste(

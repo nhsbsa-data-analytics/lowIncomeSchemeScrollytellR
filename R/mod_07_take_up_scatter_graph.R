@@ -250,7 +250,9 @@ mod_07_take_up_scatter_graph_server <- function(input, output, session, region_n
               labels = list(format = "{value:.0f}%")
             ),
             series = list(list(color = "#425563"))
-          )
+          ),
+          height = 200,
+          width = 250
         )
       )
   })
