@@ -17,28 +17,28 @@ deprivation_count_df <- dplyr::tbl(
 )
 
 # Option 1: IMD decile
-imd_decile_df <- deprivation_count_df %>% 
-  dplyr::group_by(INDEX_OF_MULT_DEPRIV_DECILE, PCD_LAD_NAME, PCD_REGION_NAME) %>% 
-  dplyr::summarise(IMD_DECILE_COUNT_LAD = sum(IMD_DECILE_COUNT)) %>% 
-  dplyr::ungroup() %>% 
-  dplyr::group_by(PCD_LAD_NAME) %>% 
-  dplyr::mutate(IMD_DECILE_P = IMD_DECILE_COUNT_LAD / sum(IMD_DECILE_COUNT_LAD) * 100) %>% 
-  dplyr::arrange(PCD_LAD_NAME,INDEX_OF_MULT_DEPRIV_DECILE) %>% 
-  dplyr::ungroup() %>% 
+imd_decile_df <- deprivation_count_df %>%
+  dplyr::group_by(INDEX_OF_MULT_DEPRIV_DECILE, PCD_LAD_NAME, PCD_REGION_NAME) %>%
+  dplyr::summarise(IMD_DECILE_COUNT_LAD = sum(IMD_DECILE_COUNT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::group_by(PCD_LAD_NAME) %>%
+  dplyr::mutate(IMD_DECILE_P = IMD_DECILE_COUNT_LAD / sum(IMD_DECILE_COUNT_LAD) * 100) %>%
+  dplyr::arrange(PCD_LAD_NAME, INDEX_OF_MULT_DEPRIV_DECILE) %>%
+  dplyr::ungroup() %>%
   dplyr::collect()
 
 
 
 # Option 2: Income decile (same as ONS income explorer scrollytell)
 
-income_decile_df <- deprivation_count_df %>% 
-  dplyr::group_by(INCOME_DECILE, PCD_LAD_NAME, PCD_REGION_NAME) %>% 
-  dplyr::summarise(INCOME_DECILE_COUNT_LAD = sum(INCOME_DECILE_COUNT)) %>% 
-  dplyr::ungroup() %>% 
-  dplyr::group_by(PCD_LAD_NAME) %>% 
-  dplyr::mutate(INCOME_DECILE_P = INCOME_DECILE_COUNT_LAD / sum(INCOME_DECILE_COUNT_LAD) * 100) %>% 
-  dplyr::arrange(PCD_LAD_NAME,INCOME_DECILE) %>% 
-  dplyr::ungroup() %>% 
+income_decile_df <- deprivation_count_df %>%
+  dplyr::group_by(INCOME_DECILE, PCD_LAD_NAME, PCD_REGION_NAME) %>%
+  dplyr::summarise(INCOME_DECILE_COUNT_LAD = sum(INCOME_DECILE_COUNT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::group_by(PCD_LAD_NAME) %>%
+  dplyr::mutate(INCOME_DECILE_P = INCOME_DECILE_COUNT_LAD / sum(INCOME_DECILE_COUNT_LAD) * 100) %>%
+  dplyr::arrange(PCD_LAD_NAME, INCOME_DECILE) %>%
+  dplyr::ungroup() %>%
   dplyr::collect()
 
 
