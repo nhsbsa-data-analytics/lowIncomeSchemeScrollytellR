@@ -14,18 +14,6 @@ app_ui <- function(request) {
     br(),
     fluidPage(
       mod_01_intro_ui("01_intro_1"),
-      # scrollytell::scrolly_container(
-      #   outputId = "scrolly_1",
-      #   scrollytell::scrolly_graph(),
-      #   scrollytell::scrolly_sections(
-      #     scrollytell::scrolly_section(
-      #       id = "01_intro",
-      #       mod_01_intro_ui("01_intro_1"),
-      #
-      #     )
-      #   )
-      # ),
-
       scrollytell::scrolly_container(
         outputId = "scrolly_2",
         scrollytell::scrolly_graph(),
@@ -85,7 +73,7 @@ app_ui <- function(request) {
         )
       ),
 
-      # Take up - map section (only for region level)
+      # Regional level take-up map
       scrollytell::scrolly_container(
         outputId = "scrolly_6",
         scrollytell::scrolly_graph(),
@@ -100,8 +88,8 @@ app_ui <- function(request) {
         )
       ),
 
-      # Take-up LA - scatterplot text on the left
-      # scatterplot chart and zoomed LA map on the right
+      # Take-up LA - scatterplot text on the top
+      # Scatterplot chart and zoomed LA map on the bottom
 
       scrollytell::scrolly_container(
         outputId = "scrolly_7",
@@ -125,13 +113,10 @@ app_ui <- function(request) {
               )
             )
           ),
-          br(),
-          br(),
-          br(),
           scrollytell::scrolly_section(
-            # here, i will use pre-defined text to show alongside with scatterpot change and map change.
+            # Text changes with more flexible contents
             id = "07_take_up_scatter_text",
-            mod_07_take_up_scatter_text_ui("07_take_up_scatter_text_1") # based on the selection of region, it will change dynamically
+            mod_07_take_up_scatter_text_ui("07_take_up_scatter_text_1")
           )
         )
       ),
