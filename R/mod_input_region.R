@@ -11,7 +11,7 @@ mod_input_region_ui <- function(id,
                                 label = "Region:",
                                 min = "East Midlands",
                                 max = "Yorkshire and The Humber",
-                                selected = "North East",
+                                selected = "North West",
                                 width = "40%") {
   ns <- NS(id)
 
