@@ -1,14 +1,9 @@
 library(magrittr)
+library(nhsbsaR)
 
 
 # Set up connection to the DB
-con <- DBI::dbConnect(
-  odbc::odbc(),
-  Driver = "Oracle in OraClient19Home1",
-  DBQ = Sys.getenv("DB_CONNECTION"),
-  UID = Sys.getenv("DB_USERNAME"),
-  PWD = Sys.getenv("DB_PASSWORD")
-)
+con <- nhsbsaR::con_nhsbsa(database = "DALP")
 
 # Create a lazy table from the ONS population table
 adult_population_df <- dplyr::tbl(
