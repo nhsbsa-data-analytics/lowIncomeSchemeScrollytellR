@@ -41,7 +41,6 @@ Imports:
     attempt,
     markdown
 Remotes:
-    github::houseofcommonslibrary/statxplorer
     github::statistiekcbs/scrollytell
     github::nhsbsa-data-analytics/nhsbsaR
 Encoding: UTF-8
