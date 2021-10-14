@@ -108,7 +108,7 @@ mod_07_take_up_scatter_graph_server <- function(input, output, session, region_n
       ) %>%
       highcharter::hc_xAxis(
         min = 1,
-        max = 320, # Pad to ensure we can see the 314 label
+        max = 322, # Pad to ensure we can see the 314 label
         categories = c(NA, "1<br>Most<br>deprived", rep(NA, 312), "314<br>Least<br>deprived"),
         labels = list(step = 313),
         title = list(text = "")
@@ -183,13 +183,6 @@ mod_07_take_up_scatter_graph_server <- function(input, output, session, region_n
       dplyr::select(FINANCIAL_YEAR, PCD_LAD_NAME, value) %>%
       dplyr::inner_join(la_imd_count)
 
-    # plot_sequence_series <- plot_df %>%
-    #   tidyr::complete(FINANCIAL_YEAR, PCD_LAD_NAME,
-    #                   fill = list(value = 0)) %>%
-    #   dplyr::group_by(PCD_LAD_NAME) %>%
-    #   dplyr::do(sequence = .$value) %>%
-    #   highcharter::list_parse()
-
     # filter la_map as well
 
     la_map <- lowIncomeSchemeScrollytellR::la_map %>%
@@ -212,10 +205,6 @@ mod_07_take_up_scatter_graph_server <- function(input, output, session, region_n
           pointFormat = "<b>Region:</b> {point.PCD_LAD_NAME}<br><b>Take-up:</b> {point.value:.1f} (per thousand of the general population)"
         )
       ) %>%
-      # highcharter::hc_motion(
-      #   labels = unique(plot_df$FINANCIAL_YEAR),
-      #   startIndex = 4
-      # ) %>%
       highcharter::hc_add_theme(hc_thm = theme_nhsbsa()) %>%
       # highcharter::hc_title(
       #   text = "Estimated take-up of NHS Low Income Scheme (2015/16 to 2019/20)"
@@ -237,22 +226,24 @@ mod_07_take_up_scatter_graph_server <- function(input, output, session, region_n
             xAxis = list(
               title = list(text = "Deprivation"), # doesn't show and i dont know why!
               min = 1,
-              max = 10,
-              type = "category",
-              labels = list(step = 1)
+              max = 11, # pad to ensure we can see the 10 label
+              #type = "category",
+              categories = c(NA, "1<br>Most<br>deprived", rep(NA, 8), "10<br>Least<br>deprived"),
+              # labels = list(step = 1)
+              labels = list(step = 9)
             ),
             yAxis = list(
               title = list(
-                text = "% in deprivation",
-                align = "high"
+                text = "% of LSOA in deprivation",
+                align = "middle"
               ),
               type = "category",
               labels = list(format = "{value:.0f}%")
             ),
             series = list(list(color = "#425563"))
           ),
-          height = 200,
-          width = 250
+          height = 240,
+          width = 280
         )
       )
   })
@@ -263,3 +254,4 @@ mod_07_take_up_scatter_graph_server <- function(input, output, session, region_n
 
 ## To be copied in the server
 # callModule(mod_07_take_up_scatter_graph_server, "07_take_up_scatter_graph_1")
+

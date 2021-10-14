@@ -13,8 +13,15 @@ mod_06_take_up_map_ui <- function(id) {
     h4("Estimated take-up is low and decreasing over time"),
     p(
       "Take-up is the number of NHS Low Income Scheme individuals covered by ",
-      "the application who have received full or partial benefit as a ",
+      "the application who have received full or partial benefit ",
       "per thousand of the general population aged 16 or over years."
+    ),
+    br(),
+    p(
+      tags$b(
+        "Estimated take-up per thousand of the general population was 8 in 2015/16,",
+        "decreasing to 6 in 2019/20."
+      )
     ),
     fluidRow(
       column(
@@ -22,16 +29,22 @@ mod_06_take_up_map_ui <- function(id) {
         br(),
         br(),
         p(
-          "In the map we can see that estimated take-up relative to the ",
-          "general population, continues to be ",
+          "By region, we can see that estimated take-up, relative to the ",
+          "population, continues to be ",
           tags$b("highest in the North East of England"),
           " and the North in general. Although the North East rate has ",
           "declined from 13 in 2015/16 to 10 in 2019/20."
         ),
         br(),
         p(
-          "Take-up relative to the general population, is ",
+          "It is ",
           tags$b("lowest in the South East region.")
+        ),
+        br(),
+        p(
+          "It is helpful to consider estimated take-up relative to deprivation.",
+          "The chart and map show estimated take-up by local authority area relative ",
+          "to the population and overall deprivation profile of an area."
         )
       ),
       column(

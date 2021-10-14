@@ -106,12 +106,8 @@ app_ui <- function(request) {
         scrollytell::scrolly_sections(
           scrollytell::scrolly_section(
             id = "dummy",
-            p(
-              tags$b(
-                "Take-up per thousand of the general population was 8 in 2015/16,",
-                "decreasing to 6 in 2019/20."
-              )
-            )
+            br(),
+            br()
           ),
           scrollytell::scrolly_section(
             # Text changes with more flexible contents
