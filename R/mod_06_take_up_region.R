@@ -1,4 +1,4 @@
-#' 06_take_up_map UI Function
+#' 06_take_up_region UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_06_take_up_map_ui <- function(id) {
+mod_06_take_up_region_ui <- function(id) {
   ns <- NS(id)
   tagList(
     h4("Estimated take-up is low and decreasing over time"),
@@ -39,17 +39,11 @@ mod_06_take_up_map_ui <- function(id) {
         p(
           "It is ",
           tags$b("lowest in the South East region.")
-        ),
-        br(),
-        p(
-          "It is helpful to consider estimated take-up relative to deprivation.",
-          "The chart and map show estimated take-up by local authority area relative ",
-          "to the population and overall deprivation profile of an area."
         )
       ),
       column(
-        offset = 1,
-        width = 6,
+        # offset = 1,
+        width = 7,
         align = "center",
         style = "background-color: #FFFFFF;",
         highcharter::highchartOutput(
@@ -64,13 +58,13 @@ mod_06_take_up_map_ui <- function(id) {
 #' 06_take_up Server Function
 #'
 #' @noRd
-mod_06_take_up_map_server <- function(input, output, session) {
+mod_06_take_up_region_server <- function(input, output, session) {
   ns <- session$ns
 
-  # Pull the slider value
-  year <- reactive({
-    input$input_year
-  })
+  # # Pull the slider value
+  # year <- reactive({
+  #   input$input_year
+  # })
 
   output$plot_successful_individuals_by_region <- highcharter::renderHighchart({
 
@@ -123,7 +117,7 @@ mod_06_take_up_map_server <- function(input, output, session) {
 }
 
 ## To be copied in the UI
-# mod_06_take_up_map_ui("06_take_up_map_1")
+# mod_06_take_up_region_ui("06_take_up_region_1")
 
 ## To be copied in the server
-# callModule(mod_06_take_up_map_server, "06_take_up_map_1")
+# callModule(mod_06_take_up_region_server, "06_take_up_region_1")
