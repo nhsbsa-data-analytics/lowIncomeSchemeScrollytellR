@@ -74,52 +74,26 @@ app_ui <- function(request) {
       ),
 
       # Regional level take-up map
+      # changed to one scrolly container to add all maps together.
       scrollytell::scrolly_container(
         outputId = "scrolly_6",
         scrollytell::scrolly_graph(),
         scrollytell::scrolly_sections(
           scrollytell::scrolly_section(
-            id = "dummy"
+            # section with map
+            id = "06_take_up_region",
+            mod_06_take_up_region_ui("06_take_up_region_1")
           ),
           scrollytell::scrolly_section(
-            id = "06_take_up_map",
-            mod_06_take_up_map_ui("06_take_up_map_1")
-          )
-        )
-      ),
-
-      # Take-up LA - scatterplot text on the top
-      # Scatterplot chart and zoomed LA map on the bottom
-
-      scrollytell::scrolly_container(
-        outputId = "scrolly_7",
-        scrollytell::scrolly_graph(
-          mod_input_region_ui("input_region_1", max = "North East"),
-          fluidRow(
-            column(
-              width = 12,
-              id = "07_take_up_scatter_graph",
-              mod_07_take_up_scatter_graph_ui("07_take_up_scatter_graph_1")
-            )
-          )
-        ),
-        scrollytell::scrolly_sections(
-          scrollytell::scrolly_section(
-            id = "dummy",
-            br(),
-            br()
-          ),
-          scrollytell::scrolly_section(
-            # Text changes with more flexible contents
-            id = "07_take_up_scatter_text",
-            mod_07_take_up_scatter_text_ui("07_take_up_scatter_text_1")
+            id = "07_take_up_la",
+            mod_07_take_up_la_ui("07_take_up_la_1")
           )
         )
       ),
 
       # student spotlight
       scrollytell::scrolly_container(
-        outputId = "scrolly_8",
+        outputId = "scrolly_7",
         scrollytell::scrolly_graph(),
         scrollytell::scrolly_sections(
           scrollytell::scrolly_section(
@@ -134,7 +108,7 @@ app_ui <- function(request) {
 
       # final thoughts
       scrollytell::scrolly_container(
-        outputId = "scrolly_9",
+        outputId = "scrolly_8",
         scrollytell::scrolly_graph(),
         scrollytell::scrolly_sections(
           scrollytell::scrolly_section(

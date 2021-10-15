@@ -1,4 +1,4 @@
-#' 07_take_up_scatter_graph UI Function
+#' 07_take_up_la UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,33 +7,55 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_07_take_up_scatter_graph_ui <- function(id) {
+mod_07_take_up_la_ui <- function(id) {
   ns <- NS(id)
   tagList(
     fluidRow(
       column(
-        width = 12,
-        # align = "center",
-        style = "background-color: #FFFFFF;",
-        highcharter::highchartOutput(
-          outputId = ns("plot_successful_individuals_by_la_imd"),
-          height = "500px"
+        width = 5,
+        p(
+          "It is helpful to consider estimated take-up relative to deprivation.",
+          "The chart and map show estimated take-up by local authority area relative ",
+          "to the population and overall deprivation profile of an area."
+        ),
+        shiny::htmlOutput(
+          ns("text")
         )
       ),
       column(
-        width = 12,
+        width = 7,
+        # align = "center",
         style = "background-color: #FFFFFF;",
-        # change to highcharter LA map but zoomed in
-        highcharter::highchartOutput(
-          outputId = ns("plot_selected_region_la"),
-          height = "470px"
-        ),
         shiny::selectInput(
           inputId = ns("input_year"),
           label = "Financial Year:",
           choices = c("2015/16", "2016/17", "2017/18", "2018/19", "2019/20"),
-          selected = "2019/20",
-          width = "60%"
+          selected = "2019/20"
+        ),
+        shiny::selectInput(
+          inputId = ns("input_region"),
+          label = "Region:",
+          choices = c(
+            "East Midlands",
+            "East of England",
+            "London",
+            "North East",
+            "North West",
+            "South East",
+            "South West",
+            "West Midlands",
+            "Yorkshire and The Humber"
+          ),
+          selected = "North West",
+          width = "30%"
+        ),
+        highcharter::highchartOutput(
+          outputId = ns("plot_selected_region_la"),
+          height = "450px"
+        ),
+        highcharter::highchartOutput(
+          outputId = ns("plot_successful_individuals_by_la_imd"),
+          height = "450px"
         )
       )
     )
@@ -43,22 +65,23 @@ mod_07_take_up_scatter_graph_ui <- function(id) {
 #' 06_take_up Server Function
 #'
 #' @noRd
-mod_07_take_up_scatter_graph_server <- function(input, output, session, region_name) {
+mod_07_take_up_la_server <- function(input, output, session) {
   ns <- session$ns
 
 
   # Pull the drop down value
   region_sel <- reactive({
-    region_name$input
+    input$input_region
   })
 
-  observe({
-    print(region_sel())
-  })
+  # observe({
+  #   print(region_sel())
+  # })
 
   year <- reactive({
     input$input_year
   })
+
 
   output$plot_successful_individuals_by_la_imd <- highcharter::renderHighchart({
 
@@ -247,10 +270,110 @@ mod_07_take_up_scatter_graph_server <- function(input, output, session, region_n
         )
       )
   })
+
+
+  # Just keep the region name and the rest of element is done prior to the text rendering.
+
+
+  # Pull number of local authorities in the selected region.
+  # get the highest take-up local authority, mention the deprivation rank
+  # get the lowest take-up local authority, mention the deprivation rank
+
+
+  # Calculate %s
+  plot_df <- reactive({
+    lowIncomeSchemeScrollytellR::adult_population_df %>%
+      dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
+      dplyr::mutate(
+        p = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000
+      ) %>%
+      dplyr::filter(PCD_REGION_NAME == region_sel())
+  })
+
+  la_count <- reactive({
+    plot_df() %>%
+      dplyr::distinct(PCD_LAD_NAME) %>%
+      dplyr::count()
+  })
+
+  # which is the highest take-up local authority in the selected region.
+  highest_take_up_la <- reactive({
+    plot_df() %>%
+      dplyr::filter(p == max(p)) %>%
+      dplyr::select(PCD_LAD_NAME, PCD_LAD_IMD_RANK, p)
+  })
+
+  # observe({
+  #   print(paste(highest_take_up_la()[1], "&", highest_take_up_la()[2]))
+  # })
+
+
+  # which is the lowest take-up local authority in the selected region.
+  lowest_take_up_la <- reactive({
+    plot_df() %>%
+      dplyr::filter(p == min(p)) %>%
+      dplyr::select(PCD_LAD_NAME, PCD_LAD_IMD_RANK, p)
+  })
+
+  # observe({
+  #   print(paste(lowest_take_up_la()[1], "&", lowest_take_up_la()[2]))
+  # })
+
+
+
+
+  # Take-up of selected region
+  # this part will change depends on the region selection from the reactive value.
+  output$text <- shiny::renderUI({
+    if (region_sel() == "North West") {
+      shiny::HTML(paste(
+        "<br>",
+        "<br>",
+        "<p>", "There are", "<b>", la_count(), " </b> local authorities in the",
+        "<b>", region_sel(), "</b>.",
+        "<b>", highest_take_up_la()[1], "</b> has the highest take-up per ",
+        "thousand of the general population.",
+        "Of the 314 local authorities in England,", "the IMD rank in", highest_take_up_la()[1], "is",
+        "<b>", highest_take_up_la()[2], "</b>.",
+        "<b>", lowest_take_up_la()[1], " </b> has the lowest take-up in the", region_sel(),
+        ", with an IMD rank of", "<b>", lowest_take_up_la()[2], " </b> out of the 314 local authorities in England.",
+        "Take-up is somewhat", "<b> lower, relative to deprivation </b>", "in five local authorities in the", "<b> North West </b>",
+        "<b> (Knowsley, Hyndburn, Halton, St Helens and Barrow in Furness.)"
+      ))
+    } else if (region_sel() == "North East") {
+      shiny::HTML(paste(
+        "<br>",
+        "<br>",
+        "<p>", "There are", "<b>", la_count(), " </b> local authorities in the",
+        "<b>", region_sel(), "</b>.",
+        "Of the", "<b>", la_count(), " </b> local authorities,",
+        "<b>", highest_take_up_la()[1], "</b> has the highest take-up per ",
+        "thousand of the general population.",
+        "Of the 314 local authorities in England,", "the IMD rank in", highest_take_up_la()[1], "is",
+        "<b>", highest_take_up_la()[2], "</b>.",
+        "<b>", lowest_take_up_la()[1], " </b> has the lowest take-up in the", region_sel(),
+        ", with an IMD rank of", "<b>", lowest_take_up_la()[2], " </b> out of the 314 local authorities in England."
+      ))
+    } else {
+      shiny::HTML(paste(
+        "<br>",
+        "<br>",
+        "<p>", "There are", "<b>", la_count(), " </b> local authorities in the",
+        "<b>", region_sel(), "</b>.",
+        "Of the", "<b>", la_count(), " </b> local authorities,",
+        "<b>", highest_take_up_la()[1], "</b> has the highest take-up per ",
+        "thousand of the general population.",
+        "Of the 314 local authorities in England,", "the IMD rank in", highest_take_up_la()[1], "is",
+        "<b>", highest_take_up_la()[2], "</b>.",
+        "<b>", lowest_take_up_la()[1], " </b> has the lowest take-up in the", region_sel(),
+        ", with an IMD rank of", "<b>", lowest_take_up_la()[2], " </b> out of the 314 local authorities in England."
+      ))
+    }
+  })
 }
 
 ## To be copied in the UI
-# mod_07_take_up_scatter_graph_ui("07_take_up_scatter_graph_1")
+# mod_07_take_up_la_ui("07_take_up_la_1")
 
 ## To be copied in the server
-# callModule(mod_07_take_up_scatter_graph_server, "07_take_up_scatter_graph_1")
+# callModule(mod_07_take_up_la_server, "07_take_up_la_1")

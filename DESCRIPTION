@@ -13,11 +13,8 @@ Authors@R:
       person(given = "Kayoung",
              family = "Goffe",
              role = "ctb",
-             email = "kayoung.goffe1@nhs.net"),
-      person(given = "Adnan",
-             family = "Shroufi",
-             role = "ctb",
-             email = "adnan.shroufi@nhs.net"))
+             email = "kayoung.goffe1@nhs.net")
+             )
 Description: NHS Low Income Scheme Scrollytell.
 License: Apache License (>= 2)
 Imports: 
@@ -32,7 +29,6 @@ Imports:
     readr,
     shiny (>= 1.6.0),
     scrollytell,
-    statxplorer,
     shinyWidgets,
     geojsonsf,
     tidyr,
