@@ -19,7 +19,8 @@ adult_population_df <- adult_population_df %>%
       POPULATION_YEAR == 2016 ~ "2016/17",
       POPULATION_YEAR == 2017 ~ "2017/18",
       POPULATION_YEAR == 2018 ~ "2018/19",
-      POPULATION_YEAR == 2019 ~ "2019/20"
+      POPULATION_YEAR == 2019 ~ "2019/20",
+      POPULATION_YEAR == 2020 ~ "2020/21"
     )
   ) %>%
   dplyr::select(

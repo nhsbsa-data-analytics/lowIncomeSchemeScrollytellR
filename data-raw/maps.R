@@ -11,6 +11,7 @@ region_map <- sf::read_sf("https://opendata.arcgis.com/api/v3/datasets/bafeb380d
 
 # Pull the local authority map (don't convert to geojson as we need it as a
 # dataframe)
+# 2021 boundary is used.
 la_map <- sf::read_sf("https://opendata.arcgis.com/api/v3/datasets/21f7fb2d524b44c8ab9dd0f971c96bba_0/downloads/data?format=geojson&spatialRefId=4326") %>%
   janitor::clean_names() %>%
   dplyr::filter(grepl("^E", lad21cd)) %>%
