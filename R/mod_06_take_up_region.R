@@ -12,15 +12,15 @@ mod_06_take_up_region_ui <- function(id) {
   tagList(
     h4("Estimated take-up is low and decreasing over time"),
     p(
-      "Take-up is the number of NHS Low Income Scheme individuals covered by ",
+      "Estimated take-up is the number of NHS Low Income Scheme individuals covered by ",
       "the application who have received full or partial benefit ",
-      "per thousand of the general population aged 16 or over years."
+      "per thousand of the general population aged 16 or over."
     ),
     br(),
     p(
       tags$b(
         "Estimated take-up per thousand of the general population was 8 in 2015/16,",
-        "decreasing to 6 in 2019/20."
+        "decreasing to 4 in 2020/21."
       )
     ),
     fluidRow(
@@ -33,7 +33,7 @@ mod_06_take_up_region_ui <- function(id) {
           "population, continues to be ",
           tags$b("highest in the North East of England"),
           " and the North in general. Although the North East rate has ",
-          "declined from 13 in 2015/16 to 10 in 2019/20."
+          "declined from 13 in 2015/16 to 6 in 2020/21."
         ),
         br(),
         p(
@@ -110,7 +110,7 @@ mod_06_take_up_region_server <- function(input, output, session) {
       ) %>%
       highcharter::hc_add_theme(hc_thm = theme_nhsbsa()) %>%
       highcharter::hc_title(
-        text = "Estimated take-up of NHS Low Income Scheme (2015/16 to 2019/20)"
+        text = "Estimated take-up of NHS Low Income Scheme (2015/16 to 2020/21)"
       ) %>%
       highcharter::hc_colorAxis(min = 0, max = 20)
   })

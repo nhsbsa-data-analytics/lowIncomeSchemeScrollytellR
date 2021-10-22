@@ -15,70 +15,33 @@ app_ui <- function(request) {
     fluidPage(
       mod_01_intro_ui("01_intro_1"),
       scrollytell::scrolly_container(
-        outputId = "scrolly_2",
+        outputId = "scrolly",
         scrollytell::scrolly_graph(),
         scrollytell::scrolly_sections(
           scrollytell::scrolly_section(
             id = "dummy"
           ),
+          br(),
           scrollytell::scrolly_section(
             id = "02_what_is_lis",
             mod_02_what_is_lis_ui("02_what_is_lis_1")
-          )
-        )
-      ),
-
-      # who applies to LIS
-      scrollytell::scrolly_container(
-        outputId = "scrolly_3",
-        scrollytell::scrolly_graph(),
-        scrollytell::scrolly_sections(
-          scrollytell::scrolly_section(
-            id = "dummy"
           ),
+          br(),
           scrollytell::scrolly_section(
             id = "03_who_applies_to_lis",
             mod_03_who_applies_to_lis_ui("03_who_applies_to_lis_1")
-          )
-        )
-      ),
-
-      # Application over time
-      scrollytell::scrolly_container(
-        outputId = "scrolly_4",
-        scrollytell::scrolly_graph(),
-        scrollytell::scrolly_sections(
-          scrollytell::scrolly_section(
-            id = "dummy"
           ),
+          br(),
           scrollytell::scrolly_section(
             id = "04_applications_over_time",
             mod_04_applications_over_time_ui("04_applications_over_time_1")
-          )
-        )
-      ),
-
-      # What help does LIS provide
-      scrollytell::scrolly_container(
-        outputId = "scrolly_5",
-        scrollytell::scrolly_graph(),
-        scrollytell::scrolly_sections(
-          scrollytell::scrolly_section(
-            id = "dummy"
           ),
+          br(),
           scrollytell::scrolly_section(
             id = "05_what_help_does_lis_provide",
             mod_05_what_help_does_lis_provide_ui("05_what_help_does_lis_provide_1")
-          )
-        )
-      ),
-
-      # Regional level take-up map
-      # changed to one scrolly container to add all maps together.
-      scrollytell::scrolly_container(
-        outputId = "scrolly_6",
-        scrollytell::scrolly_graph(),
-        scrollytell::scrolly_sections(
+          ),
+          br(),
           scrollytell::scrolly_section(
             # section with map
             id = "06_take_up_region",
@@ -87,32 +50,10 @@ app_ui <- function(request) {
           scrollytell::scrolly_section(
             id = "07_take_up_la",
             mod_07_take_up_la_ui("07_take_up_la_1")
-          )
-        )
-      ),
-
-      # student spotlight
-      scrollytell::scrolly_container(
-        outputId = "scrolly_7",
-        scrollytell::scrolly_graph(),
-        scrollytell::scrolly_sections(
-          scrollytell::scrolly_section(
-            id = "dummy"
           ),
           scrollytell::scrolly_section(
             id = "08_spotlight_students",
             mod_08_spotlight_students_ui("08_spotlight_students_1")
-          )
-        )
-      ),
-
-      # final thoughts
-      scrollytell::scrolly_container(
-        outputId = "scrolly_8",
-        scrollytell::scrolly_graph(),
-        scrollytell::scrolly_sections(
-          scrollytell::scrolly_section(
-            id = "dummy"
           ),
           scrollytell::scrolly_section(
             id = "09_final_thoughts",
