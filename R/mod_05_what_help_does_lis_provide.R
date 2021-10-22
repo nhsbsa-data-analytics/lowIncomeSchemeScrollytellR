@@ -85,8 +85,12 @@ mod_05_what_help_does_lis_provide_server <- function(input, output, session) {
       highcharter::hc_yAxis(
         max = 100,
         labels = list(
-          formatter = highcharter::JS("function(){ return this.value + '%' ;}")
-        )
+          formatter = highcharter::JS("function(){ return this.value ;}")
+        ),
+        title = list(text = "Percentage of applications")
+      ) %>%
+      highcharter::hc_xAxis(
+        title = list(text = "Financial year")
       ) %>%
       highcharter::hc_tooltip(
         shared = FALSE,

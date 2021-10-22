@@ -26,15 +26,15 @@ mod_04_applications_over_time_ui <- function(id) {
       "The rate of decline is highest amongst:"
     ),
     tags$ul(
-      tags$li("Those categorised as students at around 29%"),
+      tags$li("Those categorised as students at around 29%."),
       tags$li(
         "15 to 24 year olds (27%), where student applications are most ",
-        "prevalent"
+        "prevalent."
       ),
       tags$li(
-        "45 to 54 year olds (24%), where earner applications are most common"
+        "45 to 54 year olds (24%), where earner applications are most common."
       ),
-      tags$li("In areas of lower deprivation")
+      tags$li("In areas of lower deprivation.")
     )
   )
 }
@@ -67,8 +67,12 @@ mod_04_applications_over_time_server <- function(input, output, session) {
       highcharter::hc_yAxis(
         min = 0,
         labels = list(
-          formatter = highcharter::JS("function(){ return Math.abs(this.value) / 1000 + 'k'; }")
-        )
+          formatter = highcharter::JS("function(){ return Math.abs(this.value) / 1000; }")
+        ),
+        title = list(text = "Total number of applications")
+      ) %>%
+      highcharter::hc_xAxis(
+        title = list(text = "Financial year")
       ) %>%
       highcharter::hc_tooltip(
         shared = FALSE,
