@@ -69,7 +69,7 @@ mod_04_applications_over_time_server <- function(input, output, session) {
         labels = list(
           formatter = highcharter::JS("function(){ return Math.abs(this.value) / 1000; }")
         ),
-        title = list(text = "Total number of applications")
+        title = list(text = "Total number of applications (thousands)")
       ) %>%
       highcharter::hc_xAxis(
         title = list(text = "Financial year")
