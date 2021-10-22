@@ -11,55 +11,56 @@ mod_03_who_applies_to_lis_ui <- function(id) {
   ns <- NS(id)
   tagList(
     h4("Who applies to the NHS Low Income Scheme in England?"),
+    p(
+      "Around 7 in 10 applicants are ",
+      "single applicants and the remainder are part of a couple."
+    ),
+    p(
+      "We only hold age for the lead applicant.",
+      "One in four lead applicants are aged 15 to 24 years in 2019/20.",
+      "This age group have the highest number of applications consistently over time."
+    ),
     fluidRow(
-      p(
-        "Applications either relate to a single applicant or couple. If we ",
-        "consider individuals covered by applications, around 7 in 10 are ",
-        "single applicants and the remainder are part of a couple. We only ",
-        "hold age for the main applicant."
-      ),
-      tags$ul(
-        tags$li("One in four main applicants are aged 15 to 24 years")
-      ),
-      fluidRow(
-        style = "background-color: #FFFFFF;",
-        highcharter::highchartOutput(
-          outputId = ns("plot_individuals_by_age_band"),
-          height = "500px"
-        )
-      ),
-      br(),
-      p(
-        "Applicants are allocated a client group based on the main source ",
-        "of household income. They are most likely to be categorised as ",
-        actionLink(
-          inputId = ns("benefits_or_other_modal"),
-          label = "benefits/other"
-        ),
-        " or earners."
-      ),
-      fluidRow(
-        align = "center",
-        style = "background-color: #FFFFFF;",
-        highcharter::highchartOutput(
-          outputId = ns("plot_individuals_by_client_group")
-        )
-      ),
-      br(),
-      p(
-        "Individuals covered by the application are more likely to live in ",
-        "areas of higher deprivation, as we can see in the below ",
-        actionLink(
-          inputId = ns("imd_modal"),
-          label = "English indices of deprivation"
-        ),
-        " decile chart."
-      ),
-      fluidRow(
-        align = "center",
-        style = "background-color: #FFFFFF;",
-        highcharter::highchartOutput(outputId = ns("plot_individuals_by_deprivation"))
+      style = "background-color: #FFFFFF;",
+      highcharter::highchartOutput(
+        outputId = ns("plot_individuals_by_age_band"),
+        height = "500px"
       )
+    ),
+    br(),
+    p(
+      "Applicants are allocated a client group based on the main source ",
+      "of household income. They are most likely to be categorised as ",
+      actionLink(
+        inputId = ns("benefits_or_other_modal"),
+        label = "benefits/other"
+      ),
+      " or earners."
+    ),
+    fluidRow(
+      align = "center",
+      style = "background-color: #FFFFFF;",
+      highcharter::highchartOutput(
+        outputId = ns("plot_individuals_by_client_group")
+      )
+    ),
+    br(),
+    p(
+      "Individuals covered by the application are more likely to live in ",
+      "areas of higher deprivation, as we can see in the below ",
+      actionLink(
+        inputId = ns("imd_modal"),
+        label = "English indices of deprivation"
+      ),
+      " decile chart."
+    ),
+    p(
+      "This trend is consistent across the analysis period."
+    ),
+    fluidRow(
+      align = "center",
+      style = "background-color: #FFFFFF;",
+      highcharter::highchartOutput(outputId = ns("plot_individuals_by_deprivation"))
     )
   )
 }
@@ -180,17 +181,19 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
         text = "Age band of NHS Low Income Scheme lead applicants in England (2015/16 to 2020/21)"
       ) %>%
       highcharter::hc_subtitle(
-        text = "Note: This excludes main applicants without an age band."
+        text = "Note: This excludes lead applicants without an age band."
       ) %>%
       highcharter::hc_xAxis(
+        title = list(text = "Age band"),
         categories = sort(unique(plot_df$BAND_5YEARS)),
         reversed = FALSE
       ) %>%
       highcharter::hc_yAxis(
         max = ceiling(max_p / 5) * 5,
         labels = list(
-          formatter = highcharter::JS("function(){ return Math.abs(this.value) + '%' ;}")
-        )
+          formatter = highcharter::JS("function(){ return Math.abs(this.value) ;}")
+        ),
+        title = list(text = "Percentage of applicants")
       ) %>%
       highcharter::hc_tooltip(
         shared = FALSE,
@@ -229,8 +232,12 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       highcharter::hc_yAxis(
         max = 100,
         labels = list(
-          formatter = highcharter::JS("function(){ return this.value + '%' ;}")
-        )
+          formatter = highcharter::JS("function(){ return this.value ;}")
+        ),
+        title = list(text = "Percentage of applications")
+      ) %>%
+      highcharter::hc_xAxis(
+        title = list(text = "Financial year")
       ) %>%
       highcharter::hc_tooltip(
         shared = FALSE,
@@ -287,13 +294,15 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
         text = "Deprivation decile of NHS Low Income Scheme individuals in England (2015/16 to 2020/21)"
       ) %>%
       highcharter::hc_xAxis(
-        categories = c("1<br>Most<br>deprived", 2:9, "10<br>Least<br>deprived")
+        categories = c("1<br>Most<br>deprived", 2:9, "10<br>Least<br>deprived"),
+        title = list(text = "Deprivation decile")
       ) %>%
       highcharter::hc_yAxis(
         max = ceiling(max(plot_df$p) / 5) * 5,
         labels = list(
-          formatter = highcharter::JS("function(){ return this.value + '%' ;}")
-        )
+          formatter = highcharter::JS("function(){ return this.value ;}")
+        ),
+        title = list(text = "Percentage of individuals covered by the application")
       ) %>%
       highcharter::hc_tooltip(
         shared = FALSE,

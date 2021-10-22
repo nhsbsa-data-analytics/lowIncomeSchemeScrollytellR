@@ -11,11 +11,12 @@ mod_08_spotlight_students_ui <- function(id) {
   ns <- NS(id)
   tagList(
     h4("Spotlight on student applicants in England"),
+    p("Student applications were considered in more detail, given the rate of decline in applications."),
     p("Of student applicants in England:"),
     tags$ul(
       tags$li("The majority (98%) apply as single applicants."),
       tags$li(
-        "Over half are aged 20 to 24 years and 37% are aged 15 to 19 years"
+        "Over half are aged 20 to 24 years and 37% are aged 15 to 19 years."
       )
     ),
     br(),
@@ -34,7 +35,7 @@ mod_08_spotlight_students_ui <- function(id) {
     tags$em(
       "It's a great scheme and efficiently run. I am extremely grateful for the",
       " help with prescription costs. However, I feel it is not advertised very well",
-      " especially to students and people who do not know other people on benefits."
+      " especially to students and people who do not know other people on benefits.(Student applicant)"
     ),
     br(),
     h6("Estimated student take-up is also low and decreasing over time."),

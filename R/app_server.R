@@ -18,38 +18,7 @@ app_server <- function(input, output, session) {
   moduleServer("09_final_thoughts_1", mod_09_final_thoughts_server)
   moduleServer("10_footer_1", mod_10_footer_server)
 
-
-  output$scrolly_2 <- scrollytell::renderScrollytell({
-    scrollytell::scrollytell()
-  })
-
-
-  output$scrolly_3 <- scrollytell::renderScrollytell({
-    scrollytell::scrollytell()
-  })
-
-
-  output$scrolly_4 <- scrollytell::renderScrollytell({
-    scrollytell::scrollytell()
-  })
-
-  output$scrolly_5 <- scrollytell::renderScrollytell({
-    scrollytell::scrollytell()
-  })
-
-  output$scrolly_6 <- scrollytell::renderScrollytell({
-    scrollytell::scrollytell()
-  })
-
-  output$scrolly_7 <- scrollytell::renderScrollytell({
-    scrollytell::scrollytell()
-  })
-
-  # region_name <- callModule(mod_input_region_server, "input_region_1")
-  # callModule(mod_07_take_up_scatter_graph_server, "07_take_up_scatter_graph_1", region_name)
-  # callModule(mod_07_take_up_scatter_text_server, "07_take_up_scatter_text_1", region_name)
-
-  output$scrolly_8 <- scrollytell::renderScrollytell({
+  output$scrolly <- scrollytell::renderScrollytell({
     scrollytell::scrollytell()
   })
 }
