@@ -35,10 +35,11 @@ Imports:
     Rcpp,
     sf,
     attempt,
-    markdown
+    markdown,
+    nhsbsaR
 Remotes:
-    github::statistiekcbs/scrollytell
-    github::nhsbsa-data-analytics/nhsbsaR
+    statistiekcbs/scrollytell
+    nhsbsa-data-analytics/nhsbsaR
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
