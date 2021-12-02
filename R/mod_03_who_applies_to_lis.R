@@ -166,6 +166,8 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       dplyr::do(data = .$data) %>%
       dplyr::mutate(name = "Age Band (5 Year)") %>%
       highcharter::list_parse()
+    
+    
 
     # Create plot
     highcharter::highchart() %>%
@@ -197,7 +199,7 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       ) %>%
       highcharter::hc_tooltip(
         shared = FALSE,
-        formatter = highcharter::JS("function () { return '<b>Age band (5 years): </b>' + this.point.category + '<br/>' + '<b>Percentage: </b>' + Math.abs(Math.round(this.point.y * 10) / 10) + '%';}")
+        formatter = highcharter::JS("function () { return '<b>Age band (5 years): </b>' + this.point.category + '<br/>' + '<b>Percentage: </b>' + (Math.round(this.point.y * 10) / 10).toFixed(1) + '%';}")
       ) %>%
       highcharter::hc_credits(
         enabled = TRUE
