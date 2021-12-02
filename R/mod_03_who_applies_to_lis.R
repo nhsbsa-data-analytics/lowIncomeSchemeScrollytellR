@@ -166,8 +166,8 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       dplyr::do(data = .$data) %>%
       dplyr::mutate(name = "Age Band (5 Year)") %>%
       highcharter::list_parse()
-    
-    
+
+
 
     # Create plot
     highcharter::highchart() %>%
