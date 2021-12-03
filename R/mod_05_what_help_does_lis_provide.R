@@ -94,7 +94,7 @@ mod_05_what_help_does_lis_provide_server <- function(input, output, session) {
       ) %>%
       highcharter::hc_tooltip(
         shared = FALSE,
-        formatter = highcharter::JS("function () { return '<b>Outcome: </b>' + this.series.name + '<br>' + '<b>Financial Year: </b>' + this.point.FINANCIAL_YEAR + '<br/>' + '<b>Percentage: </b>' + Math.round(this.point.y * 10) / 10 + '%';}")
+        formatter = highcharter::JS("function () { return '<b>Outcome: </b>' + this.series.name + '<br>' + '<b>Financial Year: </b>' + this.point.FINANCIAL_YEAR + '<br/>' + '<b>Percentage: </b>' + (Math.round(this.point.y * 10) / 10).toFixed(1) + '%';}")
       ) %>%
       highcharter::hc_credits(
         enabled = TRUE
