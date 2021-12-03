@@ -18,12 +18,12 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
     ),
     p(
       "In 2019/20, ", tags$b("just over half of applications"), " resulted ",
-      "in a HC2 award ", tags$b("(full benefit)"), ", which typically ",
+      "in a HC2 award ", tags$b("(full benefit),"), "which typically ",
       "provides full help with health costs."
     ),
     p(
       "And ", tags$b("just under one-quarter"), " resulted in a HC3 award ",
-      tags$b("(partial benefit)"), ". This offers differing levels of help ",
+      tags$b("(partial benefit)."), "This offers differing levels of help ",
       "towards health costs according to assessed income, and no assistance ",
       "with prescription costs."
     ),
