@@ -24,7 +24,13 @@ individuals_by_age_band_df <- base_df %>%
 individuals_by_client_group_df <- base_df %>%
   aggregate_individuals(., CLIENTGROUP_DESC_FORMAT, multiply_max_individuals = FALSE) %>%
   dplyr::mutate(CLIENTGROUP_DESC_FORMAT = gsub("_", "/", CLIENTGROUP_DESC_FORMAT)) %>%
-  dplyr::collect()
+  dplyr::collect() %>% 
+  dplyr::mutate(
+    CLIENTGROUP_DESC_FORMAT = dplyr::case_when(
+      CLIENTGROUP_DESC_FORMAT=='Asylum Seeker (not NAS)' ~ 'Asylum Seeker (not from the National Asylum Support Service)',
+      TRUE ~ CLIENTGROUP_DESC_FORMAT
+    )
+  )
 
 # TOTAL_INDIVIDUALS per INDEX_OF_MULT_DEPRIV_DECILE
 individuals_by_imd_df <- base_df %>%
