@@ -243,7 +243,7 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       ) %>%
       highcharter::hc_tooltip(
         shared = FALSE,
-        formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Percentage: </b>' + Math.round(this.point.y * 10) / 10  + '%';}")
+        formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Percentage: </b>' + (Math.round(this.point.y * 10) / 10).toFixed(1) + '%';}")
       ) %>%
       highcharter::hc_credits(
         enabled = TRUE
@@ -308,7 +308,7 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       ) %>%
       highcharter::hc_tooltip(
         shared = FALSE,
-        formatter = highcharter::JS("function () { return '<b>Deprivation: </b>' + this.series.name + '<br>' + '<b>Decile: </b>' + parseInt(this.point.category) + '<br>' + '<b>Percentage: </b>' + Math.round(this.point.y * 10) / 10  + '%';}")
+        formatter = highcharter::JS("function () { return '<b>Deprivation: </b>' + this.series.name + '<br>' + '<b>Decile: </b>' + parseInt(this.point.category) + '<br>' + '<b>Percentage: </b>' + (Math.round(this.point.y * 10) / 10).toFixed(1)  + '%';}")
       ) %>%
       highcharter::hc_credits(
         enabled = TRUE
