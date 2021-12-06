@@ -71,7 +71,7 @@ mod_03_who_applies_to_lis_ui <- function(id) {
 mod_03_who_applies_to_lis_server <- function(input, output, session) {
   ns <- session$ns
 
-    # Pyramid plot for age band
+  # Pyramid plot for age band
   output$plot_individuals_by_age_band <- highcharter::renderHighchart({
 
     # Filter out Co-applicants and Unknowns, calculate %s
