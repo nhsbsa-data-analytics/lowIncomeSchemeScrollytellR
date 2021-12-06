@@ -108,7 +108,7 @@ mod_06_take_up_region_server <- function(input, output, session) {
         labels = unique(plot_df$FINANCIAL_YEAR),
         startIndex = 4
       ) %>%
-      highcharter::hc_add_theme(hc_thm = theme_nhsbsa()) %>%
+      theme_nhsbsa() %>%
       highcharter::hc_title(
         text = "Estimated take-up of NHS Low Income Scheme (2015/16 to 2020/21)"
       ) %>%
