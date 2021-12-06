@@ -24,7 +24,7 @@ mod_08_spotlight_students_ui <- function(id) {
     p(
       "The total number of", tags$b(" student applications decreased by 29% "),
       "between 2015/16 and 2019/20, and have decreased further since the ",
-      "pandemic. This compares to 15% overall."
+      "pandemic. This compares to 10% non student applications."
     ),
     fluidRow(
       align = "center",
