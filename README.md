@@ -31,7 +31,6 @@ lowIncomeSchemeScrollytellR
 │   ├── app                                 # ... for the app...
 │   │   └── www                             # ... made available at runtime
 │   │       ├── colours.css                 # Define colour palette of NHS identity
-│   │       ├── eligibility.md              # Markdown text for eligibility modal / popup
 │   │       ├── logo.jpg                    # NHS logo
 │   │       ├── mod_{n}_*.md                # Markdown text for module
 │   │       └── style.css                   # CSS to defining the styling of the dashboard
@@ -47,7 +46,6 @@ lowIncomeSchemeScrollytellR
 │   ├── app_ui.R                            # UI component
 │   ├── golem_*.R                           # Golem file
 │   ├── mod_{n}_*.R                         # Module (usually a container of scrollytell)
-│   ├── mod_input.R                         # Input Module (reusable dropdown)
 │   ├── run_app.R                           # Golem file
 │   ├── utils_helpers.R                     # NHSBSA highcharter theme
 │   └── utils-pipe.R                        # %>% operator

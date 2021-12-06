@@ -19,9 +19,9 @@ mod_02_what_is_lis_ui <- function(id) {
         target = "_blank"
       ),
       " (LIS) provides income related help to people who are not ",
-      actionLink(
-        inputId = ns("modal"),
-        label = "already entitled to help with health costs"
+      tippy(
+        text = "already entitled to help with health costs",
+        tooltip = tooltip_text$who_can_apply
       ),
       " if they have a low income. It is broadly the same as a means tested ",
       "benefit but also takes into account council tax and housing costs."
@@ -46,25 +46,6 @@ mod_02_what_is_lis_ui <- function(id) {
 #' @noRd
 mod_02_what_is_lis_server <- function(input, output, session) {
   ns <- session$ns
-
-  # Create reactive eligibility hyperlink
-  eligibility_click <- reactive({
-    input$modal
-  })
-
-  # Eligibility hyperlink modal
-  observeEvent(
-    eventExpr = eligibility_click(),
-    handlerExpr = {
-      showModal(
-        modalDialog(
-          title = "Eligibility",
-          includeMarkdown("inst/app/www/eligibility.md"),
-          easyClose = TRUE
-        )
-      )
-    }
-  )
 }
 
 ## To be copied in the UI
