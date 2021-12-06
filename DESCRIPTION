@@ -36,7 +36,8 @@ Imports:
     sf,
     attempt,
     markdown,
-    nhsbsaR
+    nhsbsaR,
+    tippy
 Remotes:
     statistiekcbs/scrollytell
     nhsbsa-data-analytics/nhsbsaR
