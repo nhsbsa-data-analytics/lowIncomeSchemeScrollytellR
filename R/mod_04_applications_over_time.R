@@ -60,7 +60,7 @@ mod_04_applications_over_time_server <- function(input, output, session) {
         type = "line",
         highcharter::hcaes(x = FINANCIAL_YEAR, y = TOTAL_APPLICATIONS)
       ) %>%
-      highcharter::hc_add_theme(hc_thm = theme_nhsbsa()) %>%
+      theme_nhsbsa() %>%
       highcharter::hc_title(
         text = "Number of NHS Low Income Scheme applications in England (2015/16 to 2020/21)"
       ) %>%

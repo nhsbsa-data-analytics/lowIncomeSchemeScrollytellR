@@ -143,7 +143,7 @@ mod_07_take_up_la_server <- function(input, output, session) {
       #   labels = unique(plot_df$FINANCIAL_YEAR),
       #   startIndex = 4
       # ) %>%
-      highcharter::hc_add_theme(hc_thm = theme_nhsbsa(stacking = NA)) %>%
+      theme_nhsbsa() %>%
       highcharter::hc_title(
         text = "Estimated take-up of NHS Low Income Scheme by IMD Rank for English Local Authorities (2015/16 to 2020/21)"
       ) %>%
@@ -249,7 +249,7 @@ mod_07_take_up_la_server <- function(input, output, session) {
           pointFormat = "<b>Region:</b> {point.PCD_LAD_NAME}<br><b>Take-up:</b> {point.value:.1f} (per thousand of the general population)"
         )
       ) %>%
-      highcharter::hc_add_theme(hc_thm = theme_nhsbsa()) %>%
+      theme_nhsbsa() %>%
       # highcharter::hc_title(
       #   text = "Estimated take-up of NHS Low Income Scheme (2015/16 to 2019/20)"
       # ) %>%
