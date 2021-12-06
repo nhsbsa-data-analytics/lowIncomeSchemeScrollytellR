@@ -77,7 +77,7 @@ mod_05_what_help_does_lis_provide_server <- function(input, output, session) {
         type = "column",
         highcharter::hcaes(x = FINANCIAL_YEAR, y = p, group = OUTCOME_LEVEL2)
       ) %>%
-      highcharter::hc_add_theme(hc_thm = theme_nhsbsa()) %>%
+      theme_nhsbsa() %>%
       highcharter::hc_title(
         text = "Outcome of NHS Low Income Scheme applications in England (2015/16 to 2020/21)"
       ) %>%
