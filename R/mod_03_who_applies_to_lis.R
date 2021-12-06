@@ -31,9 +31,9 @@ mod_03_who_applies_to_lis_ui <- function(id) {
     p(
       "Applicants are allocated a client group based on the main source ",
       "of household income. They are most likely to be categorised as ",
-      actionLink(
-        inputId = ns("benefits_or_other_modal"),
-        label = "benefits/other"
+      tippy(
+        text = "benefits/other",
+        tooltip = tooltip_text$benefits_others
       ),
       " or earners."
     ),
@@ -48,9 +48,9 @@ mod_03_who_applies_to_lis_ui <- function(id) {
     p(
       "Individuals covered by the application are more likely to live in ",
       "areas of higher deprivation, as we can see in the below ",
-      actionLink(
-        inputId = ns("imd_modal"),
-        label = "English indices of deprivation"
+      tippy(
+        text = "English indices of deprivation",
+        tooltip = tooltip_text$english_imd
       ),
       " decile chart."
     ),
@@ -70,74 +70,6 @@ mod_03_who_applies_to_lis_ui <- function(id) {
 #' @noRd
 mod_03_who_applies_to_lis_server <- function(input, output, session) {
   ns <- session$ns
-
-  # Create reactive benefits / other hyperlink
-  benefits_or_other_click <- reactive({
-    input$benefits_or_other_modal
-  })
-
-  # Benefits / other hyperlink modal
-  observeEvent(
-    eventExpr = benefits_or_other_click(),
-    handlerExpr = {
-      showModal(
-        modalDialog(
-          title = "Benefits/Other",
-          p(
-            "Benefits & Other includes claimants of benefit such as Universal ",
-            "Credit and Employment and Support Allowance, people on nil ",
-            "income (e.g. supported by family and friends), people between ",
-            "courses of study, religious order occupants and care home ",
-            "residents."
-          ),
-          easyClose = TRUE
-        )
-      )
-    }
-  )
-
-  # Create IMD hyperlink
-  imd_click <- reactive({
-    input$imd_modal
-  })
-
-  # IMD hyperlink modal
-  observeEvent(
-    eventExpr = imd_click(),
-    handlerExpr = {
-      showModal(
-        modalDialog(
-          title = "English indices of deprivation",
-          p(
-            "The Enlish indices of deprivation are official measures of ",
-            "relative deprivation for areas in England, ranking 32,844 areas ",
-            "in England according to their deprivation score and dividing ",
-            "them into 10 equal sized groups, or deciles. Decile 1 represents ",
-            "the most deprived 10% of areas nationally and decile 10, the ",
-            "least deprived 10% of areas nationally."
-          ),
-          p(
-            "The Index of Multiple Deprivation (IMD) is the most widely used ",
-            "of these measures and combines information from seven domains to ",
-            "produce an overall relative measure of deprivation."
-          ),
-          p(
-            "One of the seven domains is Health Deprivation which is useful ",
-            "when looking at deprivation in a healthcare setting."
-          ),
-          p(
-            "Further information can be found ",
-            a(
-              "here.",
-              href = "https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019",
-              target = "_blank"
-            )
-          ),
-          easyClose = TRUE
-        )
-      )
-    }
-  )
 
   # Pyramid plot for age band
   output$plot_individuals_by_age_band <- highcharter::renderHighchart({
