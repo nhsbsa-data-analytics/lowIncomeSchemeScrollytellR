@@ -24,7 +24,7 @@ mod_08_spotlight_students_ui <- function(id) {
     p(
       "The total number of", tags$b(" student applications decreased by 29% "),
       "between 2015/16 and 2019/20, and have decreased further since the ",
-      "pandemic. This compares to 15% overall."
+      "pandemic. This compares to 10% non student applications."
     ),
     fluidRow(
       align = "center",
@@ -107,22 +107,26 @@ mod_08_spotlight_students_server <- function(input, output, session) {
     # Create plot
     plot_df %>%
       highcharter::hchart(
-        type = "column",
+        type = "line",
         highcharter::hcaes(x = FINANCIAL_YEAR, y = TOTAL_APPLICATIONS, group = TYPE)
       ) %>%
-      highcharter::hc_add_theme(hc_thm = theme_nhsbsa(col_type = "highlight")) %>%
+      theme_nhsbsa(palette = "highlight") %>%
       highcharter::hc_title(
         text = "Number of NHS Low Income Scheme Student applications in England (2015/16 to 2020/21)"
       ) %>%
       highcharter::hc_legend(reversed = TRUE) %>%
+      highcharter::hc_xAxis(
+        title = list(text = "Financial year")
+      ) %>%
       highcharter::hc_yAxis(
         labels = list(
-          formatter = highcharter::JS("function(){ return Math.abs(this.value) / 1000 + 'k'; }")
-        )
+          formatter = highcharter::JS("function(){ return (Math.abs(this.value) / 1000) + 'k'; }")
+        ),
+        title = list(text = "Total Applications")
       ) %>%
       highcharter::hc_tooltip(
         shared = FALSE,
-        formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Total Applications: </b>' + Math.round(this.point.y / 500) * 500 / 1000 + 'k';}")
+        formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Total Applications: </b>' + (Math.round(this.point.y / 500) * 500 / 1000).toFixed(1) + 'k';}")
       ) %>%
       highcharter::hc_credits(
         enabled = TRUE
@@ -167,7 +171,7 @@ mod_08_spotlight_students_server <- function(input, output, session) {
         labels = unique(plot_df$ACADEMIC_YEAR),
         startIndex = 4
       ) %>%
-      highcharter::hc_add_theme(hc_thm = theme_nhsbsa()) %>%
+      theme_nhsbsa() %>%
       highcharter::hc_title(
         text = "Estimated take-up of NHS Low Income Scheme Student individuals by England region (2015/16 to 2019/20)"
       ) %>%
@@ -213,7 +217,7 @@ mod_08_spotlight_students_server <- function(input, output, session) {
         highcharter::hcaes(x = MONTH, y = p, group = OUTCOME_LEVEL2),
         yAxis = 1
       ) %>%
-      highcharter::hc_add_theme(hc_thm = theme_nhsbsa()) %>%
+      theme_nhsbsa() %>%
       highcharter::hc_xAxis(
         type = "datetime"
       ) %>%

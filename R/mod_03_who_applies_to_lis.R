@@ -178,7 +178,7 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
         series = c(0, 1),
         startIndex = 4
       ) %>%
-      highcharter::hc_add_theme(hc_thm = theme_nhsbsa(stacking = NA)) %>%
+      theme_nhsbsa() %>%
       highcharter::hc_title(
         text = "Age band of NHS Low Income Scheme lead applicants in England (2015/16 to 2020/21)"
       ) %>%
@@ -224,7 +224,7 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
         type = "column",
         highcharter::hcaes(x = FINANCIAL_YEAR, y = p, group = CLIENTGROUP_DESC_FORMAT)
       ) %>%
-      highcharter::hc_add_theme(hc_thm = theme_nhsbsa()) %>%
+      theme_nhsbsa() %>%
       highcharter::hc_title(
         text = "Client group of NHS Low Income Scheme applications in England (2015/16 to 2020/21)"
       ) %>%
@@ -243,7 +243,7 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
       ) %>%
       highcharter::hc_tooltip(
         shared = FALSE,
-        formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Percentage: </b>' + (Math.round(this.point.y * 10) / 10).toFixed(1)  + '%';}")
+        formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Percentage: </b>' + (Math.round(this.point.y * 10) / 10).toFixed(1) + '%';}")
       ) %>%
       highcharter::hc_credits(
         enabled = TRUE
@@ -291,7 +291,7 @@ mod_03_who_applies_to_lis_server <- function(input, output, session) {
         series = c(0, 1),
         startIndex = 4
       ) %>%
-      highcharter::hc_add_theme(hc_thm = theme_nhsbsa(stacking = NA)) %>%
+      theme_nhsbsa() %>%
       highcharter::hc_title(
         text = "Deprivation decile of NHS Low Income Scheme individuals in England (2015/16 to 2020/21)"
       ) %>%
