@@ -10,6 +10,7 @@
 mod_07_take_up_la_ui <- function(id) {
   ns <- NS(id)
   tagList(
+    h4("Estimated take-up of NHS Low Income Scheme by Index of Multiple Deprivation for English Local Authorities (2015/16 to 2020/21)"),
     fluidPage(
       fluidRow(
         column(
@@ -129,13 +130,13 @@ mod_07_take_up_la_server <- function(input, output, session) {
       # Add two dummy series for the legend
       highcharter::hc_add_series(
         data = NULL,
-        name = "Selected Region",
+        name = "Selected local authority",
         showInLegend = TRUE,
         color = "#003087"
       ) %>%
       highcharter::hc_add_series(
         data = NULL,
-        name = "Other Regions",
+        name = "Other local authority",
         showInLegend = TRUE,
         color = "#DDE1E4"
       ) %>%
@@ -144,9 +145,9 @@ mod_07_take_up_la_server <- function(input, output, session) {
       #   startIndex = 4
       # ) %>%
       theme_nhsbsa() %>%
-      highcharter::hc_title(
-        text = "Estimated take-up of NHS Low Income Scheme by IMD Rank for English Local Authorities (2015/16 to 2020/21)"
-      ) %>%
+      # highcharter::hc_title(
+      #   text = "Estimated take-up of NHS Low Income Scheme by IMD Rank for English Local Authorities (2015/16 to 2020/21)"
+      # ) %>%
       # highcharter::hc_subtitle(
       #   text = "Note:  IMD rank is based on English indicies of deprivation 2019."
       # ) %>%
@@ -155,15 +156,15 @@ mod_07_take_up_la_server <- function(input, output, session) {
         max = 322, # Pad to ensure we can see the 314 label
         categories = c(NA, "1<br>Most<br>deprived", rep(NA, 312), "314<br>Least<br>deprived"),
         labels = list(step = 313),
-        title = list(text = "")
+        title = list(text = "Local authority deprivation rank (2019)")
       ) %>%
       highcharter::hc_yAxis(
         max = ceiling(max(plot_df$p) / 5) * 5,
-        title = list(text = "")
+        title = list(text = "Take-up per thousand of the population aged 16+ years")
       ) %>%
       highcharter::hc_tooltip(
         headerFormat = "",
-        pointFormat = "<b>Local authority:</b> {point.PCD_LAD_NAME} <br><b>IMD rank:</b> {point.x} <br><b>Take-up:</b> {point.y:.1f} (per thousand of the general population)"
+        pointFormat = "<b>Local authority:</b> {point.PCD_LAD_NAME} <br><b>2019 IMD rank:</b> {point.x} <br><b>Take-up:</b> {point.y:.1f} (per thousand of the general population)"
       ) %>%
       highcharter::hc_chart(marginBottom = 125) %>%
       highcharter::hc_plotOptions(
@@ -254,7 +255,8 @@ mod_07_take_up_la_server <- function(input, output, session) {
       #   text = "Estimated take-up of NHS Low Income Scheme (2015/16 to 2019/20)"
       # ) %>%
       highcharter::hc_subtitle(
-        text = "Note:  IMD rank is based on English indicies of deprivation 2019."
+        text = "Note:  IMD rank is based on English indicies of deprivation 2019.",
+        verticalAlign = "bottom"
       ) %>%
       highcharter::hc_colorAxis(min = 0, max = 20) %>%
       highcharter::hc_tooltip(
@@ -271,7 +273,7 @@ mod_07_take_up_la_server <- function(input, output, session) {
             ),
             chart = list(type = "column"),
             xAxis = list(
-              title = list(text = "Deprivation"), # doesn't show and i dont know why!
+              title = list(text = "Deprivation decile"),
               min = 1,
               max = 11, # pad to ensure we can see the 10 label
               # type = "category",
