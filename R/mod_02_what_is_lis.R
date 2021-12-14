@@ -41,15 +41,17 @@ mod_02_what_is_lis_ui <- function(id) {
   )
 }
 
-#' 02_what_is_lis Server Function
+#' 02_what_is_lis Server Functions
 #'
 #' @noRd
-mod_02_what_is_lis_server <- function(input, output, session) {
-  ns <- session$ns
+mod_02_what_is_lis_server <- function(id) {
+  moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+  })
 }
 
 ## To be copied in the UI
-# mod_02_what_is_lis_ui("02_what_is_lis_1")
+# mod_02_what_is_lis_ui("02_what_is_lis_ui_1")
 
 ## To be copied in the server
-# callModule(mod_02_what_is_lis_server, "02_what_is_lis_1")
+# mod_02_what_is_lis_server("02_what_is_lis_ui_1")

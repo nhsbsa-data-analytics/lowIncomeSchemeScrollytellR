@@ -42,15 +42,17 @@ mod_10_footer_ui <- function(id) {
   )
 }
 
-#' 10_footer Server Function
+#' 10_footer Server Functions
 #'
 #' @noRd
-mod_10_footer_server <- function(input, output, session) {
-  ns <- session$ns
+mod_10_footer_server <- function(id) {
+  moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+  })
 }
 
 ## To be copied in the UI
-# mod_10_footer_ui("10_footer_1")
+# mod_10_footer_ui("10_footer_ui_1")
 
 ## To be copied in the server
-# callModule(mod_10_footer, "10_footer_1")
+# mod_10_footer_server("10_footer_ui_1")
