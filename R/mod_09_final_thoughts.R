@@ -14,15 +14,17 @@ mod_09_final_thoughts_ui <- function(id) {
   )
 }
 
-#' 09_final_thoughts Server Function
+#' 09_final_thoughts Server Functions
 #'
 #' @noRd
-mod_09_final_thoughts_server <- function(input, output, session) {
-  ns <- session$ns
+mod_09_final_thoughts_server <- function(id) {
+  moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+  })
 }
 
 ## To be copied in the UI
-# mod_09_final_thoughts_ui("09_final_thoughts_1")
+# mod_09_final_thoughts_ui("09_final_thoughts_ui_1")
 
 ## To be copied in the server
-# callModule(mod_09_final_thoughts_server, "09_final_thoughts_1")
+# mod_09_final_thoughts_server("09_final_thoughts_ui_1")
