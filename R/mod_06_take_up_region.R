@@ -55,69 +55,66 @@ mod_06_take_up_region_ui <- function(id) {
   )
 }
 
-#' 06_take_up Server Function
+#' 06_take_up_region Server Functions
 #'
 #' @noRd
-mod_06_take_up_region_server <- function(input, output, session) {
-  ns <- session$ns
+mod_06_take_up_region_server <- function(id) {
+  moduleServer(id, function(input, output, session) {
+    ns <- session$ns
 
-  # # Pull the slider value
-  # year <- reactive({
-  #   input$input_year
-  # })
+    output$plot_successful_individuals_by_region <- highcharter::renderHighchart({
 
-  output$plot_successful_individuals_by_region <- highcharter::renderHighchart({
-
-    # Calculate take-up rate per 1k adult population of each region
-    # Removed FRS population based on team discussion
-    # Now changed to student map style (with animation due to tooltip chart)
-    plot_df <- lowIncomeSchemeScrollytellR::adult_population_df %>%
-      # dplyr::filter(FINANCIAL_YEAR == year()) %>%
-      dplyr::group_by(FINANCIAL_YEAR, PCD_REGION_NAME) %>%
-      dplyr::summarise(TOTAL_POPULATION = sum(TOTAL_ADULT_POPULATION)) %>%
-      dplyr::ungroup() %>%
-      dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_region_df) %>%
-      dplyr::mutate(
-        value = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_POPULATION * 1000
-      )
-
-    # Format for highchater animation
-    # using tidyr::complete
-    plot_sequence_series <- plot_df %>%
-      tidyr::complete(FINANCIAL_YEAR, PCD_REGION_NAME,
-        fill = list(value = 0)
-      ) %>%
-      dplyr::group_by(PCD_REGION_NAME) %>%
-      dplyr::do(sequence = .$value) %>%
-      highcharter::list_parse()
-
-
-    # Create plot
-    highcharter::highchart(type = "map") %>%
-      highcharter::hc_chart(marginBottom = 100) %>%
-      highcharter::hc_add_series(
-        data = plot_sequence_series,
-        mapData = lowIncomeSchemeScrollytellR::region_map,
-        joinBy = "PCD_REGION_NAME",
-        tooltip = list(
-          headerFormat = "",
-          pointFormat = "<b>Region:</b> {point.PCD_REGION_NAME}<br><b>Take-up:</b> {point.value:.1f} (per thousand of the general population)"
+      # Calculate take-up rate per 1k adult population of each region
+      # Removed FRS population based on team discussion
+      # Now changed to student map style (with animation due to tooltip chart)
+      plot_df <- lowIncomeSchemeScrollytellR::adult_population_df %>%
+        # dplyr::filter(FINANCIAL_YEAR == year()) %>%
+        dplyr::group_by(FINANCIAL_YEAR, PCD_REGION_NAME) %>%
+        dplyr::summarise(TOTAL_POPULATION = sum(TOTAL_ADULT_POPULATION)) %>%
+        dplyr::ungroup() %>%
+        dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_region_df) %>%
+        dplyr::mutate(
+          value = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_POPULATION * 1000
         )
-      ) %>%
-      highcharter::hc_motion(
-        labels = unique(plot_df$FINANCIAL_YEAR),
-        startIndex = 4
-      ) %>%
-      theme_nhsbsa() %>%
-      highcharter::hc_title(
-        text = "Estimated take-up of NHS Low Income Scheme (2015/16 to 2020/21)"
-      ) %>%
-      highcharter::hc_colorAxis(min = 0, max = 20)
+
+      # Format for highchater animation
+      # using tidyr::complete
+      plot_sequence_series <- plot_df %>%
+        tidyr::complete(FINANCIAL_YEAR, PCD_REGION_NAME,
+          fill = list(value = 0)
+        ) %>%
+        dplyr::group_by(PCD_REGION_NAME) %>%
+        dplyr::do(sequence = .$value) %>%
+        highcharter::list_parse()
+
+
+      # Create plot
+      highcharter::highchart(type = "map") %>%
+        highcharter::hc_chart(marginBottom = 100) %>%
+        highcharter::hc_add_series(
+          data = plot_sequence_series,
+          mapData = lowIncomeSchemeScrollytellR::region_map,
+          joinBy = "PCD_REGION_NAME",
+          tooltip = list(
+            headerFormat = "",
+            pointFormat = "<b>Region:</b> {point.PCD_REGION_NAME}<br><b>Take-up:</b> {point.value:.1f} (per thousand of the general population)"
+          )
+        ) %>%
+        highcharter::hc_motion(
+          labels = unique(plot_df$FINANCIAL_YEAR),
+          startIndex = 4
+        ) %>%
+        theme_nhsbsa() %>%
+        highcharter::hc_title(
+          text = "Estimated take-up of NHS Low Income Scheme (2015/16 to 2020/21)"
+        ) %>%
+        highcharter::hc_colorAxis(min = 0, max = 20)
+    })
   })
 }
 
 ## To be copied in the UI
-# mod_06_take_up_region_ui("06_take_up_region_1")
+# mod_06_take_up_region_ui("06_take_up_region_ui_1")
 
 ## To be copied in the server
-# callModule(mod_06_take_up_region_server, "06_take_up_region_1")
+# mod_06_take_up_region_server("06_take_up_region_ui_1")

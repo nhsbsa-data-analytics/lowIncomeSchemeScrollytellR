@@ -52,58 +52,60 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
   )
 }
 
-#' 05_what_help_does_lis_provide Server Function
+#' 05_what_help_does_lis_provide Server Functions
 #'
 #' @noRd
-mod_05_what_help_does_lis_provide_server <- function(input, output, session) {
-  ns <- session$ns
+mod_05_what_help_does_lis_provide_server <- function(id) {
+  moduleServer(id, function(input, output, session) {
+    ns <- session$ns
 
-  # Stacked column plot for outcome
-  output$plot_applications_by_outcome <- highcharter::renderHighchart({
+    # Stacked column plot for outcome
+    output$plot_applications_by_outcome <- highcharter::renderHighchart({
 
-    # Filter out Ongoing, aggregate, then calculate %s
-    plot_df <- lowIncomeSchemeScrollytellR::applications_df %>%
-      dplyr::filter(OUTCOME_LEVEL2 != "Ongoing") %>%
-      dplyr::group_by(FINANCIAL_YEAR, OUTCOME_LEVEL2) %>%
-      dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
-      dplyr::ungroup() %>%
-      dplyr::group_by(FINANCIAL_YEAR) %>%
-      dplyr::mutate(p = TOTAL_APPLICATIONS / sum(TOTAL_APPLICATIONS) * 100) %>%
-      dplyr::ungroup()
+      # Filter out Ongoing, aggregate, then calculate %s
+      plot_df <- lowIncomeSchemeScrollytellR::applications_df %>%
+        dplyr::filter(OUTCOME_LEVEL2 != "Ongoing") %>%
+        dplyr::group_by(FINANCIAL_YEAR, OUTCOME_LEVEL2) %>%
+        dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
+        dplyr::ungroup() %>%
+        dplyr::group_by(FINANCIAL_YEAR) %>%
+        dplyr::mutate(p = TOTAL_APPLICATIONS / sum(TOTAL_APPLICATIONS) * 100) %>%
+        dplyr::ungroup()
 
-    # Create  plot
-    plot_df %>%
-      highcharter::hchart(
-        type = "column",
-        highcharter::hcaes(x = FINANCIAL_YEAR, y = p, group = OUTCOME_LEVEL2)
-      ) %>%
-      theme_nhsbsa() %>%
-      highcharter::hc_title(
-        text = "Outcome of NHS Low Income Scheme applications in England (2015/16 to 2020/21)"
-      ) %>%
-      highcharter::hc_subtitle(text = "Note: Excludes ongoing applications.") %>%
-      highcharter::hc_yAxis(
-        max = 100,
-        labels = list(
-          formatter = highcharter::JS("function(){ return this.value ;}")
-        ),
-        title = list(text = "Percentage of applications")
-      ) %>%
-      highcharter::hc_xAxis(
-        title = list(text = "Financial year")
-      ) %>%
-      highcharter::hc_tooltip(
-        shared = FALSE,
-        formatter = highcharter::JS("function () { return '<b>Outcome: </b>' + this.series.name + '<br>' + '<b>Financial Year: </b>' + this.point.FINANCIAL_YEAR + '<br/>' + '<b>Percentage: </b>' + (Math.round(this.point.y * 10) / 10).toFixed(1) + '%';}")
-      ) %>%
-      highcharter::hc_credits(
-        enabled = TRUE
-      )
+      # Create  plot
+      plot_df %>%
+        highcharter::hchart(
+          type = "column",
+          highcharter::hcaes(x = FINANCIAL_YEAR, y = p, group = OUTCOME_LEVEL2)
+        ) %>%
+        theme_nhsbsa() %>%
+        highcharter::hc_title(
+          text = "Outcome of NHS Low Income Scheme applications in England (2015/16 to 2020/21)"
+        ) %>%
+        highcharter::hc_subtitle(text = "Note: Excludes ongoing applications.") %>%
+        highcharter::hc_yAxis(
+          max = 100,
+          labels = list(
+            formatter = highcharter::JS("function(){ return this.value ;}")
+          ),
+          title = list(text = "Percentage of applications")
+        ) %>%
+        highcharter::hc_xAxis(
+          title = list(text = "Financial year")
+        ) %>%
+        highcharter::hc_tooltip(
+          shared = FALSE,
+          formatter = highcharter::JS("function () { return '<b>Outcome: </b>' + this.series.name + '<br>' + '<b>Financial Year: </b>' + this.point.FINANCIAL_YEAR + '<br/>' + '<b>Percentage: </b>' + (Math.round(this.point.y * 10) / 10).toFixed(1) + '%';}")
+        ) %>%
+        highcharter::hc_credits(
+          enabled = TRUE
+        )
+    })
   })
 }
 
 ## To be copied in the UI
-# mod_05_what_help_does_lis_provide_ui("05_what_help_does_lis_provide_1")
+# mod_05_what_help_does_lis_provide_ui("05_what_help_does_lis_provide_ui_1")
 
 ## To be copied in the server
-# callModule(mod_05_what_help_does_lis_provide_server, "05_what_help_does_lis_provide_1")
+# mod_05_what_help_does_lis_provide_server("05_what_help_does_lis_provide_ui_1")

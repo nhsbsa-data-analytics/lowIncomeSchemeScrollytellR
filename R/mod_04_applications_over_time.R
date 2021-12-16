@@ -39,53 +39,55 @@ mod_04_applications_over_time_ui <- function(id) {
   )
 }
 
-#' 04_applications_over_time Server Function
+#' 04_applications_over_time Server Functions
 #'
 #' @noRd
-mod_04_applications_over_time_server <- function(input, output, session) {
-  ns <- session$ns
+mod_04_applications_over_time_server <- function(id) {
+  moduleServer(id, function(input, output, session) {
+    ns <- session$ns
 
-  # Time series plot
-  output$plot_applications <- highcharter::renderHighchart({
+    # Time series plot
+    output$plot_applications <- highcharter::renderHighchart({
 
-    # Aggregate
-    plot_df <- lowIncomeSchemeScrollytellR::applications_df %>%
-      dplyr::group_by(FINANCIAL_YEAR) %>%
-      dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
-      dplyr::ungroup()
+      # Aggregate
+      plot_df <- lowIncomeSchemeScrollytellR::applications_df %>%
+        dplyr::group_by(FINANCIAL_YEAR) %>%
+        dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
+        dplyr::ungroup()
 
-    # Create  plot
-    plot_df %>%
-      highcharter::hchart(
-        type = "line",
-        highcharter::hcaes(x = FINANCIAL_YEAR, y = TOTAL_APPLICATIONS)
-      ) %>%
-      theme_nhsbsa() %>%
-      highcharter::hc_title(
-        text = "Number of NHS Low Income Scheme applications in England (2015/16 to 2020/21)"
-      ) %>%
-      highcharter::hc_yAxis(
-        min = 0,
-        labels = list(
-          formatter = highcharter::JS("function(){ return Math.abs(this.value) / 1000; }")
-        ),
-        title = list(text = "Total number of applications (thousands)")
-      ) %>%
-      highcharter::hc_xAxis(
-        title = list(text = "Financial year")
-      ) %>%
-      highcharter::hc_tooltip(
-        shared = FALSE,
-        formatter = highcharter::JS("function () { return '<b>Financial Year: </b>' + this.point.FINANCIAL_YEAR + '<br/>' + '<b>Total Applications: </b>' + (Math.round(this.point.y / 500) * 500 / 1000).toFixed(1) + 'k';}")
-      ) %>%
-      highcharter::hc_credits(
-        enabled = TRUE
-      )
+      # Create  plot
+      plot_df %>%
+        highcharter::hchart(
+          type = "line",
+          highcharter::hcaes(x = FINANCIAL_YEAR, y = TOTAL_APPLICATIONS)
+        ) %>%
+        theme_nhsbsa() %>%
+        highcharter::hc_title(
+          text = "Number of NHS Low Income Scheme applications in England (2015/16 to 2020/21)"
+        ) %>%
+        highcharter::hc_yAxis(
+          min = 0,
+          labels = list(
+            formatter = highcharter::JS("function(){ return Math.abs(this.value) / 1000; }")
+          ),
+          title = list(text = "Total number of applications (thousands)")
+        ) %>%
+        highcharter::hc_xAxis(
+          title = list(text = "Financial year")
+        ) %>%
+        highcharter::hc_tooltip(
+          shared = FALSE,
+          formatter = highcharter::JS("function () { return '<b>Financial Year: </b>' + this.point.FINANCIAL_YEAR + '<br/>' + '<b>Total Applications: </b>' + (Math.round(this.point.y / 500) * 500 / 1000).toFixed(1) + 'k';}")
+        ) %>%
+        highcharter::hc_credits(
+          enabled = TRUE
+        )
+    })
   })
 }
 
 ## To be copied in the UI
-# mod_04_applications_over_time_ui("04_applications_over_time_1")
+# mod_04_applications_over_time_ui("04_applications_over_time_ui_1")
 
 ## To be copied in the server
-# callModule(mod_04_applications_over_time_server, "04_applications_over_time_1")
+# mod_04_applications_over_time_server("04_applications_over_time_ui_1")
