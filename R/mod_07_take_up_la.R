@@ -103,12 +103,12 @@ mod_07_take_up_la_server <- function(id) {
 
       # Calculate %s
       plot_df <- lowIncomeSchemeScrollytellR::adult_population_df %>%
-        dplyr::filter(FINANCIAL_YEAR == year()) %>%
+        # dplyr::filter(FINANCIAL_YEAR == year()) %>%
         dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
         dplyr::mutate(
           p = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000
-        ) %>%
-        dplyr::mutate(color = ifelse(PCD_REGION_NAME == region_sel(), "#003087", "#DDE1E4"))
+        ) # %>%
+      # dplyr::mutate(color = ifelse(PCD_REGION_NAME == region_sel(), "#003087", "#DDE1E4"))
 
       # Format for highcharter animation
       # Removed as it confused with drop down menu (need to check though)
@@ -122,10 +122,11 @@ mod_07_take_up_la_server <- function(id) {
         dplyr::mutate(color = ifelse(PCD_REGION_NAME == region_sel(), "#003087", "#DDE1E4"))
 
       # Create plot
-      plot_df %>%
+      plot_sequence_df %>%
         highcharter::hchart(
           type = "scatter",
-          highcharter::hcaes(x = PCD_LAD_IMD_RANK, y = p, color = color)
+          highcharter::hcaes(x = PCD_LAD_IMD_RANK, y = sequence, color = color),
+          marginBottom = 50
         ) %>%
         # Add two dummy series for the legend
         highcharter::hc_add_series(
@@ -140,12 +141,13 @@ mod_07_take_up_la_server <- function(id) {
           showInLegend = TRUE,
           color = "#DDE1E4"
         ) %>%
-        # highcharter::hc_motion(
-        #   labels = unique(plot_df$FINANCIAL_YEAR),
-        #   startIndex = 4
-        # ) %>%
-        theme_nhsbsa() %>%
+        highcharter::hc_motion(
+          labels = unique(plot_df$FINANCIAL_YEAR),
+          startIndex = 4
+        ) %>%
+        # highcharter::hc_add_theme(hc_thm = theme_nhsbsa(stacking = NA)) %>%
         # highcharter::hc_title(
+        theme_nhsbsa(stack = NA) %>%
         #   text = "Estimated take-up of NHS Low Income Scheme by IMD Rank for English Local Authorities (2015/16 to 2020/21)"
         # ) %>%
         # highcharter::hc_subtitle(
