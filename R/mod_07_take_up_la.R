@@ -10,7 +10,6 @@
 mod_07_take_up_la_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    h4("Estimated take-up of NHS Low Income Scheme by Index of Multiple Deprivation for English Local Authorities (2015/16 to 2020/21)"),
     fluidPage(
       fluidRow(
         column(
@@ -32,10 +31,9 @@ mod_07_take_up_la_ui <- function(id) {
           column(
             width = 8,
             fluidRow(
+              h6("Estimated take-up of NHS Low Income Scheme by Index of Multiple Deprivation for English Local Authorities (2015/16 to 2020/21)"),
               column(
                 width = 6,
-                # input
-                # innput
                 shiny::selectInput(
                   inputId = ns("input_year"),
                   label = "Financial Year:",
@@ -85,30 +83,18 @@ mod_07_take_up_la_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    # Pull the drop down value
-    region_sel <- reactive({
-      input$input_region
-    })
-
-    # observe({
-    #   print(region_sel())
-    # })
-
-    year <- reactive({
-      input$input_year
-    })
 
 
     output$plot_successful_individuals_by_la_imd <- highcharter::renderHighchart({
 
       # Calculate %s
       plot_df <- lowIncomeSchemeScrollytellR::adult_population_df %>%
-        # dplyr::filter(FINANCIAL_YEAR == year()) %>%
+        # dplyr::filter(FINANCIAL_YEAR == input$input_year) %>%
         dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
         dplyr::mutate(
           p = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000
         ) # %>%
-      # dplyr::mutate(color = ifelse(PCD_REGION_NAME == region_sel(), "#003087", "#DDE1E4"))
+      # dplyr::mutate(color = ifelse(PCD_REGION_NAME == input$input_region, "#003087", "#DDE1E4"))
 
       # Format for highcharter animation
       # Removed as it confused with drop down menu (need to check though)
@@ -119,7 +105,7 @@ mod_07_take_up_la_server <- function(id) {
         dplyr::group_by(PCD_REGION_NAME, PCD_LAD_NAME, PCD_LAD_IMD_RANK) %>%
         dplyr::do(sequence = .$p) %>%
         # Mutate to create color variable to reflect selected region with lightgrey and darkblue colour
-        dplyr::mutate(color = ifelse(PCD_REGION_NAME == region_sel(), "#003087", "#DDE1E4"))
+        dplyr::mutate(color = ifelse(PCD_REGION_NAME == input$input_region, "#003087", "#DDE1E4"))
 
       # Create plot
       plot_sequence_df %>%
@@ -145,7 +131,6 @@ mod_07_take_up_la_server <- function(id) {
           labels = unique(plot_df$FINANCIAL_YEAR),
           startIndex = 4
         ) %>%
-        # highcharter::hc_add_theme(hc_thm = theme_nhsbsa(stacking = NA)) %>%
         # highcharter::hc_title(
         theme_nhsbsa(stack = NA) %>%
         #   text = "Estimated take-up of NHS Low Income Scheme by IMD Rank for English Local Authorities (2015/16 to 2020/21)"
@@ -155,8 +140,8 @@ mod_07_take_up_la_server <- function(id) {
         # ) %>%
         highcharter::hc_xAxis(
           min = 1,
-          max = 322, # Pad to ensure we can see the 314 label
-          categories = c(NA, "1<br>Most<br>deprived", rep(NA, 312), "314<br>Least<br>deprived"),
+          max = 330, # Pad to ensure we can see the 314 label
+          categories = c(NA, "1<br>Most deprived", rep(NA, 312), "314<br>Least deprived"),
           labels = list(step = 313),
           title = list(text = "Local authority deprivation rank (2019)")
         ) %>%
@@ -197,7 +182,7 @@ mod_07_take_up_la_server <- function(id) {
       # This part is for tooltip chart
       la_imd_count <- lowIncomeSchemeScrollytellR::imd_decile_df %>%
         # filter here first to hold of selected region value
-        dplyr::filter(PCD_REGION_NAME == region_sel()) %>%
+        dplyr::filter(PCD_REGION_NAME == input$input_region) %>%
         # complete and fill to keep all IMD DECILE values from 1- 10
         tidyr::complete(INDEX_OF_MULT_DEPRIV_DECILE,
           tidyr::nesting(PCD_LAD_NAME, PCD_REGION_NAME),
@@ -220,8 +205,8 @@ mod_07_take_up_la_server <- function(id) {
 
       # la data frame, change to sequence data but only for selected region and year
       plot_df <- lowIncomeSchemeScrollytellR::adult_population_df %>%
-        dplyr::filter(PCD_REGION_NAME == region_sel()) %>%
-        dplyr::filter(FINANCIAL_YEAR == year()) %>%
+        dplyr::filter(PCD_REGION_NAME == input$input_region) %>%
+        dplyr::filter(FINANCIAL_YEAR == input$input_year) %>%
         dplyr::group_by(FINANCIAL_YEAR, PCD_LAD_NAME) %>%
         dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
         dplyr::mutate(
@@ -234,7 +219,7 @@ mod_07_take_up_la_server <- function(id) {
 
       la_map <- lowIncomeSchemeScrollytellR::la_map %>%
         dplyr::inner_join(lowIncomeSchemeScrollytellR::region_la_lookup) %>%
-        dplyr::filter(PCD_REGION_NAME == region_sel()) %>%
+        dplyr::filter(PCD_REGION_NAME == input$input_region) %>%
         sf::st_transform(crs = 27700) %>%
         geojsonsf::sf_geojson() %>%
         jsonlite::fromJSON(simplifyVector = F)
@@ -312,11 +297,11 @@ mod_07_take_up_la_server <- function(id) {
     plot_df <- reactive({
       lowIncomeSchemeScrollytellR::adult_population_df %>%
         dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
-        dplyr::filter(FINANCIAL_YEAR == year()) %>%
+        dplyr::filter(FINANCIAL_YEAR == input$input_year) %>%
         dplyr::mutate(
           p = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000
         ) %>%
-        dplyr::filter(PCD_REGION_NAME == region_sel())
+        dplyr::filter(PCD_REGION_NAME == input$input_region)
     })
 
     la_count <- reactive({
@@ -354,15 +339,15 @@ mod_07_take_up_la_server <- function(id) {
     # Take-up of selected region
     # this part will change depends on the region selection from the reactive value.
     output$text <- shiny::renderUI({
-      if (region_sel() == "North West") {
+      if (input$input_region == "North West") {
         shiny::HTML(paste(
           "<br>",
           "<br>",
-          "<p>", "In ", "<b>", year(), "</b>, <b>", highest_take_up_la()[1], "</b>",
+          "<p>", "In ", "<b>", input$input_year, "</b>, <b>", highest_take_up_la()[1], "</b>",
           " has the highest take-up per thousand of the general population in the ",
-          "<b>", region_sel(), "</b>", ". Of all local authorities in England, the IMD rank in ", "<b>",
+          "<b>", input$input_region, "</b>", ". Of all local authorities in England, the IMD rank in ", "<b>",
           highest_take_up_la()[1], " </b> is ", "<b>", highest_take_up_la()[2], ".</b>",
-          "</p>", "<p>", "<b>", lowest_take_up_la()[1], " </b> has the lowest take-up in the ", " <b>", region_sel(), "</b>",
+          "</p>", "<p>", "<b>", lowest_take_up_la()[1], " </b> has the lowest take-up in the ", " <b>", input$input_region, "</b>",
           ", with an IMD rank of ", " <b>", lowest_take_up_la()[2], " </b> out of all local authorities in England.",
           "<p>",
           "Take-up is somewhat", "<b> lower, relative to deprivation </b>", "in five local authorities in the", " <b> North West </b>",
@@ -373,11 +358,11 @@ mod_07_take_up_la_server <- function(id) {
         shiny::HTML(paste(
           "<br>",
           "<br>",
-          "<p>", "In ", "<b>", year(), ", ", highest_take_up_la()[1], "</b>",
+          "<p>", "In ", "<b>", input$input_year, ", ", highest_take_up_la()[1], "</b>",
           " has the highest take-up per thousand of the general population in the ",
-          "<b>", region_sel(), "</b>", ". Of all local authorities in England, the IMD rank in ", "<b>",
+          "<b>", input$input_region, "</b>", ". Of all local authorities in England, the IMD rank in ", "<b>",
           highest_take_up_la()[1], " </b> is ", "<b>", highest_take_up_la()[2], ".</b>",
-          "</p>", "<p>", "<b>", lowest_take_up_la()[1], " </b> has the lowest take-up in the ", " <b>", region_sel(), "</b>",
+          "</p>", "<p>", "<b>", lowest_take_up_la()[1], " </b> has the lowest take-up in the ", " <b>", input$input_region, "</b>",
           ", with an IMD rank of ", " <b>", lowest_take_up_la()[2], " </b> out of all local authorities in England.",
           sep = ""
         ))
