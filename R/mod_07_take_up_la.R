@@ -177,31 +177,6 @@ mod_07_take_up_la_server <- function(id) {
 
     output$plot_selected_region_la <- highcharter::renderHighchart({
 
-      # filter local authority by input variable.
-      # only one IMD used (2019)
-      # This part is for tooltip chart
-      la_imd_count <- lowIncomeSchemeScrollytellR::imd_decile_df %>%
-        # filter here first to hold of selected region value
-        dplyr::filter(PCD_REGION_NAME == input$input_region) %>%
-        # complete and fill to keep all IMD DECILE values from 1- 10
-        tidyr::complete(INDEX_OF_MULT_DEPRIV_DECILE,
-          tidyr::nesting(PCD_LAD_NAME, PCD_REGION_NAME),
-          fill = list(IMD_DECILE_COUNT_LAD = 0, IMD_DECILE_P = 0)
-        ) %>%
-        dplyr::select(INDEX_OF_MULT_DEPRIV_DECILE, PCD_LAD_NAME, IMD_DECILE_P) %>%
-        # convert to ttdata (nesting and purrr::map)
-        tidyr::nest(-PCD_LAD_NAME) %>%
-        dplyr::mutate(
-          data = purrr::map(data, highcharter::mutate_mapping,
-            highcharter::hcaes(
-              x = INDEX_OF_MULT_DEPRIV_DECILE,
-              y = IMD_DECILE_P
-            ),
-            drop = TRUE
-          ),
-          data = purrr::map(data, highcharter::list_parse)
-        ) %>%
-        dplyr::rename(ttdata = data)
 
       # la data frame, change to sequence data but only for selected region and year
       plot_df <- lowIncomeSchemeScrollytellR::adult_population_df %>%
@@ -245,43 +220,7 @@ mod_07_take_up_la_server <- function(id) {
           text = "Note:  IMD rank is based on English indicies of deprivation 2019.",
           verticalAlign = "bottom"
         ) %>%
-        highcharter::hc_colorAxis(min = 0, max = 20) %>%
-        highcharter::hc_tooltip(
-          useHTML = TRUE,
-          headerFormat = "<b>{point.key}</b>",
-          backgroundColor = "rgba(255,255,255,1)",
-          style = list(opacity = 0),
-          pointFormatter = highcharter::tooltip_chart(
-            accesor = "ttdata",
-            hc_opts = list(
-              title = list(
-                text = "point.PCD_LAD_NAME",
-                size = 7
-              ),
-              chart = list(type = "column"),
-              xAxis = list(
-                title = list(text = "Deprivation decile"),
-                min = 1,
-                max = 11, # pad to ensure we can see the 10 label
-                # type = "category",
-                categories = c(NA, "1<br>Most<br>deprived", rep(NA, 8), "10<br>Least<br>deprived"),
-                # labels = list(step = 1)
-                labels = list(step = 9)
-              ),
-              yAxis = list(
-                title = list(
-                  text = "% of LSOA in deprivation",
-                  align = "middle"
-                ),
-                type = "category",
-                labels = list(format = "{value:.0f}%")
-              ),
-              series = list(list(color = "#425563"))
-            ),
-            height = 240,
-            width = 280
-          )
-        )
+        highcharter::hc_colorAxis(min = 0, max = 20)
     })
 
 
