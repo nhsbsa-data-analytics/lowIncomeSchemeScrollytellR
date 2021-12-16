@@ -88,171 +88,173 @@ mod_08_spotlight_students_ui <- function(id) {
   )
 }
 
-#' 08_spotlight_students Server Function
+#' 08_spotlight_students Server Functions
 #'
 #' @noRd
-mod_08_spotlight_students_server <- function(input, output, session) {
-  ns <- session$ns
+mod_08_spotlight_students_server <- function(id) {
+  moduleServer(id, function(input, output, session) {
+    ns <- session$ns
 
-  # Stacked column of student applications over time
-  output$plot_student_applications <- highcharter::renderHighchart({
+    # Stacked column of student applications over time
+    output$plot_student_applications <- highcharter::renderHighchart({
 
-    # Group data and aggregate
-    plot_df <- lowIncomeSchemeScrollytellR::applications_df %>%
-      dplyr::mutate(TYPE = ifelse(CLIENTGROUP_DESC == "Student", "Student", "Non-Student")) %>%
-      dplyr::group_by(FINANCIAL_YEAR, TYPE) %>%
-      dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
-      dplyr::ungroup()
+      # Group data and aggregate
+      plot_df <- lowIncomeSchemeScrollytellR::applications_df %>%
+        dplyr::mutate(TYPE = ifelse(CLIENTGROUP_DESC == "Student", "Student", "Non-Student")) %>%
+        dplyr::group_by(FINANCIAL_YEAR, TYPE) %>%
+        dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
+        dplyr::ungroup()
 
-    # Create plot
-    plot_df %>%
-      highcharter::hchart(
-        type = "line",
-        highcharter::hcaes(x = FINANCIAL_YEAR, y = TOTAL_APPLICATIONS, group = TYPE)
-      ) %>%
-      theme_nhsbsa(palette = "highlight") %>%
-      highcharter::hc_title(
-        text = "Number of NHS Low Income Scheme Student applications in England (2015/16 to 2020/21)"
-      ) %>%
-      highcharter::hc_legend(reversed = TRUE) %>%
-      highcharter::hc_xAxis(
-        title = list(text = "Financial year")
-      ) %>%
-      highcharter::hc_yAxis(
-        labels = list(
-          formatter = highcharter::JS("function(){ return (Math.abs(this.value) / 1000) + 'k'; }")
-        ),
-        title = list(text = "Total Applications")
-      ) %>%
-      highcharter::hc_tooltip(
-        shared = FALSE,
-        formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Total Applications: </b>' + (Math.round(this.point.y / 500) * 500 / 1000).toFixed(1) + 'k';}")
-      ) %>%
-      highcharter::hc_credits(
-        enabled = TRUE
-      )
-  })
-
-
-
-
-  output$plot_successful_student_individuals_by_region <- highcharter::renderHighchart({
-
-    # Calculate rate per region
-    plot_df <- lowIncomeSchemeScrollytellR::student_population_df %>%
-      dplyr::filter(ACADEMIC_YEAR != "2014/15") %>%
-      dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_student_individuals_by_region_df) %>%
-      dplyr::mutate(
-        value = TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS / TOTAL_STUDENT_POPULATION * 100
-      )
-
-    # Format for highcharter animation
-    plot_sequence_series <- plot_df %>%
-      tidyr::expand(ACADEMIC_YEAR, PCD_REGION_NAME) %>%
-      dplyr::left_join(plot_df) %>%
-      dplyr::mutate(value = tidyr::replace_na(value)) %>%
-      dplyr::group_by(PCD_REGION_NAME) %>%
-      dplyr::do(sequence = .$value) %>%
-      highcharter::list_parse()
-
-    # Create plot
-    highcharter::highchart(type = "map") %>%
-      highcharter::hc_chart(marginBottom = 100) %>%
-      highcharter::hc_add_series(
-        data = plot_sequence_series,
-        mapData = region_map,
-        joinBy = "PCD_REGION_NAME",
-        tooltip = list(
-          headerFormat = "",
-          pointFormat = "<b>Region:</b> {point.PCD_REGION_NAME}<br><b>Take-up:</b> {point.value:.1f}% (of the student population)<br>"
+      # Create plot
+      plot_df %>%
+        highcharter::hchart(
+          type = "line",
+          highcharter::hcaes(x = FINANCIAL_YEAR, y = TOTAL_APPLICATIONS, group = TYPE)
+        ) %>%
+        theme_nhsbsa(palette = "highlight") %>%
+        highcharter::hc_title(
+          text = "Number of NHS Low Income Scheme Student applications in England (2015/16 to 2020/21)"
+        ) %>%
+        highcharter::hc_legend(reversed = TRUE) %>%
+        highcharter::hc_xAxis(
+          title = list(text = "Financial year")
+        ) %>%
+        highcharter::hc_yAxis(
+          labels = list(
+            formatter = highcharter::JS("function(){ return (Math.abs(this.value) / 1000) + 'k'; }")
+          ),
+          title = list(text = "Total Applications")
+        ) %>%
+        highcharter::hc_tooltip(
+          shared = FALSE,
+          formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Total Applications: </b>' + (Math.round(this.point.y / 500) * 500 / 1000).toFixed(1) + 'k';}")
+        ) %>%
+        highcharter::hc_credits(
+          enabled = TRUE
         )
-      ) %>%
-      highcharter::hc_motion(
-        labels = unique(plot_df$ACADEMIC_YEAR),
-        startIndex = 4
-      ) %>%
-      theme_nhsbsa() %>%
-      highcharter::hc_title(
-        text = "Estimated take-up of NHS Low Income Scheme Student individuals by England region (2015/16 to 2019/20)"
-      ) %>%
-      highcharter::hc_colorAxis(min = 0, max = 6)
-  })
+    })
 
 
-  output$plot_student_applications_per_month <- highcharter::renderHighchart({
 
-    # Aggregate overall for line plot
-    plot_overall_df <- lowIncomeSchemeScrollytellR::applications_df %>%
-      dplyr::filter(CLIENTGROUP_DESC == "Student") %>%
-      dplyr::group_by(APPLICATION_MONTH) %>%
-      dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
-      dplyr::ungroup() %>%
-      dplyr::mutate(MONTH = lubridate::ym(APPLICATION_MONTH))
 
-    # Aggregate by benefit type (partial or full)
-    plot_benefit_df <- lowIncomeSchemeScrollytellR::applications_df %>%
-      dplyr::filter(
-        CLIENTGROUP_DESC == "Student",
-        OUTCOME_LEVEL2 %in% c("Full benefit", "Partial benefit")
-      ) %>%
-      dplyr::group_by(APPLICATION_MONTH, OUTCOME_LEVEL2) %>%
-      dplyr::summarise(SUCCESSFUL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
-      dplyr::ungroup() %>%
-      dplyr::mutate(MONTH = lubridate::ym(APPLICATION_MONTH)) %>%
-      dplyr::inner_join(plot_overall_df) %>%
-      dplyr::mutate(p = SUCCESSFUL_APPLICATIONS / TOTAL_APPLICATIONS * 100)
+    output$plot_successful_student_individuals_by_region <- highcharter::renderHighchart({
 
-    # Create plot
-    highcharter::highchart() %>%
-      highcharter::hc_add_series(
-        data = plot_overall_df,
-        type = "line",
-        highcharter::hcaes(x = MONTH, y = TOTAL_APPLICATIONS),
-        name = "Total applications",
-        yAxis = 0
-      ) %>%
-      highcharter::hc_add_series(
-        data = plot_benefit_df,
-        type = "column",
-        highcharter::hcaes(x = MONTH, y = p, group = OUTCOME_LEVEL2),
-        yAxis = 1
-      ) %>%
-      theme_nhsbsa() %>%
-      highcharter::hc_xAxis(
-        type = "datetime"
-      ) %>%
-      highcharter::hc_yAxis_multiples(
-        list(
-          top = "0%",
-          height = "40%",
-          min = 0,
-          title = list(enabled = TRUE, text = "Total Applications"),
-          labels = list(formatter = highcharter::JS("function(){ return this.value / 1000 + 'k'; }"))
-        ),
-        list(
-          top = "40%",
-          height = "60%",
-          min = 0,
-          opposite = TRUE,
-          title = list(enabled = TRUE, text = "Successful Applications"),
-          labels = list(format = "{value}%")
+      # Calculate rate per region
+      plot_df <- lowIncomeSchemeScrollytellR::student_population_df %>%
+        dplyr::filter(ACADEMIC_YEAR != "2014/15") %>%
+        dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_student_individuals_by_region_df) %>%
+        dplyr::mutate(
+          value = TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS / TOTAL_STUDENT_POPULATION * 100
         )
-      ) %>%
-      highcharter::hc_title(
-        text = "Total and successful outcome (%) of NHS Low Income Scheme Student applications by month in England (2015/16 to 2020/21)"
-      ) %>%
-      highcharter::hc_tooltip(
-        shared = TRUE,
-        formatter = highcharter::JS("function () { return '<b>Month: </b>' + Highcharts.dateFormat('%b %Y', new Date(this.x)) + '<br>' + '<b>Total applications: </b>' + Math.round(this.points[0].total / 500) * 500 / 1000 + 'k' + '<br>' + '<b>Partial benefit: </b>' + this.points[1].y.toFixed(1) + '%<br>' + '<b>Full benefit: </b>' + this.points[2].y.toFixed(1) + '%' ; }")
-      ) %>%
-      highcharter::hc_credits(
-        enabled = TRUE
-      )
+
+      # Format for highcharter animation
+      plot_sequence_series <- plot_df %>%
+        tidyr::expand(ACADEMIC_YEAR, PCD_REGION_NAME) %>%
+        dplyr::left_join(plot_df) %>%
+        dplyr::mutate(value = tidyr::replace_na(value)) %>%
+        dplyr::group_by(PCD_REGION_NAME) %>%
+        dplyr::do(sequence = .$value) %>%
+        highcharter::list_parse()
+
+      # Create plot
+      highcharter::highchart(type = "map") %>%
+        highcharter::hc_chart(marginBottom = 100) %>%
+        highcharter::hc_add_series(
+          data = plot_sequence_series,
+          mapData = region_map,
+          joinBy = "PCD_REGION_NAME",
+          tooltip = list(
+            headerFormat = "",
+            pointFormat = "<b>Region:</b> {point.PCD_REGION_NAME}<br><b>Take-up:</b> {point.value:.1f}% (of the student population)<br>"
+          )
+        ) %>%
+        highcharter::hc_motion(
+          labels = unique(plot_df$ACADEMIC_YEAR),
+          startIndex = 4
+        ) %>%
+        theme_nhsbsa() %>%
+        highcharter::hc_title(
+          text = "Estimated take-up of NHS Low Income Scheme Student individuals by England region (2015/16 to 2019/20)"
+        ) %>%
+        highcharter::hc_colorAxis(min = 0, max = 6)
+    })
+
+
+    output$plot_student_applications_per_month <- highcharter::renderHighchart({
+
+      # Aggregate overall for line plot
+      plot_overall_df <- lowIncomeSchemeScrollytellR::applications_df %>%
+        dplyr::filter(CLIENTGROUP_DESC == "Student") %>%
+        dplyr::group_by(APPLICATION_MONTH) %>%
+        dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
+        dplyr::ungroup() %>%
+        dplyr::mutate(MONTH = lubridate::ym(APPLICATION_MONTH))
+
+      # Aggregate by benefit type (partial or full)
+      plot_benefit_df <- lowIncomeSchemeScrollytellR::applications_df %>%
+        dplyr::filter(
+          CLIENTGROUP_DESC == "Student",
+          OUTCOME_LEVEL2 %in% c("Full benefit", "Partial benefit")
+        ) %>%
+        dplyr::group_by(APPLICATION_MONTH, OUTCOME_LEVEL2) %>%
+        dplyr::summarise(SUCCESSFUL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
+        dplyr::ungroup() %>%
+        dplyr::mutate(MONTH = lubridate::ym(APPLICATION_MONTH)) %>%
+        dplyr::inner_join(plot_overall_df) %>%
+        dplyr::mutate(p = SUCCESSFUL_APPLICATIONS / TOTAL_APPLICATIONS * 100)
+
+      # Create plot
+      highcharter::highchart() %>%
+        highcharter::hc_add_series(
+          data = plot_overall_df,
+          type = "line",
+          highcharter::hcaes(x = MONTH, y = TOTAL_APPLICATIONS),
+          name = "Total applications",
+          yAxis = 0
+        ) %>%
+        highcharter::hc_add_series(
+          data = plot_benefit_df,
+          type = "column",
+          highcharter::hcaes(x = MONTH, y = p, group = OUTCOME_LEVEL2),
+          yAxis = 1
+        ) %>%
+        theme_nhsbsa() %>%
+        highcharter::hc_xAxis(
+          type = "datetime"
+        ) %>%
+        highcharter::hc_yAxis_multiples(
+          list(
+            top = "0%",
+            height = "40%",
+            min = 0,
+            title = list(enabled = TRUE, text = "Total Applications"),
+            labels = list(formatter = highcharter::JS("function(){ return this.value / 1000 + 'k'; }"))
+          ),
+          list(
+            top = "40%",
+            height = "60%",
+            min = 0,
+            opposite = TRUE,
+            title = list(enabled = TRUE, text = "Successful Applications"),
+            labels = list(format = "{value}%")
+          )
+        ) %>%
+        highcharter::hc_title(
+          text = "Total and successful outcome (%) of NHS Low Income Scheme Student applications by month in England (2015/16 to 2020/21)"
+        ) %>%
+        highcharter::hc_tooltip(
+          shared = TRUE,
+          formatter = highcharter::JS("function () { return '<b>Month: </b>' + Highcharts.dateFormat('%b %Y', new Date(this.x)) + '<br>' + '<b>Total applications: </b>' + Math.round(this.points[0].total / 500) * 500 / 1000 + 'k' + '<br>' + '<b>Partial benefit: </b>' + this.points[1].y.toFixed(1) + '%<br>' + '<b>Full benefit: </b>' + this.points[2].y.toFixed(1) + '%' ; }")
+        ) %>%
+        highcharter::hc_credits(
+          enabled = TRUE
+        )
+    })
   })
 }
 
 ## To be copied in the UI
-# mod_08_spotlight_students_ui("08_spotlight_students_1")
+# mod_08_spotlight_students_ui("08_spotlight_students_ui_1")
 
 ## To be copied in the server
-# callModule(mod_08_spotlight_students_server, "08_spotlight_students_1")
+# mod_08_spotlight_students_server("08_spotlight_students_ui_1")
