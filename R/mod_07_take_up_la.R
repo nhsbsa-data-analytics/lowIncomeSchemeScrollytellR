@@ -181,18 +181,18 @@ mod_07_take_up_la_server <- function(id) {
     # click local authority and show decile distribution
     output$plot_selected_region_la <- highcharter::renderHighchart({
       req(input$input_region)
-      req(input$input_year)
+      # req(input$input_year)
 
       # la data frame, change to sequence data but only for selected region and year
       plot_df <- lowIncomeSchemeScrollytellR::adult_population_df %>%
         dplyr::filter(PCD_REGION_NAME == input$input_region) %>%
-        dplyr::filter(FINANCIAL_YEAR == input$input_year) %>%
+        # dplyr::filter(FINANCIAL_YEAR == input$input_year) %>%
         dplyr::group_by(FINANCIAL_YEAR, PCD_LAD_NAME) %>%
         dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
         dplyr::mutate(
           value = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000
         ) %>%
-        dplyr::select(FINANCIAL_YEAR, PCD_LAD_NAME, value)
+        dplyr::select(PCD_LAD_NAME, FINANCIAL_YEAR, value)
 
       # filter la_map as well
       la_map <- lowIncomeSchemeScrollytellR::la_map %>%
@@ -202,6 +202,16 @@ mod_07_take_up_la_server <- function(id) {
         geojsonsf::sf_geojson() %>%
         jsonlite::fromJSON(simplifyVector = F)
 
+
+      plot_sequence_series <- plot_df %>%
+        tidyr::complete(FINANCIAL_YEAR, PCD_LAD_NAME,
+          fill = list(value = 0)
+        ) %>%
+        dplyr::group_by(PCD_LAD_NAME) %>%
+        dplyr::do(sequence = .$value) %>%
+        highcharter::list_parse()
+
+
       # create plot and add java script event
       # for shiny module, give namespace to get which click event.
       # TODO: This chart needs to change to animation
@@ -209,15 +219,19 @@ mod_07_take_up_la_server <- function(id) {
       click_js <- htmlwidgets::JS("function(event) {Shiny.setInputValue('07_take_up_la_ui_1-mapclick', event.point.PCD_LAD_NAME);}")
 
       highcharter::highchart(type = "map") %>%
-        # highcharter::hc_chart(marginBottom = 100) %>%
+        highcharter::hc_chart(marginBottom = 100) %>%
         highcharter::hc_add_series(
-          data = plot_df,
+          data = plot_sequence_series,
           mapData = la_map,
           joinBy = "PCD_LAD_NAME",
           tooltip = list(
             headerFormat = "",
-            pointFormat = "<b>Region:</b> {point.PCD_LAD_NAME}<br><b>Take-up:</b> {point.value:.1f} (per thousand of the general population)"
+            pointFormat = "<b>Local Authority: </b> {point.PCD_LAD_NAME}<br><b>Take-up: </b> {point.value:.1f} (per thousand of the general population)"
           )
+        ) %>%
+        highcharter::hc_motion(
+          labels = unique(plot_df$FINANCIAL_YEAR),
+          startIndex = 4
         ) %>%
         theme_nhsbsa() %>%
         highcharter::hc_credits(enabled = FALSE) %>%
@@ -275,7 +289,7 @@ mod_07_take_up_la_server <- function(id) {
           ) %>%
           highcharter::hc_xAxis(
             min = 1,
-            max = 12, # Pad to ensure we can see the 314 label
+            max = 11, # Pad to ensure we can see the 314 label
             categories = c(NA, "1<br>Most<br>deprived", rep(NA, 8), "10<br>Least<br>deprived"),
             labels = list(step = 9),
             title = list(text = "Deprivation decile")
