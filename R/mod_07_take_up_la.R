@@ -12,10 +12,6 @@ mod_07_take_up_la_ui <- function(id) {
   tagList(
     fluidPage(
       fluidRow(
-        column(
-          width = 12,
-          style = "background-color: #FFFFFF;",
-        ),
         fluidRow(
           column(
             width = 4,
@@ -31,6 +27,7 @@ mod_07_take_up_la_ui <- function(id) {
           column(
             width = 8,
             fluidRow(
+              style = "background-color: #FFFFFF;",
               h6("Estimated take-up of NHS Low Income Scheme by Index of Multiple Deprivation for English Local Authorities (2015/16 to 2020/21)"),
               column(
                 width = 6,
@@ -61,16 +58,29 @@ mod_07_take_up_la_ui <- function(id) {
                 )
               )
             ),
-            highcharter::highchartOutput(
-              outputId = ns("plot_selected_region_la"),
-              height = "450px"
-            ),
-            highcharter::highchartOutput(
-              outputId = ns("plot_successful_individuals_by_la"),
-              height = "450px"
-            ),
-            highcharter::highchartOutput(
-              outputId = ns("plot_imd_decile_by_selected_la") # this is a bar graph to show LSOA decile distribution of selected la
+            fluidRow(
+              style = "background-color: #FFFFFF;",
+              column(
+                width = 6,
+                highcharter::highchartOutput(
+                  outputId = ns("plot_selected_region_la"),
+                  height = "450px"
+                )
+              ),
+              column(
+                width = 6,
+                tags$b("Click map"), " to see IMD decile distribution by selected local authority",
+                br(),
+                highcharter::highchartOutput(
+                  outputId = ns("plot_imd_decile_by_selected_la"),
+                  height = "300px",
+                  width = "100%" # this is a bar graph to show LSOA decile distribution of selected la
+                )
+              ),
+              highcharter::highchartOutput(
+                outputId = ns("scatter_successful_individuals_by_la_imd"),
+                height = "450px"
+              )
             )
           )
         )
@@ -86,9 +96,7 @@ mod_07_take_up_la_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-
-
-    output$plot_successful_individuals_by_la <- highcharter::renderHighchart({
+    output$scatter_successful_individuals_by_la_imd <- highcharter::renderHighchart({
 
       # Calculate %s
       plot_df <- lowIncomeSchemeScrollytellR::adult_population_df %>%
@@ -170,6 +178,7 @@ mod_07_take_up_la_server <- function(id) {
         )
     })
 
+    # click local authority and show decile distribution
     output$plot_selected_region_la <- highcharter::renderHighchart({
       req(input$input_region)
       req(input$input_year)
@@ -197,7 +206,7 @@ mod_07_take_up_la_server <- function(id) {
       # for shiny module, give namespace to get which click event.
       # TODO: This chart needs to change to animation
       #
-      click_js <- htmlwidgets::JS("function(event) {Shiny.setInputValue('07_take_up_la_ui_1-mapclick', event.point.PCD_LAD_NAME, {priority: 'event'});}")
+      click_js <- htmlwidgets::JS("function(event) {Shiny.setInputValue('07_take_up_la_ui_1-mapclick', event.point.PCD_LAD_NAME);}")
 
       highcharter::highchart(type = "map") %>%
         # highcharter::hc_chart(marginBottom = 100) %>%
@@ -211,11 +220,9 @@ mod_07_take_up_la_server <- function(id) {
           )
         ) %>%
         theme_nhsbsa() %>%
-        highcharter::hc_subtitle(
-          text = "Note:  IMD rank is based on English indicies of deprivation 2019.",
-          verticalAlign = "bottom"
-        ) %>%
+        highcharter::hc_credits(enabled = FALSE) %>%
         highcharter::hc_colorAxis(min = 0, max = 20) %>%
+        highcharter::hc_legend(enabled = FALSE) %>%
         highcharter::hc_plotOptions(
           map = list(
             events = list(
@@ -230,31 +237,55 @@ mod_07_take_up_la_server <- function(id) {
 
     observeEvent(input$mapclick, {
       output$plot_imd_decile_by_selected_la <- highcharter::renderHighchart({
-        req(input$input_region)
-        # req(input$mapclick)
+        req(input$mapclick)
+
 
         la_imd_count <- lowIncomeSchemeScrollytellR::imd_decile_df %>%
-          # filter here first to hold of selected region value
-          dplyr::filter(PCD_REGION_NAME == input$input_region &
-            PCD_LAD_NAME == input$mapclick) %>%
           # complete and fill to keep all IMD DECILE values from 1- 10
           tidyr::complete(INDEX_OF_MULT_DEPRIV_DECILE,
             tidyr::nesting(PCD_LAD_NAME, PCD_REGION_NAME),
             fill = list(IMD_DECILE_COUNT_LAD = 0, IMD_DECILE_P = 0)
           ) %>%
+          # filter here first to hold of selected region value
+          dplyr::filter(PCD_LAD_NAME == input$mapclick) %>%
           dplyr::select(INDEX_OF_MULT_DEPRIV_DECILE, PCD_LAD_NAME, IMD_DECILE_P)
 
         la_imd_count %>%
           highcharter::hchart(
-            type = "line",
+            type = "column",
             highcharter::hcaes(x = INDEX_OF_MULT_DEPRIV_DECILE, y = IMD_DECILE_P)
+          ) %>%
+          theme_nhsbsa() %>%
+          highcharter::hc_credits(enabled = FALSE) %>%
+          highcharter::hc_title(
+            text = glue::glue({
+              input$mapclick
+            })
+          ) %>%
+          highcharter::hc_subtitle(
+            text = "Note:  IMD rank is based on English indicies of deprivation 2019.",
+            verticalAlign = "bottom"
+          ) %>%
+          highcharter::hc_yAxis(
+            title = list(
+              text = "%of LSOA in deprivation",
+              align = "middle"
+            ),
+            labels = list(format = "{value:.0f}%")
+          ) %>%
+          highcharter::hc_xAxis(
+            min = 1,
+            max = 12, # Pad to ensure we can see the 314 label
+            categories = c(NA, "1<br>Most<br>deprived", rep(NA, 8), "10<br>Least<br>deprived"),
+            labels = list(step = 9),
+            title = list(text = "Deprivation decile")
+          ) %>%
+          highcharter::hc_tooltip(
+            shared = FALSE,
+            formatter = highcharter::JS("function () { return '<b>2019 IMD decile: </b>' + this.point.x + '<br>' + '<b>Percentage: </b>' + (Math.round(this.point.y * 10) / 10).toFixed(1) + '%';}")
           )
       })
     })
-
-
-
-
 
 
 
