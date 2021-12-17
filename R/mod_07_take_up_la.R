@@ -66,8 +66,12 @@ mod_07_take_up_la_ui <- function(id) {
               height = "450px"
             ),
             highcharter::highchartOutput(
-              outputId = ns("plot_successful_individuals_by_la_imd"),
+              outputId = ns("plot_successful_individuals_by_la"),
               height = "450px"
+            ),
+            highcharter::highchartOutput(
+              outputId = ns("plot_imd_decile_by_selected_la") # this is a bar graph to show LSOA decile distribution of selected la
+              
             )
           )
         )
@@ -85,16 +89,14 @@ mod_07_take_up_la_server <- function(id) {
 
 
 
-    output$plot_successful_individuals_by_la_imd <- highcharter::renderHighchart({
+    output$plot_successful_individuals_by_la <- highcharter::renderHighchart({
 
       # Calculate %s
       plot_df <- lowIncomeSchemeScrollytellR::adult_population_df %>%
-        # dplyr::filter(FINANCIAL_YEAR == input$input_year) %>%
         dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
         dplyr::mutate(
           p = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000
-        ) # %>%
-      # dplyr::mutate(color = ifelse(PCD_REGION_NAME == input$input_region, "#003087", "#DDE1E4"))
+        )
 
       # Format for highcharter animation
       # Removed as it confused with drop down menu (need to check though)
@@ -131,13 +133,7 @@ mod_07_take_up_la_server <- function(id) {
           labels = unique(plot_df$FINANCIAL_YEAR),
           startIndex = 4
         ) %>%
-        # highcharter::hc_title(
         theme_nhsbsa(stack = NA) %>%
-        #   text = "Estimated take-up of NHS Low Income Scheme by IMD Rank for English Local Authorities (2015/16 to 2020/21)"
-        # ) %>%
-        # highcharter::hc_subtitle(
-        #   text = "Note:  IMD rank is based on English indicies of deprivation 2019."
-        # ) %>%
         highcharter::hc_xAxis(
           min = 1,
           max = 330, # Pad to ensure we can see the 314 label
@@ -176,7 +172,8 @@ mod_07_take_up_la_server <- function(id) {
     })
 
     output$plot_selected_region_la <- highcharter::renderHighchart({
-
+      req(input$input_region)
+      req(input$input_year)
 
       # la data frame, change to sequence data but only for selected region and year
       plot_df <- lowIncomeSchemeScrollytellR::adult_population_df %>%
@@ -187,11 +184,9 @@ mod_07_take_up_la_server <- function(id) {
         dplyr::mutate(
           value = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000
         ) %>%
-        dplyr::select(FINANCIAL_YEAR, PCD_LAD_NAME, value) %>%
-        dplyr::inner_join(la_imd_count)
+        dplyr::select(FINANCIAL_YEAR, PCD_LAD_NAME, value)
 
       # filter la_map as well
-
       la_map <- lowIncomeSchemeScrollytellR::la_map %>%
         dplyr::inner_join(lowIncomeSchemeScrollytellR::region_la_lookup) %>%
         dplyr::filter(PCD_REGION_NAME == input$input_region) %>%
@@ -199,7 +194,11 @@ mod_07_take_up_la_server <- function(id) {
         geojsonsf::sf_geojson() %>%
         jsonlite::fromJSON(simplifyVector = F)
 
-      # create plot (first without tooltip)
+      # create plot and add java script event
+      # for shiny module, give namespace to get which click event.
+      # TODO: It needs to be returns to animation
+      #
+      click_js <- htmlwidgets::JS("function(event) {Shiny.setInputValue('07_take_up_la_ui_1-mapclick', event.point.PCD_LAD_NAME, {priority: 'event'});}")
 
       highcharter::highchart(type = "map") %>%
         # highcharter::hc_chart(marginBottom = 100) %>%
@@ -213,18 +212,27 @@ mod_07_take_up_la_server <- function(id) {
           )
         ) %>%
         theme_nhsbsa() %>%
-        # highcharter::hc_title(
-        #   text = "Estimated take-up of NHS Low Income Scheme (2015/16 to 2019/20)"
-        # ) %>%
         highcharter::hc_subtitle(
           text = "Note:  IMD rank is based on English indicies of deprivation 2019.",
           verticalAlign = "bottom"
         ) %>%
-        highcharter::hc_colorAxis(min = 0, max = 20)
+        highcharter::hc_colorAxis(min = 0, max = 20) %>%
+        highcharter::hc_plotOptions(
+          map = list(
+            events = list(
+              click = click_js
+            )
+          )
+        )
     })
 
 
-    # Just keep the region name and the rest of element is done prior to the text rendering.
+    observeEvent(input$mapclick, {
+      # output$oText <- renderText(paste("test", input$`07_take_up_la_ui_1-mapclick`))
+      print(input$mapclick)
+    })
+
+
 
 
     # Pull number of local authorities in the selected region.
