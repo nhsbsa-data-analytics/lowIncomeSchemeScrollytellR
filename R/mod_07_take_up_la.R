@@ -71,7 +71,6 @@ mod_07_take_up_la_ui <- function(id) {
             ),
             highcharter::highchartOutput(
               outputId = ns("plot_imd_decile_by_selected_la") # this is a bar graph to show LSOA decile distribution of selected la
-              
             )
           )
         )
@@ -196,7 +195,7 @@ mod_07_take_up_la_server <- function(id) {
 
       # create plot and add java script event
       # for shiny module, give namespace to get which click event.
-      # TODO: It needs to be returns to animation
+      # TODO: This chart needs to change to animation
       #
       click_js <- htmlwidgets::JS("function(event) {Shiny.setInputValue('07_take_up_la_ui_1-mapclick', event.point.PCD_LAD_NAME, {priority: 'event'});}")
 
@@ -227,18 +226,43 @@ mod_07_take_up_la_server <- function(id) {
     })
 
 
+    # IMD chart
+
     observeEvent(input$mapclick, {
-      # output$oText <- renderText(paste("test", input$`07_take_up_la_ui_1-mapclick`))
-      print(input$mapclick)
+      output$plot_imd_decile_by_selected_la <- highcharter::renderHighchart({
+        req(input$input_region)
+        # req(input$mapclick)
+
+        la_imd_count <- lowIncomeSchemeScrollytellR::imd_decile_df %>%
+          # filter here first to hold of selected region value
+          dplyr::filter(PCD_REGION_NAME == input$input_region &
+            PCD_LAD_NAME == input$mapclick) %>%
+          # complete and fill to keep all IMD DECILE values from 1- 10
+          tidyr::complete(INDEX_OF_MULT_DEPRIV_DECILE,
+            tidyr::nesting(PCD_LAD_NAME, PCD_REGION_NAME),
+            fill = list(IMD_DECILE_COUNT_LAD = 0, IMD_DECILE_P = 0)
+          ) %>%
+          dplyr::select(INDEX_OF_MULT_DEPRIV_DECILE, PCD_LAD_NAME, IMD_DECILE_P)
+
+        la_imd_count %>%
+          highcharter::hchart(
+            type = "line",
+            highcharter::hcaes(x = INDEX_OF_MULT_DEPRIV_DECILE, y = IMD_DECILE_P)
+          )
+      })
     })
 
 
 
 
+
+
+
+    # Bit messy - for the dynamic text in HTML
+    # Probably it will need to tidy up
     # Pull number of local authorities in the selected region.
     # get the highest take-up local authority, mention the deprivation rank
     # get the lowest take-up local authority, mention the deprivation rank
-
 
     # Calculate %s
     plot_df <- reactive({
@@ -264,10 +288,6 @@ mod_07_take_up_la_server <- function(id) {
         dplyr::select(PCD_LAD_NAME, PCD_LAD_IMD_RANK, p)
     })
 
-    # observe({
-    #   print(paste(highest_take_up_la()[1], "&", highest_take_up_la()[2]))
-    # })
-
 
     # which is the lowest take-up local authority in the selected region.
     lowest_take_up_la <- reactive({
@@ -275,13 +295,6 @@ mod_07_take_up_la_server <- function(id) {
         dplyr::filter(p == min(p)) %>%
         dplyr::select(PCD_LAD_NAME, PCD_LAD_IMD_RANK, p)
     })
-
-    # observe({
-    #   print(paste(lowest_take_up_la()[1], "&", lowest_take_up_la()[2]))
-    # })
-
-
-
 
     # Take-up of selected region
     # this part will change depends on the region selection from the reactive value.
