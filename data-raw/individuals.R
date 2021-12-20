@@ -1,5 +1,6 @@
 library(magrittr)
 library(nhsbsaR)
+library(dplyr)
 source("data-raw/individuals_utils.R")
 
 # Set up connection to the DB
@@ -19,6 +20,27 @@ base_df <- base_df %>%
 individuals_by_age_band_df <- base_df %>%
   aggregate_individuals(., BAND_5YEARS, multiply_max_individuals = FALSE) %>%
   dplyr::arrange(FINANCIAL_YEAR, desc(BAND_5YEARS))
+
+# Calculate TOTAL_INDIVIDUALS and PCT_INDIVIDUALS
+individuals_by_age_band_df <- individuals_by_age_band_df %>% 
+  dplyr::filter(
+    !(BAND_5YEARS %in% c("Co-applicant", "Unknown"))
+  ) %>%
+  dplyr::group_by(FINANCIAL_YEAR) %>%
+  dplyr::mutate(PCT_INDIVIDUALS = TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100) %>%
+  dplyr::ungroup()
+
+# Apply SDC to total individuals and percentage of individuals
+individuals_by_age_band_df <- individuals_by_age_band_df %>% 
+  mutate(SDC = ifelse(TOTAL_INDIVIDUALS %in% c(1,2,3,4),1,0),
+         SDC_TOTAL_INDIVIDUALS = 
+           ifelse(SDC == 1, NA_integer_, round(TOTAL_INDIVIDUALS, -1)),
+         SDC_PCT_INDIVIDUALS =
+           ifelse(SDC == 1, NA_integer_, janitor::round_half_up(PCT_INDIVIDUALS))
+         ) %>% 
+  select(-SDC)
+
+
 
 # TOTAL_INDIVIDUALS per CLIENTGROUP_DESC_FORMAT
 individuals_by_client_group_df <- base_df %>%

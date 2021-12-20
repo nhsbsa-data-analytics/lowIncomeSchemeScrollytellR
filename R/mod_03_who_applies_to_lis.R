@@ -73,26 +73,16 @@ mod_03_who_applies_to_lis_server <- function(id) {
     ns <- session$ns
     # Pyramid plot for age band
     output$plot_individuals_by_age_band <- highcharter::renderHighchart({
-
-      # Filter out Co-applicants and Unknowns, calculate %s
-      plot_df <- lowIncomeSchemeScrollytellR::individuals_by_age_band_df %>%
-        dplyr::filter(
-          !(BAND_5YEARS %in% c("Co-applicant", "Unknown"))
-        ) %>%
-        dplyr::group_by(FINANCIAL_YEAR) %>%
-        dplyr::mutate(p = TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100) %>%
-        dplyr::ungroup()
-
       # Pull the max p
-      max_p <- max(abs(plot_df$p))
+      max_p <- max(abs(lowIncomeSchemeScrollytellR::individuals_by_age_band_df$PCT_INDIVIDUALS))
 
       # Format for highcharter animation
-      plot_series_list <- plot_df %>%
-        tidyr::expand(FINANCIAL_YEAR, BAND_5YEARS) %>%
-        dplyr::left_join(plot_df) %>%
-        dplyr::mutate(p = tidyr::replace_na(p)) %>%
+      plot_series_list <- lowIncomeSchemeScrollytellR::individuals_by_age_band_df %>%
+        tidyr::complete(FINANCIAL_YEAR, BAND_5YEARS,
+                        fill = list(value = 0)
+        ) %>% 
         dplyr::group_by(BAND_5YEARS) %>%
-        dplyr::do(data = list(sequence = .$p)) %>%
+        dplyr::do(data = list(sequence = .$SDC_PCT_INDIVIDUALS)) %>%
         dplyr::ungroup() %>%
         # dplyr::group_by(FINANCIAL_YEAR) %>%
         dplyr::do(data = .$data) %>%
@@ -106,7 +96,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
         highcharter::hc_chart(type = "column", marginBottom = 120) %>%
         highcharter::hc_add_series_list(x = plot_series_list) %>%
         highcharter::hc_motion(
-          labels = unique(plot_df$FINANCIAL_YEAR),
+          labels = unique(lowIncomeSchemeScrollytellR::individuals_by_age_band_df$FINANCIAL_YEAR),
           series = c(0, 1),
           startIndex = 4
         ) %>%
@@ -119,7 +109,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
         ) %>%
         highcharter::hc_xAxis(
           title = list(text = "Age band"),
-          categories = sort(unique(plot_df$BAND_5YEARS)),
+          categories = sort(unique(lowIncomeSchemeScrollytellR::individuals_by_age_band_df$BAND_5YEARS)),
           reversed = FALSE
         ) %>%
         highcharter::hc_yAxis(
@@ -131,7 +121,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
         ) %>%
         highcharter::hc_tooltip(
           shared = FALSE,
-          formatter = highcharter::JS("function () { return '<b>Age band (5 years): </b>' + this.point.category + '<br/>' + '<b>Percentage: </b>' + (Math.round(this.point.y * 10) / 10).toFixed(1) + '%';}")
+          formatter = highcharter::JS("function () { return '<b>Age band (5 years): </b>' + this.point.category + '<br/>' + '<b>Percentage: </b>' + this.point.y + '%';}")
         ) %>%
         highcharter::hc_credits(
           enabled = TRUE
