@@ -223,7 +223,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
           series = c(0, 1),
           startIndex = 4
         ) %>%
-        theme_nhsbsa() %>%
+        theme_nhsbsa(stack = NA) %>%
         highcharter::hc_title(
           text = "Deprivation decile of NHS Low Income Scheme individuals in England (2015/16 to 2020/21)"
         ) %>%

@@ -62,7 +62,7 @@ adult_population_df <- adult_population_imd_db %>%
   group_by(POPULATION_YEAR, PCD_LAD_CODE, PCD_LAD_NAME, PCD_REGION_CODE, PCD_REGION_NAME) %>%
   summarise(TOTAL_ADULT_POPULATION = sum(TOTAL_POPULATION)) %>%
   ungroup() %>%
-  dplyr::mutate(
+  mutate(
     FINANCIAL_YEAR = dplyr::case_when(
       POPULATION_YEAR == 2015 ~ "2015/16",
       POPULATION_YEAR == 2016 ~ "2016/17",
@@ -78,7 +78,8 @@ adult_population_df <- adult_population_imd_db %>%
     PCD_REGION_NAME,
     TOTAL_ADULT_POPULATION
   ) %>%
-  dplyr::collect()
+  collect() %>%
+  arrange(FINANCIAL_YEAR)
 
 # IMD decile percentage by LA
 imd_decile_df <- adult_population_imd_db %>%
