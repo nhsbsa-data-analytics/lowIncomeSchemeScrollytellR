@@ -316,7 +316,7 @@ mod_07_take_up_la_server <- function(id) {
       })
     })
 
-    # dynamic text 
+    # dynamic text
     plot_df <- reactive({
       lowIncomeSchemeScrollytellR::adult_population_df %>%
         dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
