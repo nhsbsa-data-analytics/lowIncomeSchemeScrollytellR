@@ -13,33 +13,30 @@ mod_07_take_up_la_ui <- function(id) {
     fluidPage(
       fluidRow(
         fluidRow(
-          column(
-            width = 4,
-            p(
-              "It is helpful to consider estimated take-up relative to deprivation.",
-              "The chart and map show estimated take-up by local authority area relative ",
-              "to the population and overall deprivation profile of an area."
-            ),
-            shiny::htmlOutput(
-              ns("text")
+          col_4(
+            style = "margin-bottom: 0;",
+            div(
+              br(),
+              br(),
+              p(
+                "It is helpful to consider estimated take-up relative to deprivation.",
+                "The chart and map show estimated take-up by local authority area relative ",
+                "to the population and overall deprivation profile of an area."
+              ),
+              br(),
+              br(),
+              shiny::htmlOutput(
+                ns("text")
+              )
             )
           ),
-          column(
-            width = 8,
+          col_8(
             fluidRow(
               style = "background-color: #FFFFFF;",
               h6("Estimated take-up of NHS Low Income Scheme by Index of Multiple Deprivation for English Local Authorities (2015/16 to 2020/21)"),
               column(
                 width = 6,
-                shiny::selectInput(
-                  inputId = ns("input_year"),
-                  label = "Financial Year:",
-                  choices = c("2015/16", "2016/17", "2017/18", "2018/19", "2019/20", "2020/21"),
-                  selected = "2019/20"
-                )
-              ),
-              column(
-                width = 6,
+                style = "margin-bottom: 0;",
                 shiny::selectInput(
                   inputId = ns("input_region"),
                   label = "Region:",
@@ -56,19 +53,38 @@ mod_07_take_up_la_ui <- function(id) {
                   ),
                   selected = "North West"
                 )
-              )
+              ) # ,
+              # column(
+              #   width = 6 # ,
+              #   # shiny::selectInput(
+              #   #   inputId = ns("input_region"),
+              #   #   label = "Region:",
+              #   #   choices = c(
+              #   #     "East Midlands",
+              #   #     "East of England",
+              #   #     "London",
+              #   #     "North East",
+              #   #     "North West",
+              #   #     "South East",
+              #   #     "South West",
+              #   #     "West Midlands",
+              #   #     "Yorkshire and The Humber"
+              #   #   ),
+              #   #   selected = "North West"
+              #   # )
+              # )
             ),
             fluidRow(
               style = "background-color: #FFFFFF;",
-              column(
-                width = 6,
+              col_6(
+                style = "margin-bottom: 0;",
                 highcharter::highchartOutput(
                   outputId = ns("plot_selected_region_la"),
                   height = "450px"
                 )
               ),
-              column(
-                width = 6,
+              col_6(
+                style = "margin-bottom: 0;",
                 tags$b("Click map"), " to see IMD decile distribution by selected local authority",
                 br(),
                 highcharter::highchartOutput(
@@ -253,7 +269,6 @@ mod_07_take_up_la_server <- function(id) {
       output$plot_imd_decile_by_selected_la <- highcharter::renderHighchart({
         req(input$mapclick)
 
-
         la_imd_count <- lowIncomeSchemeScrollytellR::imd_decile_df %>%
           # complete and fill to keep all IMD DECILE values from 1- 10
           tidyr::complete(INDEX_OF_MULT_DEPRIV_DECILE,
@@ -301,19 +316,11 @@ mod_07_take_up_la_server <- function(id) {
       })
     })
 
-
-
-    # Bit messy - for the dynamic text in HTML
-    # Probably it will need to tidy up
-    # Pull number of local authorities in the selected region.
-    # get the highest take-up local authority, mention the deprivation rank
-    # get the lowest take-up local authority, mention the deprivation rank
-
-    # Calculate %s
+    # dynamic text 
     plot_df <- reactive({
       lowIncomeSchemeScrollytellR::adult_population_df %>%
         dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
-        dplyr::filter(FINANCIAL_YEAR == input$input_year) %>%
+        dplyr::filter(FINANCIAL_YEAR == "2019/20") %>%
         dplyr::mutate(
           p = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000
         ) %>%
@@ -334,6 +341,8 @@ mod_07_take_up_la_server <- function(id) {
     })
 
 
+
+
     # which is the lowest take-up local authority in the selected region.
     lowest_take_up_la <- reactive({
       plot_df() %>%
@@ -344,32 +353,32 @@ mod_07_take_up_la_server <- function(id) {
     # Take-up of selected region
     # this part will change depends on the region selection from the reactive value.
     output$text <- shiny::renderUI({
+      main_text <- paste(
+        "<br> <br> <p> In <b> 2019/20, ", highest_take_up_la()[1], "</b> has the highest",
+        " take-up per thousand of the general population in the <b>", input$input_region,
+        "</b>. Of all local authorities in England, the IMD rank in <b>", highest_take_up_la()[1], " </b> is <b>",
+        highest_take_up_la()[2], ". </b>", "</p> <p> <b>", lowest_take_up_la()[1],
+        " </b> has the lowest take-up in the <b>", input$input_region, "</b>", ", with an IMD rank of <b>",
+        lowest_take_up_la()[2], " </b> out of all local authorities in England.",
+        sep = ""
+      )
+
+      additional_text <- paste(
+        "<p> Take-up is somewhat", "<b> lower, relative to deprivation </b>",
+        "in five local authorities in the", " <b> North West (Knowsley,
+          Hyndburn, Halton, St Helens and Barrow in Furness) </b> </p>",
+        sep = ""
+      )
+
+
+
       if (input$input_region == "North West") {
-        shiny::HTML(paste(
-          "<br>",
-          "<br>",
-          "<p>", "In ", "<b>", input$input_year, "</b>, <b>", highest_take_up_la()[1], "</b>",
-          " has the highest take-up per thousand of the general population in the ",
-          "<b>", input$input_region, "</b>", ". Of all local authorities in England, the IMD rank in ", "<b>",
-          highest_take_up_la()[1], " </b> is ", "<b>", highest_take_up_la()[2], ".</b>",
-          "</p>", "<p>", "<b>", lowest_take_up_la()[1], " </b> has the lowest take-up in the ", " <b>", input$input_region, "</b>",
-          ", with an IMD rank of ", " <b>", lowest_take_up_la()[2], " </b> out of all local authorities in England.",
-          "<p>",
-          "Take-up is somewhat", "<b> lower, relative to deprivation </b>", "in five local authorities in the", " <b> North West </b>",
-          "<b> (Knowsley, Hyndburn, Halton, St Helens and Barrow in Furness.)", "</p>",
-          sep = ""
+        shiny::HTML(paste0(
+          main_text, additional_text
         ))
       } else {
         shiny::HTML(paste(
-          "<br>",
-          "<br>",
-          "<p>", "In ", "<b>", input$input_year, ", ", highest_take_up_la()[1], "</b>",
-          " has the highest take-up per thousand of the general population in the ",
-          "<b>", input$input_region, "</b>", ". Of all local authorities in England, the IMD rank in ", "<b>",
-          highest_take_up_la()[1], " </b> is ", "<b>", highest_take_up_la()[2], ".</b>",
-          "</p>", "<p>", "<b>", lowest_take_up_la()[1], " </b> has the lowest take-up in the ", " <b>", input$input_region, "</b>",
-          ", with an IMD rank of ", " <b>", lowest_take_up_la()[2], " </b> out of all local authorities in England.",
-          sep = ""
+          main_text
         ))
       }
     })
