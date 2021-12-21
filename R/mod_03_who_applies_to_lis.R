@@ -25,6 +25,9 @@ mod_03_who_applies_to_lis_ui <- function(id) {
       highcharter::highchartOutput(
         outputId = ns("plot_individuals_by_age_band"),
         height = "500px"
+      ),
+      mod_download_ui(
+        id = ns("download_individuals_by_age_band")
       )
     ),
     br(),
@@ -79,8 +82,8 @@ mod_03_who_applies_to_lis_server <- function(id) {
       # Format for highcharter animation
       plot_series_list <- lowIncomeSchemeScrollytellR::individuals_by_age_band_df %>%
         tidyr::complete(FINANCIAL_YEAR, BAND_5YEARS,
-                        fill = list(value = 0)
-        ) %>% 
+          fill = list(value = 0)
+        ) %>%
         dplyr::group_by(BAND_5YEARS) %>%
         dplyr::do(data = list(sequence = .$SDC_PCT_INDIVIDUALS)) %>%
         dplyr::ungroup() %>%
@@ -88,8 +91,6 @@ mod_03_who_applies_to_lis_server <- function(id) {
         dplyr::do(data = .$data) %>%
         dplyr::mutate(name = "Age Band (5 Year)") %>%
         highcharter::list_parse()
-
-
 
       # Create plot
       highcharter::highchart() %>%
@@ -127,6 +128,32 @@ mod_03_who_applies_to_lis_server <- function(id) {
           enabled = TRUE
         )
     })
+
+    # Swap NAs for "c" for data download
+    individuals_by_age_band_download_df <- lowIncomeSchemeScrollytellR::individuals_by_age_band_df %>%
+      dplyr::mutate(
+        SDC_PCT_INDIVIDUALS = ifelse(
+          test = is.na(SDC_PCT_INDIVIDUALS),
+          yes = "c",
+          no = as.character(SDC_PCT_INDIVIDUALS)
+        ),
+        SDC_TOTAL_INDIVIDUALS = ifelse(
+          test = is.na(SDC_TOTAL_INDIVIDUALS),
+          yes = "c",
+          no = as.character(SDC_TOTAL_INDIVIDUALS)
+        )
+      ) %>%
+      dplyr::select(-TOTAL_INDIVIDUALS, -PCT_INDIVIDUALS)
+
+
+    # Add data to download button
+    mod_download_server(
+      id = "download_individuals_by_age_band",
+      filename = "individual_age_band.csv",
+      export_data = individuals_by_age_band_download_df
+    )
+
+
 
     # Stacked column plot by client group
     output$plot_individuals_by_client_group <- highcharter::renderHighchart({
