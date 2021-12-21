@@ -154,24 +154,14 @@ mod_03_who_applies_to_lis_server <- function(id) {
     )
 
 
-
     # Stacked column plot by client group
     output$plot_individuals_by_client_group <- highcharter::renderHighchart({
 
-      # Filter out Co-applicants and Unknowns then calculate %s
-      plot_df <- lowIncomeSchemeScrollytellR::individuals_by_client_group_df %>%
-        dplyr::filter(
-          !(CLIENTGROUP_DESC_FORMAT %in% c("Co-applicant", "Unknown"))
-        ) %>%
-        dplyr::group_by(FINANCIAL_YEAR) %>%
-        dplyr::mutate(p = TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100) %>%
-        dplyr::ungroup()
-
       # Create plot
-      plot_df %>%
+      lowIncomeSchemeScrollytellR::individuals_by_client_group_df %>%
         highcharter::hchart(
           type = "column",
-          highcharter::hcaes(x = FINANCIAL_YEAR, y = p, group = CLIENTGROUP_DESC_FORMAT)
+          highcharter::hcaes(x = FINANCIAL_YEAR, y = SDC_PCT_INDIVIDUALS, group = CLIENTGROUP_DESC_FORMAT)
         ) %>%
         theme_nhsbsa() %>%
         highcharter::hc_title(
@@ -191,13 +181,17 @@ mod_03_who_applies_to_lis_server <- function(id) {
           title = list(text = "Financial year")
         ) %>%
         highcharter::hc_tooltip(
-          shared = FALSE,
-          formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Percentage: </b>' + (Math.round(this.point.y * 10) / 10).toFixed(1) + '%';}")
+          shared = TRUE,
+          headerFormat = "<b> {point.name} </b>", valueSuffix = "%"
+          # formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Percentage: </b>' + this.point.y + '%';}")
         ) %>%
         highcharter::hc_credits(
           enabled = TRUE
         )
     })
+
+ 
+
 
     # Column plot by deprivation
     output$plot_individuals_by_deprivation <- highcharter::renderHighchart({
