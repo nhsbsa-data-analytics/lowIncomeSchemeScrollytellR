@@ -88,11 +88,11 @@ individuals_by_health_df <- base_df %>%
 
 
 # Calculate TOTAL_INDIVIDUALS and PCT_INDIVIDUALS by IMD and Health IMD
-individuals_by_imd_health_df <- lowIncomeSchemeScrollytellR::individuals_by_imd_df %>%
+individuals_by_imd_health_df <- individuals_by_imd_df %>%
   mutate(DEPRIVATION = "Index of Multiple Deprivation") %>%
   rename(DECILE = INDEX_OF_MULT_DEPRIV_DECILE) %>%
   rbind(
-    lowIncomeSchemeScrollytellR::individuals_by_health_df %>%
+    individuals_by_health_df %>%
       mutate(DEPRIVATION = "Health Deprivation") %>%
       rename(DECILE = HEALTH_DEPRIVATION_DECILE)
   ) %>%

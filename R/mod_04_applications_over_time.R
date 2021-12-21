@@ -17,9 +17,11 @@ mod_04_applications_over_time_ui <- function(id) {
       "2019/20, with further declines during the pandemic."
     ),
     fluidRow(
-      align = "center",
       style = "background-color: #FFFFFF;",
-      highcharter::highchartOutput(ns("plot_applications"))
+      highcharter::highchartOutput(ns("plot_applications")),
+      mod_download_ui(
+        id = ns("download_applications")
+      )
     ),
     br(),
     p(
@@ -49,17 +51,12 @@ mod_04_applications_over_time_server <- function(id) {
     # Time series plot
     output$plot_applications <- highcharter::renderHighchart({
 
-      # Aggregate
-      plot_df <- lowIncomeSchemeScrollytellR::applications_df %>%
-        dplyr::group_by(FINANCIAL_YEAR) %>%
-        dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
-        dplyr::ungroup()
 
       # Create  plot
-      plot_df %>%
+      lowIncomeSchemeScrollytellR::applications_agg_df %>%
         highcharter::hchart(
           type = "line",
-          highcharter::hcaes(x = FINANCIAL_YEAR, y = TOTAL_APPLICATIONS)
+          highcharter::hcaes(x = FINANCIAL_YEAR, y = SDC_TOTAL_APPLICATIONS)
         ) %>%
         theme_nhsbsa() %>%
         highcharter::hc_title(
@@ -77,12 +74,33 @@ mod_04_applications_over_time_server <- function(id) {
         ) %>%
         highcharter::hc_tooltip(
           shared = FALSE,
-          formatter = highcharter::JS("function () { return '<b>Financial Year: </b>' + this.point.FINANCIAL_YEAR + '<br/>' + '<b>Total Applications: </b>' + (Math.round(this.point.y / 500) * 500 / 1000).toFixed(1) + 'k';}")
+          formatter = highcharter::JS("function () { return '<b>Financial Year: </b>' + this.point.FINANCIAL_YEAR + '<br/>' + '<b>Total Applications: </b>' + (Math.round(this.point.y / 500) * 500 / 1000).toFixed(0) + 'k';}")
         ) %>%
         highcharter::hc_credits(
           enabled = TRUE
         )
     })
+
+
+
+    # Swap NAs for "c" for data download
+    applications_agg_download_df <- lowIncomeSchemeScrollytellR::applications_agg_df %>%
+      dplyr::mutate(
+        SDC_TOTAL_APPLICATIONS = ifelse(
+          test = is.na(SDC_TOTAL_APPLICATIONS),
+          yes = "c",
+          no = as.character(SDC_TOTAL_APPLICATIONS)
+        )
+      ) %>%
+      dplyr::select(-TOTAL_APPLICATIONS)
+
+
+    # Add data to download button
+    mod_download_server(
+      id = "download_applications",
+      filename = "applications.csv",
+      export_data = applications_agg_download_df
+    )
   })
 }
 
