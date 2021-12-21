@@ -28,7 +28,7 @@ mod_download_server <- function(id, filename, export_data) {
     output$download <- downloadHandler(
       filename = filename,
       content = function(file) {
-        write.csv(export_data, file)
+        write.csv(export_data, file, row.names = FALSE)
       }
     )
   })
