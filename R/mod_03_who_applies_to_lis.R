@@ -25,6 +25,9 @@ mod_03_who_applies_to_lis_ui <- function(id) {
       highcharter::highchartOutput(
         outputId = ns("plot_individuals_by_age_band"),
         height = "500px"
+      ),
+      mod_download_ui(
+        id = ns("download_individuals_by_age_band")
       )
     ),
     br(),
@@ -38,10 +41,13 @@ mod_03_who_applies_to_lis_ui <- function(id) {
       " or earners."
     ),
     fluidRow(
-      align = "center",
+      # align = "center",
       style = "background-color: #FFFFFF;",
       highcharter::highchartOutput(
         outputId = ns("plot_individuals_by_client_group")
+      ),
+      mod_download_ui(
+        id = ns("download_individuals_by_client_group")
       )
     ),
     br(),
@@ -58,9 +64,12 @@ mod_03_who_applies_to_lis_ui <- function(id) {
       "This trend is consistent across the analysis period."
     ),
     fluidRow(
-      align = "center",
+      # align = "center",
       style = "background-color: #FFFFFF;",
-      highcharter::highchartOutput(outputId = ns("plot_individuals_by_deprivation"))
+      highcharter::highchartOutput(outputId = ns("plot_individuals_by_deprivation")),
+      mod_download_ui(
+        id = ns("download_individuals_by_deprivation")
+      )
     )
   )
 }
@@ -73,40 +82,28 @@ mod_03_who_applies_to_lis_server <- function(id) {
     ns <- session$ns
     # Pyramid plot for age band
     output$plot_individuals_by_age_band <- highcharter::renderHighchart({
-
-      # Filter out Co-applicants and Unknowns, calculate %s
-      plot_df <- lowIncomeSchemeScrollytellR::individuals_by_age_band_df %>%
-        dplyr::filter(
-          !(BAND_5YEARS %in% c("Co-applicant", "Unknown"))
-        ) %>%
-        dplyr::group_by(FINANCIAL_YEAR) %>%
-        dplyr::mutate(p = TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100) %>%
-        dplyr::ungroup()
-
       # Pull the max p
-      max_p <- max(abs(plot_df$p))
+      max_p <- max(abs(lowIncomeSchemeScrollytellR::individuals_by_age_band_df$PCT_INDIVIDUALS))
 
       # Format for highcharter animation
-      plot_series_list <- plot_df %>%
-        tidyr::expand(FINANCIAL_YEAR, BAND_5YEARS) %>%
-        dplyr::left_join(plot_df) %>%
-        dplyr::mutate(p = tidyr::replace_na(p)) %>%
+      plot_series_list <- lowIncomeSchemeScrollytellR::individuals_by_age_band_df %>%
+        tidyr::complete(FINANCIAL_YEAR, BAND_5YEARS,
+          fill = list(value = 0)
+        ) %>%
         dplyr::group_by(BAND_5YEARS) %>%
-        dplyr::do(data = list(sequence = .$p)) %>%
+        dplyr::do(data = list(sequence = .$SDC_PCT_INDIVIDUALS)) %>%
         dplyr::ungroup() %>%
         # dplyr::group_by(FINANCIAL_YEAR) %>%
         dplyr::do(data = .$data) %>%
         dplyr::mutate(name = "Age Band (5 Year)") %>%
         highcharter::list_parse()
 
-
-
       # Create plot
       highcharter::highchart() %>%
         highcharter::hc_chart(type = "column", marginBottom = 120) %>%
         highcharter::hc_add_series_list(x = plot_series_list) %>%
         highcharter::hc_motion(
-          labels = unique(plot_df$FINANCIAL_YEAR),
+          labels = unique(lowIncomeSchemeScrollytellR::individuals_by_age_band_df$FINANCIAL_YEAR),
           series = c(0, 1),
           startIndex = 4
         ) %>%
@@ -119,7 +116,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
         ) %>%
         highcharter::hc_xAxis(
           title = list(text = "Age band"),
-          categories = sort(unique(plot_df$BAND_5YEARS)),
+          categories = sort(unique(lowIncomeSchemeScrollytellR::individuals_by_age_band_df$BAND_5YEARS)),
           reversed = FALSE
         ) %>%
         highcharter::hc_yAxis(
@@ -131,30 +128,46 @@ mod_03_who_applies_to_lis_server <- function(id) {
         ) %>%
         highcharter::hc_tooltip(
           shared = FALSE,
-          formatter = highcharter::JS("function () { return '<b>Age band (5 years): </b>' + this.point.category + '<br/>' + '<b>Percentage: </b>' + (Math.round(this.point.y * 10) / 10).toFixed(1) + '%';}")
+          formatter = highcharter::JS("function () { return '<b>Age band (5 years): </b>' + this.point.category + '<br/>' + '<b>Percentage: </b>' + this.point.y + '%';}")
         ) %>%
         highcharter::hc_credits(
           enabled = TRUE
         )
     })
 
+    # Swap NAs for "c" for data download
+    individuals_by_age_band_download_df <- lowIncomeSchemeScrollytellR::individuals_by_age_band_df %>%
+      dplyr::mutate(
+        SDC_PCT_INDIVIDUALS = ifelse(
+          test = is.na(SDC_PCT_INDIVIDUALS),
+          yes = "c",
+          no = as.character(SDC_PCT_INDIVIDUALS)
+        ),
+        SDC_TOTAL_INDIVIDUALS = ifelse(
+          test = is.na(SDC_TOTAL_INDIVIDUALS),
+          yes = "c",
+          no = as.character(SDC_TOTAL_INDIVIDUALS)
+        )
+      ) %>%
+      dplyr::select(-TOTAL_INDIVIDUALS, -PCT_INDIVIDUALS)
+
+
+    # Add data to download button
+    mod_download_server(
+      id = "download_individuals_by_age_band",
+      filename = "individual_age_band.csv",
+      export_data = individuals_by_age_band_download_df
+    )
+
+
     # Stacked column plot by client group
     output$plot_individuals_by_client_group <- highcharter::renderHighchart({
 
-      # Filter out Co-applicants and Unknowns then calculate %s
-      plot_df <- lowIncomeSchemeScrollytellR::individuals_by_client_group_df %>%
-        dplyr::filter(
-          !(CLIENTGROUP_DESC_FORMAT %in% c("Co-applicant", "Unknown"))
-        ) %>%
-        dplyr::group_by(FINANCIAL_YEAR) %>%
-        dplyr::mutate(p = TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100) %>%
-        dplyr::ungroup()
-
       # Create plot
-      plot_df %>%
+      lowIncomeSchemeScrollytellR::individuals_by_client_group_df %>%
         highcharter::hchart(
           type = "column",
-          highcharter::hcaes(x = FINANCIAL_YEAR, y = p, group = CLIENTGROUP_DESC_FORMAT)
+          highcharter::hcaes(x = FINANCIAL_YEAR, y = SDC_PCT_INDIVIDUALS, group = CLIENTGROUP_DESC_FORMAT)
         ) %>%
         theme_nhsbsa() %>%
         highcharter::hc_title(
@@ -174,40 +187,53 @@ mod_03_who_applies_to_lis_server <- function(id) {
           title = list(text = "Financial year")
         ) %>%
         highcharter::hc_tooltip(
-          shared = FALSE,
-          formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Percentage: </b>' + (Math.round(this.point.y * 10) / 10).toFixed(1) + '%';}")
+          shared = TRUE,
+          headerFormat = "<b> {point.name} </b>", valueSuffix = "%"
+          # formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Percentage: </b>' + this.point.y + '%';}")
         ) %>%
         highcharter::hc_credits(
           enabled = TRUE
         )
     })
 
+    # Swap NAs for "c" for data download
+    individuals_by_client_group_download_df <- lowIncomeSchemeScrollytellR::individuals_by_client_group_df %>%
+      dplyr::mutate(
+        SDC_PCT_INDIVIDUALS = ifelse(
+          test = is.na(SDC_PCT_INDIVIDUALS),
+          yes = "c",
+          no = as.character(SDC_PCT_INDIVIDUALS)
+        ),
+        SDC_TOTAL_INDIVIDUALS = ifelse(
+          test = is.na(SDC_TOTAL_INDIVIDUALS),
+          yes = "c",
+          no = as.character(SDC_TOTAL_INDIVIDUALS)
+        )
+      ) %>%
+      dplyr::select(-TOTAL_INDIVIDUALS, -PCT_INDIVIDUALS)
+
+
+    # Add data to download button
+    mod_download_server(
+      id = "download_individuals_by_client_group",
+      filename = "individual_client_group.csv",
+      export_data = individuals_by_client_group_download_df
+    )
+
+
     # Column plot by deprivation
     output$plot_individuals_by_deprivation <- highcharter::renderHighchart({
 
-      # Calculate %s
-      plot_df <- lowIncomeSchemeScrollytellR::individuals_by_imd_df %>%
-        dplyr::mutate(DEPRIVATION = "Index of Multiple Deprivation") %>%
-        dplyr::rename(DECILE = INDEX_OF_MULT_DEPRIV_DECILE) %>%
-        rbind(
-          lowIncomeSchemeScrollytellR::individuals_by_health_df %>%
-            dplyr::mutate(DEPRIVATION = "Health Deprivation") %>%
-            dplyr::rename(DECILE = HEALTH_DEPRIVATION_DECILE)
-        ) %>%
-        dplyr::group_by(FINANCIAL_YEAR, DEPRIVATION) %>%
-        dplyr::mutate(p = TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100) %>%
-        dplyr::ungroup()
-
       # Pull the max p
-      max_p <- max(abs(plot_df$p))
+      max_p <- max(abs(lowIncomeSchemeScrollytellR::individuals_by_imd_health_df$PCT_INDIVIDUALS))
 
       # Format for highcharter animation
-      plot_series_list <- plot_df %>%
-        tidyr::expand(FINANCIAL_YEAR, DECILE, DEPRIVATION) %>%
-        dplyr::left_join(plot_df) %>%
-        dplyr::mutate(p = tidyr::replace_na(p)) %>%
+      plot_series_list <- lowIncomeSchemeScrollytellR::individuals_by_imd_health_df %>%
+        tidyr::complete(FINANCIAL_YEAR, DECILE, DEPRIVATION,
+          fill = list(value = 0)
+        ) %>%
         dplyr::group_by(DECILE, DEPRIVATION) %>%
-        dplyr::do(data = list(sequence = .$p)) %>%
+        dplyr::do(data = list(sequence = .$SDC_PCT_INDIVIDUALS)) %>%
         dplyr::ungroup() %>%
         dplyr::group_by(DEPRIVATION) %>%
         dplyr::do(data = .$data) %>%
@@ -219,7 +245,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
         highcharter::hc_chart(type = "column", marginBottom = 120) %>%
         highcharter::hc_add_series_list(x = plot_series_list) %>%
         highcharter::hc_motion(
-          labels = unique(plot_df$FINANCIAL_YEAR),
+          labels = unique(lowIncomeSchemeScrollytellR::individuals_by_imd_health_df$FINANCIAL_YEAR),
           series = c(0, 1),
           startIndex = 4
         ) %>%
@@ -232,7 +258,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
           title = list(text = "Deprivation decile")
         ) %>%
         highcharter::hc_yAxis(
-          max = ceiling(max(plot_df$p) / 5) * 5,
+          max = ceiling(max(lowIncomeSchemeScrollytellR::individuals_by_imd_health_df$SDC_PCT_INDIVIDUALS) / 5) * 5,
           labels = list(
             formatter = highcharter::JS("function(){ return this.value ;}")
           ),
@@ -240,12 +266,38 @@ mod_03_who_applies_to_lis_server <- function(id) {
         ) %>%
         highcharter::hc_tooltip(
           shared = FALSE,
-          formatter = highcharter::JS("function () { return '<b>Deprivation: </b>' + this.series.name + '<br>' + '<b>Decile: </b>' + parseInt(this.point.category) + '<br>' + '<b>Percentage: </b>' + (Math.round(this.point.y * 10) / 10).toFixed(1)  + '%';}")
+          formatter = highcharter::JS("function () { return '<b>Deprivation: </b>' + this.series.name + '<br>' + '<b>Decile: </b>' + parseInt(this.point.category) + '<br>' + '<b>Percentage: </b>' + this.point.y  + '%';}")
         ) %>%
         highcharter::hc_credits(
           enabled = TRUE
         )
     })
+
+
+
+    # Swap NAs for "c" for data download
+    individuals_by_deprivation_download_df <- lowIncomeSchemeScrollytellR::individuals_by_imd_health_df %>%
+      dplyr::mutate(
+        SDC_PCT_INDIVIDUALS = ifelse(
+          test = is.na(SDC_PCT_INDIVIDUALS),
+          yes = "c",
+          no = as.character(SDC_PCT_INDIVIDUALS)
+        ),
+        SDC_TOTAL_INDIVIDUALS = ifelse(
+          test = is.na(SDC_TOTAL_INDIVIDUALS),
+          yes = "c",
+          no = as.character(SDC_TOTAL_INDIVIDUALS)
+        )
+      ) %>%
+      dplyr::select(-TOTAL_INDIVIDUALS, -PCT_INDIVIDUALS)
+
+
+    # Add data to download button
+    mod_download_server(
+      id = "download_individuals_by_deprivation",
+      filename = "individual_deprivation.csv",
+      export_data = individuals_by_deprivation_download_df
+    )
   })
 }
 
