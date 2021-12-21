@@ -65,7 +65,7 @@ rvtl <- shiny::reactiveValuesToList
 
 #' Define tooltip text
 #'
-#' @noRd#'
+#' @noRd
 tooltip_text <- list(
   # Already entitled to help with health cost
   who_can_apply = "<strong>Who can apply </strong> Anyone can apply as long as they do not have savings or investments over a certain limit. You cannot get help if you or your partner (or both) have more than: <br>
