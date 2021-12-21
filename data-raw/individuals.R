@@ -55,6 +55,27 @@ individuals_by_client_group_df <- base_df %>%
     )
   )
 
+# Calculate TOTAL_INDIVIDUALS and PCT_INDIVIDUALS
+individuals_by_client_group_df <- individuals_by_client_group_df %>%
+  filter(
+    !(CLIENTGROUP_DESC_FORMAT %in% c("Co-applicant", "Unknown"))
+  ) %>%
+  group_by(FINANCIAL_YEAR) %>%
+  mutate(PCT_INDIVIDUALS = TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100) %>%
+  ungroup()
+
+# Apply SDC to total individuals and percentage of individuals
+individuals_by_client_group_df <- individuals_by_client_group_df %>%
+  mutate(
+    SDC = ifelse(TOTAL_INDIVIDUALS %in% c(1, 2, 3, 4), 1, 0),
+    SDC_TOTAL_INDIVIDUALS =
+      ifelse(SDC == 1, NA_integer_, round(TOTAL_INDIVIDUALS, -1)),
+    SDC_PCT_INDIVIDUALS =
+      ifelse(SDC == 1, NA_integer_, janitor::round_half_up(PCT_INDIVIDUALS))
+  ) %>%
+  select(-SDC)
+
+
 # TOTAL_INDIVIDUALS per INDEX_OF_MULT_DEPRIV_DECILE
 individuals_by_imd_df <- base_df %>%
   aggregate_individuals(INDEX_OF_MULT_DEPRIV_DECILE, multiply_max_individuals = TRUE) %>%
