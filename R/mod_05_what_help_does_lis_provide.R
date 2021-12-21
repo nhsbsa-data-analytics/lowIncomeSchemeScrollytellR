@@ -45,9 +45,11 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
       )
     ),
     fluidRow(
-      align = "center",
       style = "background-color: #FFFFFF;",
-      highcharter::highchartOutput(ns("plot_applications_by_outcome"))
+      highcharter::highchartOutput(ns("plot_applications_by_outcome")),
+      mod_download_ui(
+        id = ns("download_applications_outcome")
+      )
     )
   )
 }
@@ -62,21 +64,11 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
     # Stacked column plot for outcome
     output$plot_applications_by_outcome <- highcharter::renderHighchart({
 
-      # Filter out Ongoing, aggregate, then calculate %s
-      plot_df <- lowIncomeSchemeScrollytellR::applications_df %>%
-        dplyr::filter(OUTCOME_LEVEL2 != "Ongoing") %>%
-        dplyr::group_by(FINANCIAL_YEAR, OUTCOME_LEVEL2) %>%
-        dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
-        dplyr::ungroup() %>%
-        dplyr::group_by(FINANCIAL_YEAR) %>%
-        dplyr::mutate(p = TOTAL_APPLICATIONS / sum(TOTAL_APPLICATIONS) * 100) %>%
-        dplyr::ungroup()
-
       # Create  plot
-      plot_df %>%
+      lowIncomeSchemeScrollytellR::applications_outcome_df %>%
         highcharter::hchart(
           type = "column",
-          highcharter::hcaes(x = FINANCIAL_YEAR, y = p, group = OUTCOME_LEVEL2)
+          highcharter::hcaes(x = FINANCIAL_YEAR, y = SDC_PCT_TOTAL_APPLICATIONS, group = OUTCOME_LEVEL2)
         ) %>%
         theme_nhsbsa() %>%
         highcharter::hc_title(
@@ -94,13 +86,37 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
           title = list(text = "Financial year")
         ) %>%
         highcharter::hc_tooltip(
-          shared = FALSE,
-          formatter = highcharter::JS("function () { return '<b>Outcome: </b>' + this.series.name + '<br>' + '<b>Financial Year: </b>' + this.point.FINANCIAL_YEAR + '<br/>' + '<b>Percentage: </b>' + (Math.round(this.point.y * 10) / 10).toFixed(1) + '%';}")
+          shared = TRUE,
+          headerFormat = "<b> {point.name} </b>", valueSuffix = "%"
         ) %>%
         highcharter::hc_credits(
           enabled = TRUE
         )
     })
+
+    # Swap NAs for "c" for data download
+    applications_outcome_download_df <- lowIncomeSchemeScrollytellR::applications_outcome_df %>%
+      dplyr::mutate(
+        SDC_TOTAL_APPLICATIONS = ifelse(
+          test = is.na(SDC_TOTAL_APPLICATIONS),
+          yes = "c",
+          no = as.character(SDC_TOTAL_APPLICATIONS)
+        ),
+        SDC_PCT_TOTAL_APPLICATIONS = ifelse(
+          test = is.na(SDC_PCT_TOTAL_APPLICATIONS),
+          yes = "c",
+          no = as.character(SDC_PCT_TOTAL_APPLICATIONS)
+        )
+      ) %>%
+      dplyr::select(-TOTAL_APPLICATIONS, -PCT_TOTAL_APPLICATIONS)
+
+
+    # Add data to download button
+    mod_download_server(
+      id = "download_applications_outcome",
+      filename = "applications_outcomes.csv",
+      export_data = applications_outcome_download_df
+    )
   })
 }
 
