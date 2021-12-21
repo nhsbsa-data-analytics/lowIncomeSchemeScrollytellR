@@ -41,10 +41,13 @@ mod_03_who_applies_to_lis_ui <- function(id) {
       " or earners."
     ),
     fluidRow(
-      align = "center",
+      # align = "center",
       style = "background-color: #FFFFFF;",
       highcharter::highchartOutput(
         outputId = ns("plot_individuals_by_client_group")
+      ),
+      mod_download_ui(
+        id = ns("download_individuals_by_client_group")
       )
     ),
     br(),
@@ -190,7 +193,29 @@ mod_03_who_applies_to_lis_server <- function(id) {
         )
     })
 
- 
+    # Swap NAs for "c" for data download
+    individuals_by_client_group_download_df <- lowIncomeSchemeScrollytellR::individuals_by_client_group_df %>%
+      dplyr::mutate(
+        SDC_PCT_INDIVIDUALS = ifelse(
+          test = is.na(SDC_PCT_INDIVIDUALS),
+          yes = "c",
+          no = as.character(SDC_PCT_INDIVIDUALS)
+        ),
+        SDC_TOTAL_INDIVIDUALS = ifelse(
+          test = is.na(SDC_TOTAL_INDIVIDUALS),
+          yes = "c",
+          no = as.character(SDC_TOTAL_INDIVIDUALS)
+        )
+      ) %>%
+      dplyr::select(-TOTAL_INDIVIDUALS, -PCT_INDIVIDUALS)
+
+
+    # Add data to download button
+    mod_download_server(
+      id = "download_individuals_by_client_group",
+      filename = "individual_client_group.csv",
+      export_data = individuals_by_client_group_download_df
+    )
 
 
     # Column plot by deprivation
