@@ -96,7 +96,8 @@ mod_07_take_up_la_ui <- function(id) {
               highcharter::highchartOutput(
                 outputId = ns("scatter_successful_individuals_by_la_imd"),
                 height = "450px"
-              )
+              ),
+              mod_download_ui(id = ns("la_take_up_download"))
             )
           )
         )
@@ -118,17 +119,17 @@ mod_07_take_up_la_server <- function(id) {
       plot_df <- lowIncomeSchemeScrollytellR::adult_population_df %>%
         dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
         dplyr::mutate(
-          p = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000
+          SDC_PCT_LA_TAKE_UP = janitor::round_half_up(TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000, 1)
         )
 
       # Format for highcharter animation
       # Removed as it confused with drop down menu (need to check though)
       plot_sequence_df <- plot_df %>%
-        tidyr::expand(FINANCIAL_YEAR, tidyr::nesting(PCD_REGION_NAME, PCD_LAD_NAME, PCD_LAD_IMD_RANK)) %>%
-        dplyr::left_join(plot_df) %>%
-        dplyr::mutate(p = tidyr::replace_na(p)) %>%
+        tidyr::complete(FINANCIAL_YEAR, tidyr::nesting(PCD_REGION_NAME, PCD_LAD_NAME, PCD_LAD_IMD_RANK),
+          fill = list(SDC_PCT_LA_TAKE_UP = 0)
+        ) %>%
         dplyr::group_by(PCD_REGION_NAME, PCD_LAD_NAME, PCD_LAD_IMD_RANK) %>%
-        dplyr::do(sequence = .$p) %>%
+        dplyr::do(sequence = .$SDC_PCT_LA_TAKE_UP) %>%
         # Mutate to create color variable to reflect selected region with lightgrey and darkblue colour
         dplyr::mutate(color = ifelse(PCD_REGION_NAME == input$input_region, "#003087", "#DDE1E4")) %>%
         dplyr::ungroup()
@@ -166,12 +167,12 @@ mod_07_take_up_la_server <- function(id) {
           title = list(text = "Local authority deprivation rank (2019)")
         ) %>%
         highcharter::hc_yAxis(
-          max = ceiling(max(plot_df$p) / 5) * 5,
+          max = ceiling(max(plot_df$SDC_PCT_LA_TAKE_UP) / 5) * 5,
           title = list(text = "Take-up per thousand of the population aged 16+ years")
         ) %>%
         highcharter::hc_tooltip(
           headerFormat = "",
-          pointFormat = "<b>Local authority:</b> {point.PCD_LAD_NAME} <br><b>2019 IMD rank:</b> {point.x} <br><b>Take-up:</b> {point.y:.1f} (per thousand of the general population)"
+          pointFormat = "<b>Local authority:</b> {point.PCD_LAD_NAME} <br><b>2019 IMD rank:</b> {point.x} <br><b>Take-up:</b> {point.y:.0f} (per thousand of the general population)"
         ) %>%
         highcharter::hc_chart(marginBottom = 125) %>%
         highcharter::hc_plotOptions(
@@ -207,7 +208,7 @@ mod_07_take_up_la_server <- function(id) {
         dplyr::group_by(FINANCIAL_YEAR, PCD_LAD_NAME) %>%
         dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
         dplyr::mutate(
-          value = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000
+          value = janitor::round_half_up(TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000)
         ) %>%
         dplyr::select(PCD_LAD_NAME, FINANCIAL_YEAR, value)
 
@@ -243,7 +244,7 @@ mod_07_take_up_la_server <- function(id) {
           joinBy = "PCD_LAD_NAME",
           tooltip = list(
             headerFormat = "",
-            pointFormat = "<b>Local Authority: </b> {point.PCD_LAD_NAME}<br><b>Take-up: </b> {point.value:.1f} (per thousand of the general population)"
+            pointFormat = "<b>Local Authority: </b> {point.PCD_LAD_NAME}<br><b>Take-up: </b> {point.value} (per thousand of the general population)"
           )
         ) %>%
         highcharter::hc_motion(
@@ -312,10 +313,41 @@ mod_07_take_up_la_server <- function(id) {
           ) %>%
           highcharter::hc_tooltip(
             shared = FALSE,
-            formatter = highcharter::JS("function () { return '<b>2019 IMD decile: </b>' + this.point.x + '<br>' + '<b>Percentage: </b>' + (Math.round(this.point.y * 10) / 10).toFixed(1) + '%';}")
+            formatter = highcharter::JS("function () { return '<b>2019 IMD decile: </b>' + this.point.x + '<br>' + '<b>Percentage: </b>' + this.point.y + '%';}")
           )
       })
     })
+
+    # Download data
+    la_take_up_download_df <- reactive({
+      lowIncomeSchemeScrollytellR::adult_population_df %>%
+        dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
+        dplyr::mutate(
+          LA_TAKE_UP = janitor::round_half_up(TOTAL_SUCCESSFUL_INDIVIDUALS /
+            TOTAL_ADULT_POPULATION * 1000)
+        ) %>%
+        dplyr::left_join(lowIncomeSchemeScrollytellR::imd_decile_df %>%
+          tidyr::complete(INDEX_OF_MULT_DEPRIV_DECILE,
+            tidyr::nesting(PCD_LAD_NAME, PCD_REGION_NAME),
+            fill = list(IMD_DECILE_COUNT_LAD = 0, IMD_DECILE_P = 0)
+          ),
+        by = c("PCD_LAD_NAME", "PCD_REGION_NAME")
+        ) %>%
+        dplyr::select(
+          FINANCIAL_YEAR, PCD_LAD_NAME, PCD_REGION_NAME, PCD_LAD_IMD_RANK, LA_TAKE_UP,
+          INDEX_OF_MULT_DEPRIV_DECILE, IMD_DECILE_P
+        ) %>%
+        dplyr::filter(PCD_REGION_NAME == input$input_region)
+    })
+
+    mod_download_server(
+      id = "la_take_up_download",
+      filename = "la_take_up.csv",
+      export_data = la_take_up_download_df()
+    )
+
+
+
 
     # dynamic text
     plot_df <- reactive({
@@ -370,8 +402,6 @@ mod_07_take_up_la_server <- function(id) {
           Hyndburn, Halton, St Helens and Barrow in Furness) </b> </p>",
         sep = ""
       )
-
-
 
       if (input$input_region == "North West") {
         shiny::HTML(paste0(
