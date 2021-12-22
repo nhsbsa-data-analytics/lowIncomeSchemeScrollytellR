@@ -130,7 +130,8 @@ mod_07_take_up_la_server <- function(id) {
         dplyr::group_by(PCD_REGION_NAME, PCD_LAD_NAME, PCD_LAD_IMD_RANK) %>%
         dplyr::do(sequence = .$p) %>%
         # Mutate to create color variable to reflect selected region with lightgrey and darkblue colour
-        dplyr::mutate(color = ifelse(PCD_REGION_NAME == input$input_region, "#003087", "#DDE1E4"))
+        dplyr::mutate(color = ifelse(PCD_REGION_NAME == input$input_region, "#003087", "#DDE1E4")) %>%
+        dplyr::ungroup()
 
       # Create plot
       plot_sequence_df %>%
