@@ -27,9 +27,9 @@ mod_08_spotlight_students_ui <- function(id) {
       "pandemic. This compares to 10% non student applications."
     ),
     fluidRow(
-      align = "center",
       style = "background-color: #FFFFFF;",
       highcharter::highchartOutput(outputId = ns("plot_student_applications")),
+      mod_download_ui(id = ns("download_student_applications"))
     ),
     br(),
     tags$em(
@@ -77,12 +77,12 @@ mod_08_spotlight_students_ui <- function(id) {
       column(
         width = 6,
         offset = 1,
-        align = "center",
         style = "background-color: #FFFFFF;",
         highcharter::highchartOutput(
           outputId = ns("plot_successful_student_individuals_by_region"),
           height = "700px"
-        )
+        ),
+        mod_download_ui(id = ns("download_student_individuals_by_region"))
       )
     ),
   )
@@ -95,21 +95,15 @@ mod_08_spotlight_students_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
+
     # Stacked column of student applications over time
     output$plot_student_applications <- highcharter::renderHighchart({
 
-      # Group data and aggregate
-      plot_df <- lowIncomeSchemeScrollytellR::applications_df %>%
-        dplyr::mutate(TYPE = ifelse(CLIENTGROUP_DESC == "Student", "Student", "Non-Student")) %>%
-        dplyr::group_by(FINANCIAL_YEAR, TYPE) %>%
-        dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
-        dplyr::ungroup()
-
       # Create plot
-      plot_df %>%
+      lowIncomeSchemeScrollytellR::applications_student_df %>%
         highcharter::hchart(
           type = "line",
-          highcharter::hcaes(x = FINANCIAL_YEAR, y = TOTAL_APPLICATIONS, group = TYPE)
+          highcharter::hcaes(x = FINANCIAL_YEAR, y = SDC_TOTAL_APPLICATIONS, group = TYPE)
         ) %>%
         theme_nhsbsa(palette = "highlight") %>%
         highcharter::hc_title(
@@ -127,7 +121,7 @@ mod_08_spotlight_students_server <- function(id) {
         ) %>%
         highcharter::hc_tooltip(
           shared = FALSE,
-          formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Total Applications: </b>' + (Math.round(this.point.y / 500) * 500 / 1000).toFixed(1) + 'k';}")
+          formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Total Applications: </b>' + (Math.round(this.point.y / 500) * 500 / 1000).toFixed(0) + 'k';}")
         ) %>%
         highcharter::hc_credits(
           enabled = TRUE
@@ -135,23 +129,31 @@ mod_08_spotlight_students_server <- function(id) {
     })
 
 
+    mod_download_server(
+      id = "download_student_applications",
+      filename = "student_applications.csv",
+      export_data = lowIncomeSchemeScrollytellR::applications_student_df
+    )
+
+
+    # Calculate rate per region
+    student_individuals_by_region <- lowIncomeSchemeScrollytellR::student_population_df %>%
+      dplyr::filter(ACADEMIC_YEAR != "2014/15") %>%
+      dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_student_individuals_by_region_df) %>%
+      dplyr::mutate(
+        value = janitor::round_half_up(TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS /
+          TOTAL_STUDENT_POPULATION * 100)
+      )
+
 
 
     output$plot_successful_student_individuals_by_region <- highcharter::renderHighchart({
 
-      # Calculate rate per region
-      plot_df <- lowIncomeSchemeScrollytellR::student_population_df %>%
-        dplyr::filter(ACADEMIC_YEAR != "2014/15") %>%
-        dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_student_individuals_by_region_df) %>%
-        dplyr::mutate(
-          value = TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS / TOTAL_STUDENT_POPULATION * 100
-        )
-
       # Format for highcharter animation
-      plot_sequence_series <- plot_df %>%
-        tidyr::expand(ACADEMIC_YEAR, PCD_REGION_NAME) %>%
-        dplyr::left_join(plot_df) %>%
-        dplyr::mutate(value = tidyr::replace_na(value)) %>%
+      plot_sequence_series <- student_individuals_by_region %>%
+        tidyr::complete(ACADEMIC_YEAR, PCD_REGION_NAME,
+          fill = list(value = 0)
+        ) %>%
         dplyr::group_by(PCD_REGION_NAME) %>%
         dplyr::do(sequence = .$value) %>%
         highcharter::list_parse()
@@ -165,7 +167,7 @@ mod_08_spotlight_students_server <- function(id) {
           joinBy = "PCD_REGION_NAME",
           tooltip = list(
             headerFormat = "",
-            pointFormat = "<b>Region:</b> {point.PCD_REGION_NAME}<br><b>Take-up:</b> {point.value:.1f}% (of the student population)<br>"
+            pointFormat = "<b>Region:</b> {point.PCD_REGION_NAME}<br><b>Take-up:</b> {point.value}% (of the student population)<br>"
           )
         ) %>%
         highcharter::hc_motion(
@@ -180,76 +182,17 @@ mod_08_spotlight_students_server <- function(id) {
     })
 
 
-    output$plot_student_applications_per_month <- highcharter::renderHighchart({
 
-      # Aggregate overall for line plot
-      plot_overall_df <- lowIncomeSchemeScrollytellR::applications_df %>%
-        dplyr::filter(CLIENTGROUP_DESC == "Student") %>%
-        dplyr::group_by(APPLICATION_MONTH) %>%
-        dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
-        dplyr::ungroup() %>%
-        dplyr::mutate(MONTH = lubridate::ym(APPLICATION_MONTH))
+    student_individuals_by_region_download_df <- student_individuals_by_region %>%
+      dplyr::rename(SDC_STUDENT_TAKE_UP = value) %>%
+      dplyr::select(-c(TOTAL_STUDENT_POPULATION, TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS))
 
-      # Aggregate by benefit type (partial or full)
-      plot_benefit_df <- lowIncomeSchemeScrollytellR::applications_df %>%
-        dplyr::filter(
-          CLIENTGROUP_DESC == "Student",
-          OUTCOME_LEVEL2 %in% c("Full benefit", "Partial benefit")
-        ) %>%
-        dplyr::group_by(APPLICATION_MONTH, OUTCOME_LEVEL2) %>%
-        dplyr::summarise(SUCCESSFUL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
-        dplyr::ungroup() %>%
-        dplyr::mutate(MONTH = lubridate::ym(APPLICATION_MONTH)) %>%
-        dplyr::inner_join(plot_overall_df) %>%
-        dplyr::mutate(p = SUCCESSFUL_APPLICATIONS / TOTAL_APPLICATIONS * 100)
 
-      # Create plot
-      highcharter::highchart() %>%
-        highcharter::hc_add_series(
-          data = plot_overall_df,
-          type = "line",
-          highcharter::hcaes(x = MONTH, y = TOTAL_APPLICATIONS),
-          name = "Total applications",
-          yAxis = 0
-        ) %>%
-        highcharter::hc_add_series(
-          data = plot_benefit_df,
-          type = "column",
-          highcharter::hcaes(x = MONTH, y = p, group = OUTCOME_LEVEL2),
-          yAxis = 1
-        ) %>%
-        theme_nhsbsa() %>%
-        highcharter::hc_xAxis(
-          type = "datetime"
-        ) %>%
-        highcharter::hc_yAxis_multiples(
-          list(
-            top = "0%",
-            height = "40%",
-            min = 0,
-            title = list(enabled = TRUE, text = "Total Applications"),
-            labels = list(formatter = highcharter::JS("function(){ return this.value / 1000 + 'k'; }"))
-          ),
-          list(
-            top = "40%",
-            height = "60%",
-            min = 0,
-            opposite = TRUE,
-            title = list(enabled = TRUE, text = "Successful Applications"),
-            labels = list(format = "{value}%")
-          )
-        ) %>%
-        highcharter::hc_title(
-          text = "Total and successful outcome (%) of NHS Low Income Scheme Student applications by month in England (2015/16 to 2020/21)"
-        ) %>%
-        highcharter::hc_tooltip(
-          shared = TRUE,
-          formatter = highcharter::JS("function () { return '<b>Month: </b>' + Highcharts.dateFormat('%b %Y', new Date(this.x)) + '<br>' + '<b>Total applications: </b>' + Math.round(this.points[0].total / 500) * 500 / 1000 + 'k' + '<br>' + '<b>Partial benefit: </b>' + this.points[1].y.toFixed(1) + '%<br>' + '<b>Full benefit: </b>' + this.points[2].y.toFixed(1) + '%' ; }")
-        ) %>%
-        highcharter::hc_credits(
-          enabled = TRUE
-        )
-    })
+    mod_download_server(
+      id = "download_student_individuals_by_region",
+      file = "student_take_up.csv",
+      export_data = student_individuals_by_region_download_df
+    )
   })
 }
 

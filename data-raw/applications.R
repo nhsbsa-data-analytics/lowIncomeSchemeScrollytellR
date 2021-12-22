@@ -84,8 +84,28 @@ applications_outcome_df <- applications_outcome_df %>%
   select(-SDC)
 
 
+# Aggregate student
+applications_student_df <- applications_df %>%
+  dplyr::mutate(TYPE = ifelse(CLIENTGROUP_DESC == "Student", "Student", "Non-Student")) %>%
+  dplyr::group_by(FINANCIAL_YEAR, TYPE) %>%
+  dplyr::summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
+  dplyr::ungroup()
+
+
+# Apply SDC
+applications_student_df <- applications_student_df %>%
+  mutate(
+    SDC = ifelse(TOTAL_APPLICATIONS %in% c(1, 2, 3, 4), 1, 0),
+    SDC_TOTAL_APPLICATIONS =
+      ifelse(SDC == 1, NA_integer_, round(TOTAL_APPLICATIONS, -1))
+  ) %>%
+  select(-c(SDC, TOTAL_APPLICATIONS))
+
+
+
 usethis::use_data(applications_df, overwrite = TRUE)
 usethis::use_data(applications_agg_df, overwrite = TRUE)
 usethis::use_data(applications_outcome_df, overwrite = TRUE)
+usethis::use_data(applications_student_df, overwrite = TRUE)
 
 DBI::dbDisconnect(con)
