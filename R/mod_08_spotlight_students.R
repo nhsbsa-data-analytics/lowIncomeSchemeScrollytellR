@@ -171,7 +171,7 @@ mod_08_spotlight_students_server <- function(id) {
           )
         ) %>%
         highcharter::hc_motion(
-          labels = unique(plot_df$ACADEMIC_YEAR),
+          labels = unique(student_individuals_by_region$ACADEMIC_YEAR),
           startIndex = 4
         ) %>%
         theme_nhsbsa() %>%
