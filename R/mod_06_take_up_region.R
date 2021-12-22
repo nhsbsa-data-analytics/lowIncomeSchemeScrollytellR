@@ -94,29 +94,30 @@ mod_06_take_up_region_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
+
+    region_take_up <- lowIncomeSchemeScrollytellR::adult_population_df %>%
+      # dplyr::filter(FINANCIAL_YEAR == year()) %>%
+      dplyr::group_by(FINANCIAL_YEAR, PCD_REGION_NAME) %>%
+      dplyr::summarise(TOTAL_POPULATION = sum(TOTAL_ADULT_POPULATION)) %>%
+      dplyr::ungroup() %>%
+      dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_region_df) %>%
+      dplyr::mutate(
+        PCT_INDIVIDUALS_REGION = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_POPULATION * 1000
+      )
+
+
+    region_take_up <- region_take_up %>%
+      dplyr::mutate(
+        SDC = ifelse(TOTAL_SUCCESSFUL_INDIVIDUALS %in% c(1, 2, 3, 4), 1, 0),
+        SDC_PCT_INDIVIDUALS_REGION =
+          ifelse(SDC == 1, NA_integer_, janitor::round_half_up(PCT_INDIVIDUALS_REGION))
+      ) %>%
+      dplyr::select(-SDC)
+
     output$plot_successful_individuals_by_region <- highcharter::renderHighchart({
 
       # Calculate take-up rate per 1k adult population of each region
       # Because of inner join from other data-raw output, calculating SDC here
-
-      region_take_up <- lowIncomeSchemeScrollytellR::adult_population_df %>%
-        # dplyr::filter(FINANCIAL_YEAR == year()) %>%
-        dplyr::group_by(FINANCIAL_YEAR, PCD_REGION_NAME) %>%
-        dplyr::summarise(TOTAL_POPULATION = sum(TOTAL_ADULT_POPULATION)) %>%
-        dplyr::ungroup() %>%
-        dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_region_df) %>%
-        dplyr::mutate(
-          PCT_INDIVIDUALS_REGION = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_POPULATION * 1000
-        )
-
-
-      region_take_up <- region_take_up %>%
-        dplyr::mutate(
-          SDC = ifelse(TOTAL_SUCCESSFUL_INDIVIDUALS %in% c(1, 2, 3, 4), 1, 0),
-          SDC_PCT_INDIVIDUALS_REGION =
-            ifelse(SDC == 1, NA_integer_, janitor::round_half_up(PCT_INDIVIDUALS_REGION))
-        ) %>%
-        dplyr::select(-SDC)
 
       # Create plot
       region_take_up %>%
