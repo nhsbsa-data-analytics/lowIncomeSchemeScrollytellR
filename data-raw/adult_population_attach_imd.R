@@ -87,12 +87,13 @@ imd_decile_df <- adult_population_imd_db %>%
   # data is single age at the moment so distinct first
   distinct(LSOA_CODE, INDEX_OF_MULT_DEPRIV_DECILE, PCD_LAD_NAME, PCD_REGION_NAME) %>%
   group_by(PCD_LAD_NAME, PCD_REGION_NAME, INDEX_OF_MULT_DEPRIV_DECILE) %>% # counting IMD decile in LAD
-  summarise(IMD_DECILE_COUNT = n()) %>%
+  summarise(IMD_DECILE_COUNT_LAD = n()) %>%
   ungroup() %>%
   group_by(PCD_LAD_NAME, PCD_REGION_NAME) %>%
-  mutate(IMD_DECILE_P = IMD_DECILE_COUNT / sum(IMD_DECILE_COUNT) * 100) %>%
+  mutate(IMD_DECILE_P = IMD_DECILE_COUNT_LAD / sum(IMD_DECILE_COUNT_LAD) * 100) %>%
   ungroup() %>%
-  collect()
+  collect() %>%
+  mutate(IMD_DECILE_P = janitor::round_half_up(IMD_DECILE_P))
 
 
 
