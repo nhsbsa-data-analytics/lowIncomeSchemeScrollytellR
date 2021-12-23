@@ -9,21 +9,22 @@ region_map <- sf::read_sf("https://opendata.arcgis.com/api/v3/datasets/bafeb380d
 
 
 
-# Pull the local authority map (don't convert to geojson as we need it as a
-# dataframe)
-# 2021 boundary is used.
-la_map <- sf::read_sf("https://opendata.arcgis.com/api/v3/datasets/21f7fb2d524b44c8ab9dd0f971c96bba_0/downloads/data?format=geojson&spatialRefId=4326") %>%
-  janitor::clean_names() %>%
-  dplyr::filter(grepl("^E", lad21cd)) %>%
-  dplyr::select(PCD_LAD_NAME = lad21nm, PCD_LAD_GEOMETRY = geometry) %>%
-  sf::st_transform(crs = 27700)
 
-# Pull the region / local authority lookup
-region_la_lookup <- read.csv("https://opendata.arcgis.com/api/v3/datasets/6a41affae7e345a7b2b86602408ea8a2_0/downloads/data?format=csv&spatialRefId=4326") %>%
+# 2020 boundary is used.
+# spatial reference is selected in API call.
+la_map <- sf::read_sf("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Local_Authority_Districts_December_2020_UK_BUC_V2/FeatureServer/0/query?where=1%3D1&outFields=LAD20NM,LAD20CD&outSR=27700&f=json") %>%
   janitor::clean_names() %>%
+  dplyr::filter(grepl("^E", lad20cd)) %>%
+  dplyr::select(PCD_LAD_NAME = lad20nm, PCD_LAD_GEOMETRY = geometry) 
+
+
+# Pull the region / local authority lookup 
+region_la_lookup <- jsonlite::fromJSON("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/LAD20_RGN20_EN_LU/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json")$features$attributes %>% 
+  as.data.frame() %>% 
+  janitor::clean_names() %>%  
   dplyr::select(
-    PCD_REGION_NAME = rgn21nm,
-    PCD_LAD_NAME = lad21nm
+    PCD_REGION_NAME = rgn20nm,
+    PCD_LAD_NAME = lad20nm
   )
 
 
