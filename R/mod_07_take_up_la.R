@@ -347,8 +347,6 @@ mod_07_take_up_la_server <- function(id) {
     )
 
 
-
-
     # dynamic text
     plot_df <- reactive({
       lowIncomeSchemeScrollytellR::adult_population_df %>%

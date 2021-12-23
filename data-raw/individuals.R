@@ -22,6 +22,8 @@ individuals_by_age_band_df <- base_df %>%
   dplyr::arrange(FINANCIAL_YEAR, desc(BAND_5YEARS))
 
 # Calculate TOTAL_INDIVIDUALS and PCT_INDIVIDUALS
+# It is overall figure so all values are greater than 5 (don't need to do recode step)
+# calculate raw value and change to janitor::round_half_up
 individuals_by_age_band_df <- individuals_by_age_band_df %>%
   dplyr::filter(
     !(BAND_5YEARS %in% c("Co-applicant", "Unknown"))
