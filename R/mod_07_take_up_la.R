@@ -119,17 +119,17 @@ mod_07_take_up_la_server <- function(id) {
       plot_df <- lowIncomeSchemeScrollytellR::adult_population_df %>%
         dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
         dplyr::mutate(
-          SDC_PCT_LA_TAKE_UP = janitor::round_half_up(TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000, 1)
+          LA_TAKE_UP_PER_THOUSAND = janitor::round_half_up(TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000, 1)
         )
 
       # Format for highcharter animation
       # Removed as it confused with drop down menu (need to check though)
       plot_sequence_df <- plot_df %>%
         tidyr::complete(FINANCIAL_YEAR, tidyr::nesting(PCD_REGION_NAME, PCD_LAD_NAME, PCD_LAD_IMD_RANK),
-          fill = list(SDC_PCT_LA_TAKE_UP = 0)
+          fill = list(LA_TAKE_UP_PER_THOUSAND = 0)
         ) %>%
         dplyr::group_by(PCD_REGION_NAME, PCD_LAD_NAME, PCD_LAD_IMD_RANK) %>%
-        dplyr::do(sequence = .$SDC_PCT_LA_TAKE_UP) %>%
+        dplyr::do(sequence = .$LA_TAKE_UP_PER_THOUSAND) %>%
         # Mutate to create color variable to reflect selected region with lightgrey and darkblue colour
         dplyr::mutate(color = ifelse(PCD_REGION_NAME == input$input_region, "#003087", "#DDE1E4")) %>%
         dplyr::ungroup()
@@ -139,7 +139,7 @@ mod_07_take_up_la_server <- function(id) {
         highcharter::hchart(
           type = "scatter",
           highcharter::hcaes(x = PCD_LAD_IMD_RANK, y = sequence, color = color),
-          marginBottom = 50
+          marginBottom = 150
         ) %>%
         # Add two dummy series for the legend
         highcharter::hc_add_series(
@@ -167,7 +167,7 @@ mod_07_take_up_la_server <- function(id) {
           title = list(text = "Local authority deprivation rank (2019)")
         ) %>%
         highcharter::hc_yAxis(
-          max = ceiling(max(plot_df$SDC_PCT_LA_TAKE_UP) / 5) * 5,
+          max = ceiling(max(plot_df$LA_TAKE_UP_PER_THOUSAND) / 5) * 5,
           title = list(text = "Take-up per thousand of the population aged 16+ years")
         ) %>%
         highcharter::hc_tooltip(
@@ -321,9 +321,10 @@ mod_07_take_up_la_server <- function(id) {
     # Download data
     la_take_up_download_df <- reactive({
       lowIncomeSchemeScrollytellR::adult_population_df %>%
+        dplyr::filter(PCD_REGION_NAME == input$input_region) %>%
         dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
         dplyr::mutate(
-          LA_TAKE_UP = janitor::round_half_up(TOTAL_SUCCESSFUL_INDIVIDUALS /
+          LA_TAKE_UP_PER_THOUSAND = janitor::round_half_up(TOTAL_SUCCESSFUL_INDIVIDUALS /
             TOTAL_ADULT_POPULATION * 1000)
         ) %>%
         dplyr::left_join(lowIncomeSchemeScrollytellR::imd_decile_df %>%
@@ -334,10 +335,9 @@ mod_07_take_up_la_server <- function(id) {
         by = c("PCD_LAD_NAME", "PCD_REGION_NAME")
         ) %>%
         dplyr::select(
-          FINANCIAL_YEAR, PCD_LAD_NAME, PCD_REGION_NAME, PCD_LAD_IMD_RANK, LA_TAKE_UP,
+          FINANCIAL_YEAR, PCD_LAD_NAME, PCD_REGION_NAME, PCD_LAD_IMD_RANK, LA_TAKE_UP_PER_THOUSAND,
           INDEX_OF_MULT_DEPRIV_DECILE, IMD_DECILE_P
-        ) %>%
-        dplyr::filter(PCD_REGION_NAME == input$input_region)
+        )
     })
 
     mod_download_server(

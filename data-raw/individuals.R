@@ -29,19 +29,11 @@ individuals_by_age_band_df <- individuals_by_age_band_df %>%
     !(BAND_5YEARS %in% c("Co-applicant", "Unknown"))
   ) %>%
   dplyr::group_by(FINANCIAL_YEAR) %>%
-  dplyr::mutate(PCT_INDIVIDUALS = TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100) %>%
-  dplyr::ungroup()
-
-# Apply SDC to total individuals and percentage of individuals
-individuals_by_age_band_df <- individuals_by_age_band_df %>%
-  mutate(
-    SDC = ifelse(TOTAL_INDIVIDUALS %in% c(1, 2, 3, 4), 1, 0),
-    SDC_TOTAL_INDIVIDUALS =
-      ifelse(SDC == 1, NA_integer_, round(TOTAL_INDIVIDUALS, -1)),
-    SDC_PCT_INDIVIDUALS =
-      ifelse(SDC == 1, NA_integer_, janitor::round_half_up(PCT_INDIVIDUALS))
+  dplyr::mutate(
+    PCT_INDIVIDUALS = janitor::round_half_up(TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100),
+    TOTAL_INDIVIDUALS = round(TOTAL_INDIVIDUALS, -1)
   ) %>%
-  select(-SDC)
+  dplyr::ungroup()
 
 
 
@@ -58,24 +50,17 @@ individuals_by_client_group_df <- base_df %>%
   )
 
 # Calculate TOTAL_INDIVIDUALS and PCT_INDIVIDUALS
+# Apply round numbers
 individuals_by_client_group_df <- individuals_by_client_group_df %>%
   filter(
     !(CLIENTGROUP_DESC_FORMAT %in% c("Co-applicant", "Unknown"))
   ) %>%
   group_by(FINANCIAL_YEAR) %>%
-  mutate(PCT_INDIVIDUALS = TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100) %>%
-  ungroup()
-
-# Apply SDC to total individuals and percentage of individuals
-individuals_by_client_group_df <- individuals_by_client_group_df %>%
   mutate(
-    SDC = ifelse(TOTAL_INDIVIDUALS %in% c(1, 2, 3, 4), 1, 0),
-    SDC_TOTAL_INDIVIDUALS =
-      ifelse(SDC == 1, NA_integer_, round(TOTAL_INDIVIDUALS, -1)),
-    SDC_PCT_INDIVIDUALS =
-      ifelse(SDC == 1, NA_integer_, janitor::round_half_up(PCT_INDIVIDUALS))
+    PCT_INDIVIDUALS = janitor::round_half_up(TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100),
+    TOTAL_INDIVIDUALS = round(TOTAL_INDIVIDUALS, -1)
   ) %>%
-  select(-SDC)
+  ungroup()
 
 
 # TOTAL_INDIVIDUALS per INDEX_OF_MULT_DEPRIV_DECILE
@@ -99,20 +84,12 @@ individuals_by_imd_health_df <- individuals_by_imd_df %>%
       rename(DECILE = HEALTH_DEPRIVATION_DECILE)
   ) %>%
   group_by(FINANCIAL_YEAR, DEPRIVATION) %>%
-  mutate(PCT_INDIVIDUALS = TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100) %>%
+  mutate(
+    PCT_INDIVIDUALS = janitor::round_half_up(TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100),
+    TOTAL_INDIVIDUALS = round(TOTAL_INDIVIDUALS, -1)
+  ) %>%
   ungroup()
 
-# Apply SDC to total individuals and percentage of individuals
-
-individuals_by_imd_health_df <- individuals_by_imd_health_df %>%
-  mutate(
-    SDC = ifelse(TOTAL_INDIVIDUALS %in% c(1, 2, 3, 4), 1, 0),
-    SDC_TOTAL_INDIVIDUALS =
-      ifelse(SDC == 1, NA_integer_, round(TOTAL_INDIVIDUALS, -1)),
-    SDC_PCT_INDIVIDUALS =
-      ifelse(SDC == 1, NA_integer_, janitor::round_half_up(PCT_INDIVIDUALS))
-  ) %>%
-  select(-SDC)
 
 
 # TOTAL_SUCCESSFUL_INDIVIDUALS per PCD_REGION_NAME
