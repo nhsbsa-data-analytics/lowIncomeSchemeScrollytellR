@@ -103,11 +103,18 @@ mod_08_spotlight_students_server <- function(id) {
       lowIncomeSchemeScrollytellR::applications_student_df %>%
         highcharter::hchart(
           type = "line",
-          highcharter::hcaes(x = FINANCIAL_YEAR, y = SDC_TOTAL_APPLICATIONS, group = TYPE)
+          highcharter::hcaes(x = FINANCIAL_YEAR, y = TOTAL_APPLICATIONS, group = TYPE)
         ) %>%
         theme_nhsbsa(palette = "highlight") %>%
         highcharter::hc_title(
           text = "Number of NHS Low Income Scheme Student applications in England (2015/16 to 2020/21)"
+        ) %>%
+        highcharter::hc_subtitle(
+          text = paste(
+            "Numbers are rounded to the nearest 10."
+          ),
+          verticalAlign = "bottom",
+          align = "right"
         ) %>%
         highcharter::hc_legend(reversed = TRUE) %>%
         highcharter::hc_xAxis(
@@ -141,8 +148,11 @@ mod_08_spotlight_students_server <- function(id) {
       dplyr::filter(ACADEMIC_YEAR != "2014/15") %>%
       dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_student_individuals_by_region_df) %>%
       dplyr::mutate(
-        value = janitor::round_half_up(TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS /
-          TOTAL_STUDENT_POPULATION * 100)
+        value = janitor::round_half_up(
+          TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS /
+            TOTAL_STUDENT_POPULATION * 100
+        ),
+        TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS = round(TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS, -1)
       )
 
 
@@ -160,7 +170,7 @@ mod_08_spotlight_students_server <- function(id) {
 
       # Create plot
       highcharter::highchart(type = "map") %>%
-        highcharter::hc_chart(marginBottom = 100) %>%
+        highcharter::hc_chart(marginBottom = 50) %>%
         highcharter::hc_add_series(
           data = plot_sequence_series,
           mapData = region_map,
@@ -178,15 +188,19 @@ mod_08_spotlight_students_server <- function(id) {
         highcharter::hc_title(
           text = "Estimated take-up of NHS Low Income Scheme Student individuals by England region (2015/16 to 2019/20)"
         ) %>%
-        highcharter::hc_colorAxis(min = 0, max = 6)
+        highcharter::hc_subtitle(
+          text = paste(
+            "Numbers are rounded to the nearest 10. Percentages are rounded to the nearest whole number."
+          )
+        ) %>%
+        highcharter::hc_colorAxis(min = 0, max = 6) %>%
+        highcharter::hc_legend(enabled = FALSE)
     })
 
 
 
     student_individuals_by_region_download_df <- student_individuals_by_region %>%
-      dplyr::rename(SDC_STUDENT_TAKE_UP = value) %>%
-      dplyr::select(-c(TOTAL_STUDENT_POPULATION, TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS))
-
+      dplyr::rename(STUDENT_TAKE_UP = value)
 
     mod_download_server(
       id = "download_student_individuals_by_region",

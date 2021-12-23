@@ -91,7 +91,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
           fill = list(value = 0)
         ) %>%
         dplyr::group_by(BAND_5YEARS) %>%
-        dplyr::do(data = list(sequence = .$SDC_PCT_INDIVIDUALS)) %>%
+        dplyr::do(data = list(sequence = .$PCT_INDIVIDUALS)) %>%
         dplyr::ungroup() %>%
         # dplyr::group_by(FINANCIAL_YEAR) %>%
         dplyr::do(data = .$data) %>%
@@ -112,7 +112,12 @@ mod_03_who_applies_to_lis_server <- function(id) {
           text = "Age band of NHS Low Income Scheme lead applicants in England (2015/16 to 2020/21)"
         ) %>%
         highcharter::hc_subtitle(
-          text = "Note: This excludes lead applicants without an age band."
+          text = paste(
+            "Note: This excludes lead applicants without an age band.", "<br>",
+            "Numbers are rounded to the nearest 10. Percentages are rounded to the nearest whole number."
+          ),
+          verticalAlign = "bottom",
+          align = "right"
         ) %>%
         highcharter::hc_xAxis(
           title = list(text = "Age band"),
@@ -135,27 +140,19 @@ mod_03_who_applies_to_lis_server <- function(id) {
         )
     })
 
-    # Swap NAs for "c" for data download
+    # Rename variable
+
     individuals_by_age_band_download_df <- lowIncomeSchemeScrollytellR::individuals_by_age_band_df %>%
-      dplyr::mutate(
-        SDC_PCT_INDIVIDUALS = ifelse(
-          test = is.na(SDC_PCT_INDIVIDUALS),
-          yes = "c",
-          no = as.character(SDC_PCT_INDIVIDUALS)
-        ),
-        SDC_TOTAL_INDIVIDUALS = ifelse(
-          test = is.na(SDC_TOTAL_INDIVIDUALS),
-          yes = "c",
-          no = as.character(SDC_TOTAL_INDIVIDUALS)
-        )
-      ) %>%
-      dplyr::select(-TOTAL_INDIVIDUALS, -PCT_INDIVIDUALS)
+      dplyr::rename(
+        COUNT_APPLICANTS_BY_AGE_GROUP = TOTAL_INDIVIDUALS,
+        PERCENTAGE_APPLICANTS_BY_AGE_GROUP = PCT_INDIVIDUALS
+      )
 
 
     # Add data to download button
     mod_download_server(
       id = "download_individuals_by_age_band",
-      filename = "individual_age_band.csv",
+      filename = "applicants_age_band.csv",
       export_data = individuals_by_age_band_download_df
     )
 
@@ -167,14 +164,19 @@ mod_03_who_applies_to_lis_server <- function(id) {
       lowIncomeSchemeScrollytellR::individuals_by_client_group_df %>%
         highcharter::hchart(
           type = "column",
-          highcharter::hcaes(x = FINANCIAL_YEAR, y = SDC_PCT_INDIVIDUALS, group = CLIENTGROUP_DESC_FORMAT)
+          highcharter::hcaes(x = FINANCIAL_YEAR, y = PCT_INDIVIDUALS, group = CLIENTGROUP_DESC_FORMAT)
         ) %>%
         theme_nhsbsa() %>%
         highcharter::hc_title(
           text = "Client group of NHS Low Income Scheme applications in England (2015/16 to 2020/21)"
         ) %>%
         highcharter::hc_subtitle(
-          text = "Note: This excludes applications with an unknown client group."
+          text = paste(
+            "Note: This excludes lead applicants with an unknown client group.", "<br>",
+            "Numbers are rounded to the nearest 10. Percentages are rounded to the nearest whole number."
+          ),
+          verticalAlign = "bottom",
+          align = "right"
         ) %>%
         highcharter::hc_yAxis(
           max = 100,
@@ -196,21 +198,12 @@ mod_03_who_applies_to_lis_server <- function(id) {
         )
     })
 
-    # Swap NAs for "c" for data download
+    # Change column name
     individuals_by_client_group_download_df <- lowIncomeSchemeScrollytellR::individuals_by_client_group_df %>%
-      dplyr::mutate(
-        SDC_PCT_INDIVIDUALS = ifelse(
-          test = is.na(SDC_PCT_INDIVIDUALS),
-          yes = "c",
-          no = as.character(SDC_PCT_INDIVIDUALS)
-        ),
-        SDC_TOTAL_INDIVIDUALS = ifelse(
-          test = is.na(SDC_TOTAL_INDIVIDUALS),
-          yes = "c",
-          no = as.character(SDC_TOTAL_INDIVIDUALS)
-        )
-      ) %>%
-      dplyr::select(-TOTAL_INDIVIDUALS, -PCT_INDIVIDUALS)
+      dplyr::rename(
+        COUNT_APPLICANTS_BY_OUTCOME = TOTAL_INDIVIDUALS,
+        PERCENTAGE_APPLICANTS_BY_OUTCOME = PCT_INDIVIDUALS
+      )
 
 
     # Add data to download button
@@ -233,7 +226,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
           fill = list(value = 0)
         ) %>%
         dplyr::group_by(DECILE, DEPRIVATION) %>%
-        dplyr::do(data = list(sequence = .$SDC_PCT_INDIVIDUALS)) %>%
+        dplyr::do(data = list(sequence = .$PCT_INDIVIDUALS)) %>%
         dplyr::ungroup() %>%
         dplyr::group_by(DEPRIVATION) %>%
         dplyr::do(data = .$data) %>%
@@ -253,12 +246,17 @@ mod_03_who_applies_to_lis_server <- function(id) {
         highcharter::hc_title(
           text = "Deprivation decile of NHS Low Income Scheme individuals in England (2015/16 to 2020/21)"
         ) %>%
+        highcharter::hc_subtitle(
+          text = paste("Numbers are rounded to the nearest 10. Percentages are rounded to the nearest whole number."),
+          verticalAlign = "bottom",
+          align = "right"
+        ) %>%
         highcharter::hc_xAxis(
           categories = c("1<br>Most<br>deprived", 2:9, "10<br>Least<br>deprived"),
           title = list(text = "Deprivation decile")
         ) %>%
         highcharter::hc_yAxis(
-          max = ceiling(max(lowIncomeSchemeScrollytellR::individuals_by_imd_health_df$SDC_PCT_INDIVIDUALS) / 5) * 5,
+          max = ceiling(max(lowIncomeSchemeScrollytellR::individuals_by_imd_health_df$PCT_INDIVIDUALS) / 5) * 5,
           labels = list(
             formatter = highcharter::JS("function(){ return this.value ;}")
           ),
@@ -273,24 +271,12 @@ mod_03_who_applies_to_lis_server <- function(id) {
         )
     })
 
-
-
-    # Swap NAs for "c" for data download
+    # Change column name
     individuals_by_deprivation_download_df <- lowIncomeSchemeScrollytellR::individuals_by_imd_health_df %>%
-      dplyr::mutate(
-        SDC_PCT_INDIVIDUALS = ifelse(
-          test = is.na(SDC_PCT_INDIVIDUALS),
-          yes = "c",
-          no = as.character(SDC_PCT_INDIVIDUALS)
-        ),
-        SDC_TOTAL_INDIVIDUALS = ifelse(
-          test = is.na(SDC_TOTAL_INDIVIDUALS),
-          yes = "c",
-          no = as.character(SDC_TOTAL_INDIVIDUALS)
-        )
-      ) %>%
-      dplyr::select(-TOTAL_INDIVIDUALS, -PCT_INDIVIDUALS)
-
+      dplyr::rename(
+        COUNT_APPLICANTS_BY_OUTCOME = TOTAL_INDIVIDUALS,
+        PERCENTAGE_APPLICANTS_BY_OUTCOME = PCT_INDIVIDUALS
+      )
 
     # Add data to download button
     mod_download_server(

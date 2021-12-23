@@ -84,7 +84,7 @@ tooltip_text <- list(
   # Benefits / Others
   benefits_others = "<strong>Benefits & Others </strong> includes claimants of benefit such as Universal Credit and Employment and Support Allowance, people on nil income (e.g. supported by family and friends), people between courses or study, religious order occupants and care home residents.",
   # English IMD
-  english_imd = "<strong>The Enlish indices of deprivation </strong> are official measures of relative deprivation for areas in England, ranking 32,844 areas in England according to their deprivation score and dividing them into 10 equal sized groups, or deciles. <br>
+  english_imd = "<strong>The English indices of deprivation </strong> are official measures of relative deprivation for areas in England, ranking 32,844 areas in England according to their deprivation score and dividing them into 10 equal sized groups, or deciles. <br>
   Decile 1 represents the most deprived 10% of areas nationally and decile 10, the least deprived 10% of areas nationally.<br><br> The Index of Multiple Deprivation (IMD) is the most widely used of these measures and combines information from seven domains to produce an overall relative measure of deprivation. <br><br>
   One of the seven domains is Health Deprivation which is useful when looking at deprivation in a healthcare setting. <br><br> Further information can be found <a href = 'https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019' target = '_blank'> <span style = 'font-size: 15px'> here.</span> </a>"
 )

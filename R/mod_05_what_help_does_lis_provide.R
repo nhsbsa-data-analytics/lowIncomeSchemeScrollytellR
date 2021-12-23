@@ -68,13 +68,20 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
       lowIncomeSchemeScrollytellR::applications_outcome_df %>%
         highcharter::hchart(
           type = "column",
-          highcharter::hcaes(x = FINANCIAL_YEAR, y = SDC_PCT_TOTAL_APPLICATIONS, group = OUTCOME_LEVEL2)
+          highcharter::hcaes(x = FINANCIAL_YEAR, y = PCT_OUTCOMES, group = OUTCOME_LEVEL2)
         ) %>%
         theme_nhsbsa() %>%
         highcharter::hc_title(
           text = "Outcome of NHS Low Income Scheme applications in England (2015/16 to 2020/21)"
         ) %>%
-        highcharter::hc_subtitle(text = "Note: Excludes ongoing applications.") %>%
+        highcharter::hc_subtitle(
+          text = paste(
+            "Note: Excludes ongoing applications.", "<br>",
+            "Numbers are rounded to the nearest 10. Percentages are rounded to the nearest whole number."
+          ),
+          verticalAlign = "bottom",
+          align = "right"
+        ) %>%
         highcharter::hc_yAxis(
           max = 100,
           labels = list(
@@ -96,20 +103,11 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
 
     # Swap NAs for "c" for data download
     applications_outcome_download_df <- lowIncomeSchemeScrollytellR::applications_outcome_df %>%
-      dplyr::mutate(
-        SDC_TOTAL_APPLICATIONS = ifelse(
-          test = is.na(SDC_TOTAL_APPLICATIONS),
-          yes = "c",
-          no = as.character(SDC_TOTAL_APPLICATIONS)
-        ),
-        SDC_PCT_TOTAL_APPLICATIONS = ifelse(
-          test = is.na(SDC_PCT_TOTAL_APPLICATIONS),
-          yes = "c",
-          no = as.character(SDC_PCT_TOTAL_APPLICATIONS)
-        )
-      ) %>%
-      dplyr::select(-TOTAL_APPLICATIONS, -PCT_TOTAL_APPLICATIONS)
-
+      dplyr::rename(
+        OUTCOME = OUTCOME_LEVEL2,
+        APPLICATIONS = TOTAL_APPLICATIONS,
+        OUTCOME_PERCENTAGE = PCT_OUTCOMES
+      )
 
     # Add data to download button
     mod_download_server(
