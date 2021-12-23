@@ -53,14 +53,21 @@ mod_04_applications_over_time_server <- function(id) {
 
 
       # Create  plot
-      lowIncomeSchemeScrollytellR::applications_agg_df %>%
+      lowIncomeSchemeScrollytellR::applications_overall_df %>%
         highcharter::hchart(
           type = "line",
-          highcharter::hcaes(x = FINANCIAL_YEAR, y = SDC_TOTAL_APPLICATIONS)
+          highcharter::hcaes(x = FINANCIAL_YEAR, y = TOTAL_APPLICATIONS)
         ) %>%
         theme_nhsbsa() %>%
         highcharter::hc_title(
           text = "Number of NHS Low Income Scheme applications in England (2015/16 to 2020/21)"
+        ) %>%
+        highcharter::hc_subtitle(
+          text = paste(
+            "Numbers are rounded to the nearest 10."
+          ),
+          verticalAlign = "bottom",
+          align = "right"
         ) %>%
         highcharter::hc_yAxis(
           min = 0,
@@ -81,25 +88,11 @@ mod_04_applications_over_time_server <- function(id) {
         )
     })
 
-
-
-    # Swap NAs for "c" for data download
-    applications_agg_download_df <- lowIncomeSchemeScrollytellR::applications_agg_df %>%
-      dplyr::mutate(
-        SDC_TOTAL_APPLICATIONS = ifelse(
-          test = is.na(SDC_TOTAL_APPLICATIONS),
-          yes = "c",
-          no = as.character(SDC_TOTAL_APPLICATIONS)
-        )
-      ) %>%
-      dplyr::select(-TOTAL_APPLICATIONS)
-
-
     # Add data to download button
     mod_download_server(
       id = "download_applications",
       filename = "applications.csv",
-      export_data = applications_agg_download_df
+      export_data = lowIncomeSchemeScrollytellR::applications_overall_df
     )
   })
 }

@@ -102,17 +102,13 @@ mod_06_take_up_region_server <- function(id) {
       dplyr::ungroup() %>%
       dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_region_df) %>%
       dplyr::mutate(
-        PCT_INDIVIDUALS_REGION = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_POPULATION * 1000
+        TAKE_UP_PER_THOUSAND = janitor::round_half_up(
+          TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_POPULATION * 1000
+        ),
+        TOTAL_SUCCESSFUL_INDIVIDUALS = round(TOTAL_SUCCESSFUL_INDIVIDUALS, -1)
       )
 
 
-    region_take_up <- region_take_up %>%
-      dplyr::mutate(
-        SDC = ifelse(TOTAL_SUCCESSFUL_INDIVIDUALS %in% c(1, 2, 3, 4), 1, 0),
-        SDC_PCT_INDIVIDUALS_REGION =
-          ifelse(SDC == 1, NA_integer_, janitor::round_half_up(PCT_INDIVIDUALS_REGION))
-      ) %>%
-      dplyr::select(-SDC)
 
     output$plot_successful_individuals_by_region <- highcharter::renderHighchart({
 
@@ -123,11 +119,16 @@ mod_06_take_up_region_server <- function(id) {
       region_take_up %>%
         highcharter::hchart(
           type = "line",
-          highcharter::hcaes(x = FINANCIAL_YEAR, y = SDC_PCT_INDIVIDUALS_REGION, group = PCD_REGION_NAME)
+          highcharter::hcaes(x = FINANCIAL_YEAR, y = TAKE_UP_PER_THOUSAND, group = PCD_REGION_NAME)
         ) %>%
         theme_nhsbsa(stack = NA) %>%
         highcharter::hc_title(
           text = "Estimated take-up of NHS Low Income Scheme (2015/16 to 2020/21)"
+        ) %>%
+        highcharter::hc_subtitle(
+          text = paste("Rates are rounded to the nearest whole number."),
+          verticalAlign = "bottom",
+          align = "right"
         ) %>%
         highcharter::hc_yAxis(
           title = list(text = "per thousand of the general population")
@@ -141,15 +142,10 @@ mod_06_take_up_region_server <- function(id) {
     })
 
     region_take_up_download <- region_take_up %>%
-      dplyr::mutate(
-        SDC_PCT_INDIVIDUALS_REGION = ifelse(
-          test = is.na(SDC_PCT_INDIVIDUALS_REGION),
-          yes = "c",
-          no = as.character(SDC_PCT_INDIVIDUALS_REGION)
-        )
-      ) %>%
-      dplyr::rename(REGION_TAKE_UP_PER_THOUSAND_POP = SDC_PCT_INDIVIDUALS_REGION) %>%
-      dplyr::select(-TOTAL_POPULATION, -TOTAL_SUCCESSFUL_INDIVIDUALS, -PCT_INDIVIDUALS_REGION)
+      dplyr::rename(
+        REGION_NAME = PCD_REGION_NAME,
+        OVER16_POPULATION = TOTAL_POPULATION
+      )
 
     # add data download
     mod_download_server(
