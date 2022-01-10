@@ -13,4 +13,4 @@ man
 /data/*
 !/data/.gitkeep
 rsconnect
-R/TEMP.R
+*.sql

@@ -65,10 +65,10 @@ mod_08_spotlight_students_ui <- function(id) {
       "as a percentage of the eligible population."
     ),
     p(
-      tags$b(
-        "Estimated take-up was around 4% in the 2015/16 Academic Year ",
-        "reducing to 2% in 2019/20."
-      )
+      # tags$b(
+      "Estimated take-up was around 4% in the 2015/16 Academic Year ",
+      "reducing to 2% in 2019/20."
+      # )
     ),
     fluidRow(
       column(
@@ -261,7 +261,7 @@ mod_08_spotlight_students_server <- function(id) {
         ) %>%
         theme_nhsbsa() %>%
         highcharter::hc_title(
-          text = "Estimated take-up of NHS Low Income Scheme Student individuals by England region (2015/16 to 2019/20)"
+          text = "Estimated take-up of NHS Low Income Scheme Student individuals by England region 2015/16 to 2019/20"
         ) %>%
         highcharter::hc_subtitle(
           text = paste(
