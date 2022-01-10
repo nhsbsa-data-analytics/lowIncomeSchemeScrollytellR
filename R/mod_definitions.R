@@ -77,7 +77,7 @@ mod_definitions_ui <- function(id) {
       "when looking at deprivation in a healthcare setting.",
       "Further information can be found",
       a(
-        "here",
+        "here.",
         href = "https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019",
         target = "_blank"
       ),
