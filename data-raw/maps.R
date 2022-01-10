@@ -15,13 +15,13 @@ region_map <- sf::read_sf("https://opendata.arcgis.com/api/v3/datasets/bafeb380d
 la_map <- sf::read_sf("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Local_Authority_Districts_December_2020_UK_BUC_V2/FeatureServer/0/query?where=1%3D1&outFields=LAD20NM,LAD20CD&outSR=27700&f=json") %>%
   janitor::clean_names() %>%
   dplyr::filter(grepl("^E", lad20cd)) %>%
-  dplyr::select(PCD_LAD_NAME = lad20nm, PCD_LAD_GEOMETRY = geometry) 
+  dplyr::select(PCD_LAD_NAME = lad20nm, PCD_LAD_GEOMETRY = geometry)
 
 
-# Pull the region / local authority lookup 
-region_la_lookup <- jsonlite::fromJSON("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/LAD20_RGN20_EN_LU/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json")$features$attributes %>% 
-  as.data.frame() %>% 
-  janitor::clean_names() %>%  
+# Pull the region / local authority lookup
+region_la_lookup <- jsonlite::fromJSON("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/LAD20_RGN20_EN_LU/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json")$features$attributes %>%
+  as.data.frame() %>%
+  janitor::clean_names() %>%
   dplyr::select(
     PCD_REGION_NAME = rgn20nm,
     PCD_LAD_NAME = lad20nm

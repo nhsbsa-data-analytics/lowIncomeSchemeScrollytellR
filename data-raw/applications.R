@@ -72,10 +72,27 @@ applications_outcome_df <- applications_df %>%
 
 # Aggregate student
 applications_student_df <- applications_df %>%
-  dplyr::mutate(TYPE = ifelse(CLIENTGROUP_DESC == "Student", "Student", "Non-Student")) %>%
-  dplyr::group_by(FINANCIAL_YEAR, TYPE) %>%
-  dplyr::summarise(TOTAL_APPLICATIONS = round(sum(TOTAL_APPLICATIONS), -1)) %>%
-  dplyr::ungroup()
+  mutate(TYPE = ifelse(CLIENTGROUP_DESC == "Student", "Student", "Non-Student")) %>%
+  group_by(FINANCIAL_YEAR, TYPE) %>%
+  summarise(TOTAL_APPLICATIONS = round(sum(TOTAL_APPLICATIONS), -1)) %>%
+  ungroup()
+
+
+# Outcome aggregate and apply rounding for students
+applications_outcome_student_df <- applications_df %>%
+  filter(OUTCOME_LEVEL2 != "Ongoing") %>%
+  droplevels() %>%
+  mutate(TYPE = ifelse(CLIENTGROUP_DESC == "Student", "Student", "Non-Student")) %>%
+  group_by(TYPE, OUTCOME_LEVEL2, FINANCIAL_YEAR) %>%
+  summarise(TOTAL_APPLICATIONS = sum(TOTAL_APPLICATIONS)) %>%
+  ungroup() %>%
+  group_by(TYPE, FINANCIAL_YEAR) %>%
+  mutate(
+    PCT_OUTCOMES = janitor::round_half_up(TOTAL_APPLICATIONS / sum(TOTAL_APPLICATIONS) * 100),
+    TOTAL_APPLICATIONS = round(TOTAL_APPLICATIONS, -1)
+  ) %>%
+  ungroup()
+
 
 
 
@@ -83,5 +100,6 @@ usethis::use_data(applications_df, overwrite = TRUE)
 usethis::use_data(applications_overall_df, overwrite = TRUE)
 usethis::use_data(applications_outcome_df, overwrite = TRUE)
 usethis::use_data(applications_student_df, overwrite = TRUE)
+usethis::use_data(applications_outcome_student_df, overwrite = TRUE)
 
 DBI::dbDisconnect(con)

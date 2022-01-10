@@ -10,37 +10,7 @@
 mod_definitions_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    h4("Definitions"),
-    br(),
-    p("Here is a page containing all of our definitions"),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br(),
-    br()
+    includeMarkdown("inst/app/www/mod_definitions.md")
   )
 }
 
