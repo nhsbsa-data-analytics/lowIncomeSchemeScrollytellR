@@ -83,14 +83,20 @@ mod_06_take_up_region_server <- function(id) {
       region_take_up %>%
         highcharter::hchart(
           type = "line",
-          highcharter::hcaes(x = FINANCIAL_YEAR, y = TAKE_UP_PER_THOUSAND, group = PCD_REGION_NAME)
+          highcharter::hcaes(
+            x = FINANCIAL_YEAR, y = TAKE_UP_PER_THOUSAND,
+            group = PCD_REGION_NAME
+          )
         ) %>%
         theme_nhsbsa(stack = NA) %>%
         highcharter::hc_title(
           text = "Estimated take-up of NHS Low Income Scheme (2015/16 to 2020/21)"
         ) %>%
         highcharter::hc_subtitle(
-          text = paste("Rates are rounded to the nearest whole number."),
+          text = paste(
+            "Rates are rounded to the nearest whole number. <br> Hover",
+            " over the region in the legend to highlight the region."
+          ),
           verticalAlign = "bottom",
           align = "right"
         ) %>%
