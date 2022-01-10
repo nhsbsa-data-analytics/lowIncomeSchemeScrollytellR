@@ -20,7 +20,7 @@ mod_02_what_is_lis_ui <- function(id) {
       ),
       " (LIS) provides income related help to people who are not ",
       tippy(
-        text = "already entitled to help with health costs",
+        text = "already entitled to help with health costs(HwHC)",
         tooltip = tooltip_text$who_can_apply
       ),
       " if they have a low income. It is broadly the same as a means tested ",
@@ -35,8 +35,8 @@ mod_02_what_is_lis_ui <- function(id) {
       tags$li("NHS wigs and fabric supports")
     ),
     p(
-      "Certificates are generally issued from periods of between six months ",
-      "and five years."
+      "Certificates are generally issued from periods of between 6 months ",
+      "and 5 years."
     )
   )
 }

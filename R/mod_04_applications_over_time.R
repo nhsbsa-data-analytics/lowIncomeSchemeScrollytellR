@@ -14,7 +14,7 @@ mod_04_applications_over_time_ui <- function(id) {
     p(
       "The total number of NHS Low Income Scheme applications in England has ",
       "declined by 15% from 350 thousand in 2015/16 to 298 thousand in ",
-      "2019/20, with further declines during the pandemic."
+      "2019/20, with a sharp decline during the COVID-19 pandemic."
     ),
     fluidRow(
       style = "background-color: #FFFFFF;",
@@ -25,7 +25,7 @@ mod_04_applications_over_time_ui <- function(id) {
     ),
     br(),
     p(
-      "The rate of decline is highest amongst:"
+      "The rate of decline between 2015/16 and 2019/20 is highest amongst:"
     ),
     tags$ul(
       tags$li("Those categorised as students at around 29%."),
