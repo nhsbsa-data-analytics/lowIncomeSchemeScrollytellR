@@ -17,38 +17,56 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
       "necessary outgoings, plus any savings or investments."
     ),
     p(
-      "In 2019/20, ", tags$b("just over half of applications"), " resulted ",
-      "in a HC2 award ", tags$b("(full benefit),"), "which typically ",
-      "provides full help with health costs."
-    ),
-    p(
-      "And ", tags$b("just under one-quarter"), " resulted in a HC3 award ",
-      tags$b("(partial benefit)."), "This offers differing levels of help ",
-      "towards health costs according to assessed income, and no assistance ",
-      "with prescription costs."
-    ),
-    p(
-      "Around ", tags$b("one in ten"), " applications are ",
-      tags$b("withdrawn or abandoned"), " due to insufficient information ",
-      "from the applicant."
-    ),
-    p(
-      "
-      And the remaining applications are deemed unnecessary, either because ",
-      "applicants:"
-    ),
-    tags$ul(
-      tags$li("Are already receiving other benefits (8%)"),
-      tags$li("Have excess income too high to qualify (4%)"),
-      tags$li(
-        "Have more than £16 thousand in savings, investments or property (0.4%)"
-      )
-    ),
-    fluidRow(
-      style = "background-color: #FFFFFF;",
-      highcharter::highchartOutput(ns("plot_applications_by_outcome")),
-      mod_download_ui(
-        id = ns("download_applications_outcome")
+      "In 2019/20:, ",
+      tags$ul(
+        tags$li(
+          "Just over half of applications (53%) resulted in ",
+          "a HC2 award (full benefit), which typically provides ",
+          "full help with health costs."
+        ),
+        tags$li(
+          "Just under one-quarter (23%) resulted in ",
+          "a HC3 award (partial benefit) . Partial benefit ",
+          "offers differing levels of help towards health costs ",
+          "such as dental treatment and eye tests according to ",
+          "assessed income, and no assistance with prescription costs."
+        ),
+        tags$li(
+          "Around one in ten applications are withdrawn or ",
+          "abandoned due to insufficient information provided by ",
+          "the applicant."
+        )
+      ),
+      p(
+        "
+      The remaining applications are deemed unnecessary, either because ",
+        "applicants:"
+      ),
+      tags$ul(
+        tags$li("Are already receiving other benefits (8%)"),
+        tags$li("Have excess income too high to qualify (4%)"),
+        tags$li(
+          "Have more than £16 thousand in savings, investments or property (0.4%)"
+        )
+      ),
+      br(),
+      fluidRow(
+        style = "background-color: #FFFFFF;",
+        highcharter::highchartOutput(ns("plot_applications_by_outcome")),
+        mod_download_ui(
+          id = ns("download_applications_outcome")
+        )
+      ),
+      br(),
+      p(
+        "There is a decline in applications receiving full and partial help, ",
+        "between 2015/16 and 2019/20 from 87% to 76%. Whereas there is an increase in the ",
+        "proportion of applications:"
+      ),
+      tags$ul(
+        tags$li("Which have been withdrawn/abandoned."),
+        tags$li("Where applicants are already in receipt of qualifying benefits."),
+        tags$li("Where applicants have excess income too high to qualify.")
       )
     )
   )

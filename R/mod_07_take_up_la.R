@@ -19,9 +19,13 @@ mod_07_take_up_la_ui <- function(id) {
               br(),
               br(),
               p(
-                "It is helpful to consider estimated take-up relative to deprivation.",
                 "The chart and map show estimated take-up by local authority area relative ",
-                "to the population and overall deprivation profile of an area."
+                "to the population and deprivation profile of a local authority, based on ",
+                a(
+                  "MHCLG methodology.",
+                  href = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/833947/IoD2019_Research_Report.pdf",
+                  target = "_blank"
+                ),
               ),
               br(),
               br(),
@@ -53,26 +57,7 @@ mod_07_take_up_la_ui <- function(id) {
                   ),
                   selected = "North West"
                 )
-              ) # ,
-              # column(
-              #   width = 6 # ,
-              #   # shiny::selectInput(
-              #   #   inputId = ns("input_region"),
-              #   #   label = "Region:",
-              #   #   choices = c(
-              #   #     "East Midlands",
-              #   #     "East of England",
-              #   #     "London",
-              #   #     "North East",
-              #   #     "North West",
-              #   #     "South East",
-              #   #     "South West",
-              #   #     "West Midlands",
-              #   #     "Yorkshire and The Humber"
-              #   #   ),
-              #   #   selected = "North West"
-              #   # )
-              # )
+              )
             ),
             fluidRow(
               style = "background-color: #FFFFFF;",

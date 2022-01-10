@@ -13,12 +13,12 @@ mod_03_who_applies_to_lis_ui <- function(id) {
     h4("Who applies to the NHS Low Income Scheme in England?"),
     p(
       "Around 7 in 10 applicants are ",
-      "single applicants and the remainder are part of a couple."
+      "single applicants and the remainder are applying as part of a couple/dual application."
     ),
     p(
-      "We only hold age for the lead applicant.",
+      "We only hold age for the lead applicant (person making the application).",
       "One in four lead applicants are aged 15 to 24 years in 2019/20.",
-      "This age group have the highest number of applications consistently over time."
+      "This age group have the highest number of applications in each year observed."
     ),
     fluidRow(
       style = "background-color: #FFFFFF;",
@@ -61,7 +61,7 @@ mod_03_who_applies_to_lis_ui <- function(id) {
       " decile chart."
     ),
     p(
-      "This trend is consistent across the analysis period."
+      "This trend is consistent in each year observed."
     ),
     fluidRow(
       # align = "center",

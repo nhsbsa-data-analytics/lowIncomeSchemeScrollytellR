@@ -12,19 +12,19 @@ mod_08_spotlight_students_ui <- function(id) {
   tagList(
     h4("Spotlight on student applicants in England"),
     p("Student applications were considered in more detail, given the rate of decline in applications."),
-    p("Of student applicants in England:"),
+    p("Of student applicants in England in 2019/20:"),
     tags$ul(
       tags$li("The majority (98%) apply as single applicants."),
       tags$li(
-        "Over half are aged 20 to 24 years and 37% are aged 15 to 19 years."
+        "Over half (52%) are aged 20 to 24 years and 37% are aged 15 to 19 years."
       )
     ),
     br(),
     h6("A stronger downward trend in student applications in England"),
     p(
       "The total number of", tags$b(" student applications decreased by 29% "),
-      "between 2015/16 and 2019/20, and have decreased further since the ",
-      "pandemic. This compares to 10% non student applications."
+      "between 2015/16 and 2019/20, compared to a 10% decrease in non student applications.",
+      "It has decreased further since the beginning of the COVID-19 pandemic."
     ),
     fluidRow(
       style = "background-color: #FFFFFF;",
@@ -38,22 +38,37 @@ mod_08_spotlight_students_ui <- function(id) {
       " especially to students and people who do not know other people on benefits.(Student applicant)"
     ),
     br(),
+    p(
+      "Student applications are more likely to receive partial benefit than non student ",
+      "applications and are less likely to be unsuccessful. There is a less of a decline ",
+      "in the percentage of student applications resulting in full or partial benefit than ",
+      "non student applications between 2015/16 and 2019/20."
+    ),
+    fluidRow(
+      align = "center",
+      style = "background-color: #FFFFFF;",
+      highcharter::highchartOutput(
+        outputId = ns("plot_student_applications_by_outcome")
+      )
+    ),
+    mod_download_ui(id = ns("download_student_applications_by_outcome")),
+    br(),
     h6("Estimated student take-up is also low and decreasing over time."),
     p(
-      "In order to determine estimated take-up for students, we have used a ",
+      "To determine estimated take-up for students, we have used a ",
       "proxy for the eligible population as the number of enrolled students ",
-      "in higher education in England."
+      "in higher education in England by academic year."
     ),
     p(
-      "Estimated take-up is the number of NHS Low Income Scheme individuals ",
-      "covered by student applications who have received full or partial ",
-      "benefit as a percentage of the eligible population."
+      "Estimated take-up is the number of people receiving full or partial ",
+      "benefit from the NHS Low Income Scheme from student applications, ",
+      "as a percentage of the eligible population."
     ),
     p(
-      tags$b(
-        "Estimated take-up was around 4% in the 2015/16 Academic Year ",
-        "reducing to 2% in 2019/20."
-      )
+      # tags$b(
+      "Estimated take-up was around 4% in the 2015/16 Academic Year ",
+      "reducing to 2% in 2019/20."
+      # )
     ),
     fluidRow(
       column(
@@ -63,15 +78,19 @@ mod_08_spotlight_students_ui <- function(id) {
         br(),
         p(
           "Estimated student take-up, continues to be somewhat",
-          tags$b(" lower in the South East and London."), "This is despite ",
-          "London having in the largest proportion of student applicants."
+          tags$b(" lower in the South East and London."), "This appears to ",
+          "be primarily due to lower numbers of applications overall ",
+          "relative to the population."
         ),
         br(),
         p("And student take-up is", tags$b("highest in the North West.")),
         br(),
         p(
           "The take-up rate has",
-          tags$b("decreased most in the East of England.")
+          tags$b("decreased most in the East of England ")
+        ),
+        p(
+          "between 2015/16 and 2019/20."
         )
       ),
       column(
@@ -143,6 +162,62 @@ mod_08_spotlight_students_server <- function(id) {
     )
 
 
+    output$plot_student_applications_by_outcome <- highcharter::renderHighchart({
+
+      # Format for highcharter animation
+      plot_sequence_series_list <- lowIncomeSchemeScrollytellR::applications_outcome_student_df %>%
+        tidyr::expand(FINANCIAL_YEAR, TYPE, OUTCOME_LEVEL2) %>%
+        dplyr::left_join(lowIncomeSchemeScrollytellR::applications_outcome_student_df) %>%
+        dplyr::mutate(p = tidyr::replace_na(PCT_OUTCOMES, 0)) %>%
+        dplyr::group_by(TYPE, OUTCOME_LEVEL2) %>%
+        dplyr::do(data = list(sequence = .$PCT_OUTCOMES)) %>%
+        dplyr::ungroup() %>%
+        dplyr::group_by(OUTCOME_LEVEL2) %>%
+        dplyr::do(data = .$data) %>%
+        dplyr::mutate(name = OUTCOME_LEVEL2) %>%
+        highcharter::list_parse()
+
+      # Create plot
+      highcharter::highchart() %>%
+        highcharter::hc_chart(type = "bar", marginBottom = 100) %>%
+        highcharter::hc_add_series_list(plot_sequence_series_list) %>%
+        highcharter::hc_motion(
+          labels = unique(lowIncomeSchemeScrollytellR::applications_outcome_student_df$FINANCIAL_YEAR),
+          series = c(0, 1, 2, 3, 4, 5, 6),
+          startIndex = 4
+        ) %>%
+        theme_nhsbsa() %>%
+        highcharter::hc_title(
+          text = "Outcome of NHS Low Income Scheme Student applications in England (2015/16 to 2020/21)"
+        ) %>%
+        highcharter::hc_subtitle(
+          text = "Note: Excludes ongoing applications."
+        ) %>%
+        highcharter::hc_legend(reversed = TRUE) %>%
+        highcharter::hc_xAxis(categories = unique(lowIncomeSchemeScrollytellR::applications_outcome_student_df$TYPE)) %>%
+        highcharter::hc_yAxis(
+          max = 100,
+          labels = list(
+            formatter = highcharter::JS("function(){ return this.value + '%' ;}")
+          )
+        ) %>%
+        highcharter::hc_tooltip(
+          shared = TRUE,
+          headerFormat = "<b> {point.name} </b>", valueSuffix = "%"
+        ) %>%
+        highcharter::hc_credits(
+          enabled = TRUE
+        )
+    })
+
+
+    mod_download_server(
+      id = "download_student_applications_by_outcome",
+      filename = "student_non_student_applications_by_outcome.csv",
+      export_data = lowIncomeSchemeScrollytellR::applications_outcome_student_df %>%
+        dplyr::rename(CATEGORY = TYPE, OUTCOME = OUTCOME_LEVEL2)
+    )
+
     # Calculate rate per region
     student_individuals_by_region <- lowIncomeSchemeScrollytellR::student_population_df %>%
       dplyr::filter(ACADEMIC_YEAR != "2014/15") %>%
@@ -186,11 +261,11 @@ mod_08_spotlight_students_server <- function(id) {
         ) %>%
         theme_nhsbsa() %>%
         highcharter::hc_title(
-          text = "Estimated take-up of NHS Low Income Scheme Student individuals by England region (2015/16 to 2019/20)"
+          text = "Estimated take-up of NHS Low Income Scheme Student individuals by England region 2015/16 to 2019/20"
         ) %>%
         highcharter::hc_subtitle(
           text = paste(
-            "Numbers are rounded to the nearest 10. Percentages are rounded to the nearest whole number."
+            "Students were allocated to a region based on the address on the application."
           )
         ) %>%
         highcharter::hc_colorAxis(min = 0, max = 6) %>%

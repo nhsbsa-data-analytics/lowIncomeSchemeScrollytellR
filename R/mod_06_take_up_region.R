@@ -12,8 +12,8 @@ mod_06_take_up_region_ui <- function(id) {
   tagList(
     h4("Estimated take-up is low and decreasing over time"),
     p(
-      "Estimated take-up is the number of NHS Low Income Scheme individuals covered by ",
-      "the application who have received full or partial benefit ",
+      "Estimated take-up is the number of people ",
+      "who have received full or partial benefit ",
       "per thousand of the general population aged 16 or over."
     ),
     br(),
@@ -23,37 +23,6 @@ mod_06_take_up_region_ui <- function(id) {
         "decreasing to 4 in 2020/21."
       )
     ),
-    # Keep old structure until we confirm
-    # fluidRow(
-    #   column(
-    #     width = 5,
-    #     br(),
-    #     br(),
-    #     p(
-    #       "By region, we can see that estimated take-up, relative to the ",
-    #       "population, continues to be ",
-    #       tags$b("highest in the North East of England"),
-    #       " and the North in general. Although the North East rate has ",
-    #       "declined from 13 in 2015/16 to 6 in 2020/21."
-    #     ),
-    #     br(),
-    #     p(
-    #       "It is ",
-    #       tags$b("lowest in the South East region.")
-    #     )
-    #   ),
-    #   column(
-    #     # offset = 1,
-    #     width = 7,
-    #     align = "center",
-    #     style = "background-color: #FFFFFF;",
-    #     highcharter::highchartOutput(
-    #       outputId = ns("plot_successful_individuals_by_region"), # change this one to animation style
-    #       height = "700px"
-    #     )
-    #   )
-    # )
-    ######
     fluidRow(
       col_12(
         br(),
@@ -63,11 +32,6 @@ mod_06_take_up_region_ui <- function(id) {
           tags$b("highest in the North East of England"),
           " and the North in general. Although the North East rate has ",
           "declined from 13 in 2015/16 to 6 in 2020/21."
-        ),
-        br(),
-        p(
-          "It is ",
-          tags$b("lowest in the South East region.")
         )
       ),
       br(),
@@ -119,14 +83,20 @@ mod_06_take_up_region_server <- function(id) {
       region_take_up %>%
         highcharter::hchart(
           type = "line",
-          highcharter::hcaes(x = FINANCIAL_YEAR, y = TAKE_UP_PER_THOUSAND, group = PCD_REGION_NAME)
+          highcharter::hcaes(
+            x = FINANCIAL_YEAR, y = TAKE_UP_PER_THOUSAND,
+            group = PCD_REGION_NAME
+          )
         ) %>%
         theme_nhsbsa(stack = NA) %>%
         highcharter::hc_title(
           text = "Estimated take-up of NHS Low Income Scheme (2015/16 to 2020/21)"
         ) %>%
         highcharter::hc_subtitle(
-          text = paste("Rates are rounded to the nearest whole number."),
+          text = paste(
+            "Rates are rounded to the nearest whole number. <br> Hover",
+            " over the region in the legend to highlight the region."
+          ),
           verticalAlign = "bottom",
           align = "right"
         ) %>%

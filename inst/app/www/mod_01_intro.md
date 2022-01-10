@@ -6,4 +6,4 @@ _“Without this scheme I could not afford to pay for most of the services I rec
 
 Using a combination of analytics, user research and customer survey data we explored whether the NHS Low Income Scheme in England reaches its intended audience and meets user needs. In this article we consider take-up of the scheme.
 
-Analysis covers a period of five years but focuses on the 2019/20 pre COVID-19 period.
+The report covers a period of five years from 2015/16 to 2020/21 but analysis focuses on the period, up to 2019/20 to avoid any changes due to coronavirus (COVID-19)
