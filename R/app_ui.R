@@ -8,7 +8,7 @@ app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
-    tags$html(class = "no-js", lang="en"),
+    tags$html(class = "no-js", lang = "en"),
     # First level UI elements
     mod_00_header_ui("00_header_ui_1"),
     br(),
@@ -16,6 +16,12 @@ app_ui <- function(request) {
       well = FALSE,
       widths = c(2, 12),
       tabPanel(
+        tags$style(
+          "li a {
+          font-size: 20px;
+          font-weight: bold;
+          }"
+        ),
         title = "Article",
         fluidPage(
           mod_01_intro_ui("01_intro_ui_1"),
