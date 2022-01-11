@@ -21,7 +21,8 @@ mod_00_header_ui <- function(id) {
           tags$a(
             href = "https://www.nhs.uk/",
             target = "_blank",
-            img(src = "www/logo.jpg", height = "10%", width = "10%")
+            img(src = "www/logo.jpg", height = "10%", width = "10%"),
+            alt="NHS logo"
           )
         )
       )
