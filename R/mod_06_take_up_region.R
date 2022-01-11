@@ -95,7 +95,7 @@ mod_06_take_up_region_server <- function(id) {
         highcharter::hc_subtitle(
           text = paste(
             "Rates are rounded to the nearest whole number. <br> Hover",
-            " over the region in the legend to highlight the region."
+            " over the region in the legend to highlight."
           ),
           verticalAlign = "bottom",
           align = "right"
