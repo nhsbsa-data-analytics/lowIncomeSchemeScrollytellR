@@ -51,11 +51,12 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
       ),
       br(),
       fluidRow(
+        align = "center",
         style = "background-color: #FFFFFF;",
-        highcharter::highchartOutput(ns("plot_applications_by_outcome")),
-        mod_download_ui(
-          id = ns("download_applications_outcome")
-        )
+        highcharter::highchartOutput(ns("plot_applications_by_outcome"))
+      ),
+      mod_download_ui(
+        id = ns("download_applications_outcome")
       ),
       br(),
       p(
@@ -94,8 +95,8 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
         ) %>%
         highcharter::hc_subtitle(
           text = paste(
-            "Note: Excludes ongoing applications.", "<br>",
-            "Numbers are rounded to the nearest 10. Percentages are rounded to the nearest whole number."
+            "Note: Excludes ongoing applications." # , "<br>",
+            # "Numbers are rounded to the nearest 10. Percentages are rounded to the nearest whole number."
           ),
           verticalAlign = "bottom",
           align = "right"
@@ -112,7 +113,7 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
         ) %>%
         highcharter::hc_tooltip(
           shared = TRUE,
-          headerFormat = "<b> {point.name} </b>", valueSuffix = "%"
+          headerFormat = "<b> {point.name} </b>", valueSuffix = "%", valueDecimals = 1
         ) %>%
         highcharter::hc_credits(
           enabled = TRUE

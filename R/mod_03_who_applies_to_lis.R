@@ -21,14 +21,16 @@ mod_03_who_applies_to_lis_ui <- function(id) {
       "This age group have the highest number of applications in each year observed."
     ),
     fluidRow(
+      HTML('<label for="play-range" style = "visibility: hidden;">year-range</label>'),
+      align = "center",
       style = "background-color: #FFFFFF;",
       highcharter::highchartOutput(
         outputId = ns("plot_individuals_by_age_band"),
         height = "500px"
-      ),
-      mod_download_ui(
-        id = ns("download_individuals_by_age_band")
       )
+    ),
+    mod_download_ui(
+      id = ns("download_individuals_by_age_band")
     ),
     br(),
     p(
@@ -41,14 +43,14 @@ mod_03_who_applies_to_lis_ui <- function(id) {
       " or earners."
     ),
     fluidRow(
-      # align = "center",
+      align = "center",
       style = "background-color: #FFFFFF;",
       highcharter::highchartOutput(
         outputId = ns("plot_individuals_by_client_group")
-      ),
-      mod_download_ui(
-        id = ns("download_individuals_by_client_group")
       )
+    ),
+    mod_download_ui(
+      id = ns("download_individuals_by_client_group")
     ),
     br(),
     p(
@@ -64,12 +66,12 @@ mod_03_who_applies_to_lis_ui <- function(id) {
       "This trend is consistent in each year observed."
     ),
     fluidRow(
-      # align = "center",
+      align = "center",
       style = "background-color: #FFFFFF;",
-      highcharter::highchartOutput(outputId = ns("plot_individuals_by_deprivation")),
-      mod_download_ui(
-        id = ns("download_individuals_by_deprivation")
-      )
+      highcharter::highchartOutput(outputId = ns("plot_individuals_by_deprivation"))
+    ),
+    mod_download_ui(
+      id = ns("download_individuals_by_deprivation")
     )
   )
 }
@@ -133,7 +135,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
         ) %>%
         highcharter::hc_tooltip(
           shared = FALSE,
-          formatter = highcharter::JS("function () { return '<b>Age band (5 years): </b>' + this.point.category + '<br/>' + '<b>Percentage: </b>' + this.point.y + '%';}")
+          formatter = highcharter::JS("function () { return '<b>Age band (5 years): </b>' + this.point.category + '<br/>' + '<b>Percentage: </b>' + this.point.y.toFixed(1) + '%';}")
         ) %>%
         highcharter::hc_credits(
           enabled = TRUE
@@ -190,7 +192,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
         ) %>%
         highcharter::hc_tooltip(
           shared = TRUE,
-          headerFormat = "<b> {point.name} </b>", valueSuffix = "%"
+          headerFormat = "<b> {point.name} </b>", valueSuffix = "%", valueDecimals = 1
           # formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Percentage: </b>' + this.point.y + '%';}")
         ) %>%
         highcharter::hc_credits(
@@ -246,11 +248,11 @@ mod_03_who_applies_to_lis_server <- function(id) {
         highcharter::hc_title(
           text = "Deprivation decile of NHS Low Income Scheme individuals in England (2015/16 to 2020/21)"
         ) %>%
-        highcharter::hc_subtitle(
-          text = paste("Numbers are rounded to the nearest 10. Percentages are rounded to the nearest whole number."),
-          verticalAlign = "bottom",
-          align = "right"
-        ) %>%
+        # highcharter::hc_subtitle(
+        #   text = paste("Numbers are rounded to the nearest 10. Percentages are rounded to the nearest whole number."),
+        #   verticalAlign = "bottom",
+        #   align = "right"
+        # ) %>%
         highcharter::hc_xAxis(
           categories = c("1<br>Most<br>deprived", 2:9, "10<br>Least<br>deprived"),
           title = list(text = "Deprivation decile")
@@ -264,7 +266,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
         ) %>%
         highcharter::hc_tooltip(
           shared = FALSE,
-          formatter = highcharter::JS("function () { return '<b>Deprivation: </b>' + this.series.name + '<br>' + '<b>Decile: </b>' + parseInt(this.point.category) + '<br>' + '<b>Percentage: </b>' + this.point.y  + '%';}")
+          formatter = highcharter::JS("function () { return '<b>Deprivation: </b>' + this.series.name + '<br>' + '<b>Decile: </b>' + parseInt(this.point.category) + '<br>' + '<b>Percentage: </b>' + this.point.y.toFixed(1)  + '%';}")
         ) %>%
         highcharter::hc_credits(
           enabled = TRUE

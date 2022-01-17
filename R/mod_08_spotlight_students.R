@@ -27,10 +27,11 @@ mod_08_spotlight_students_ui <- function(id) {
       "It has decreased further since the beginning of the COVID-19 pandemic."
     ),
     fluidRow(
+      align = "center",
       style = "background-color: #FFFFFF;",
-      highcharter::highchartOutput(outputId = ns("plot_student_applications")),
-      mod_download_ui(id = ns("download_student_applications"))
+      highcharter::highchartOutput(outputId = ns("plot_student_applications"))
     ),
+    mod_download_ui(id = ns("download_student_applications")),
     br(),
     tags$em(
       "It's a great scheme and efficiently run. I am extremely grateful for the",
@@ -94,6 +95,7 @@ mod_08_spotlight_students_ui <- function(id) {
         )
       ),
       column(
+        # align = "center",
         width = 6,
         offset = 1,
         style = "background-color: #FFFFFF;",
@@ -103,7 +105,7 @@ mod_08_spotlight_students_ui <- function(id) {
         ),
         mod_download_ui(id = ns("download_student_individuals_by_region"))
       )
-    ),
+    )
   )
 }
 
@@ -128,13 +130,13 @@ mod_08_spotlight_students_server <- function(id) {
         highcharter::hc_title(
           text = "Number of NHS Low Income Scheme Student applications in England (2015/16 to 2020/21)"
         ) %>%
-        highcharter::hc_subtitle(
-          text = paste(
-            "Numbers are rounded to the nearest 10."
-          ),
-          verticalAlign = "bottom",
-          align = "right"
-        ) %>%
+        # highcharter::hc_subtitle(
+        #   text = paste(
+        #     "Numbers are rounded to the nearest 10."
+        #   ),
+        #   verticalAlign = "bottom",
+        #   align = "right"
+        # ) %>%
         highcharter::hc_legend(reversed = TRUE) %>%
         highcharter::hc_xAxis(
           title = list(text = "Financial year")
@@ -203,7 +205,7 @@ mod_08_spotlight_students_server <- function(id) {
         ) %>%
         highcharter::hc_tooltip(
           shared = TRUE,
-          headerFormat = "<b> {point.name} </b>", valueSuffix = "%"
+          headerFormat = "<b> {point.name} </b>", valueSuffix = "%", valueDecimals = 1
         ) %>%
         highcharter::hc_credits(
           enabled = TRUE

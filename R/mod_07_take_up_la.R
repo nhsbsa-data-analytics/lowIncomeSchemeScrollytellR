@@ -60,6 +60,7 @@ mod_07_take_up_la_ui <- function(id) {
               )
             ),
             fluidRow(
+              align = "center",
               style = "background-color: #FFFFFF;",
               col_6(
                 style = "margin-bottom: 0;",
@@ -81,9 +82,9 @@ mod_07_take_up_la_ui <- function(id) {
               highcharter::highchartOutput(
                 outputId = ns("scatter_successful_individuals_by_la_imd"),
                 height = "450px"
-              ),
-              mod_download_ui(id = ns("la_take_up_download"))
-            )
+              )
+            ),
+            mod_download_ui(id = ns("la_take_up_download"))
           )
         )
       )
@@ -157,7 +158,7 @@ mod_07_take_up_la_server <- function(id) {
         ) %>%
         highcharter::hc_tooltip(
           headerFormat = "",
-          pointFormat = "<b>Local authority:</b> {point.PCD_LAD_NAME} <br><b>2019 IMD rank:</b> {point.x} <br><b>Take-up:</b> {point.y:.0f} (per thousand of the general population)"
+          pointFormat = "<b>Local authority:</b> {point.PCD_LAD_NAME} <br><b>2019 IMD rank:</b> {point.x} <br><b>Take-up:</b> {point.y:.1f} (per thousand of the general population)"
         ) %>%
         highcharter::hc_chart(marginBottom = 125) %>%
         highcharter::hc_plotOptions(
@@ -298,7 +299,7 @@ mod_07_take_up_la_server <- function(id) {
           ) %>%
           highcharter::hc_tooltip(
             shared = FALSE,
-            formatter = highcharter::JS("function () { return '<b>2019 IMD decile: </b>' + this.point.x + '<br>' + '<b>Percentage: </b>' + this.point.y + '%';}")
+            formatter = highcharter::JS("function () { return '<b>2019 IMD decile: </b>' + this.point.x + '<br>' + '<b>Percentage: </b>' + this.point.y.toFixed(1) + '%';}")
           )
       })
     })

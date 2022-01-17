@@ -23,31 +23,24 @@ mod_06_take_up_region_ui <- function(id) {
         "decreasing to 4 in 2020/21."
       )
     ),
+    p(
+      "By region, we can see that estimated take-up, relative to the ",
+      "population, continues to be ",
+      tags$b("highest in the North East of England"),
+      " and the North in general. Although the North East rate has ",
+      "declined from 13 in 2015/16 to 6 in 2020/21."
+    ),
     fluidRow(
-      col_12(
-        br(),
-        p(
-          "By region, we can see that estimated take-up, relative to the ",
-          "population, continues to be ",
-          tags$b("highest in the North East of England"),
-          " and the North in general. Although the North East rate has ",
-          "declined from 13 in 2015/16 to 6 in 2020/21."
-        )
-      ),
-      br(),
-      br(),
-      col_12(
-        style = "background-color: #FFFFFF;",
-        highcharter::highchartOutput(
-          outputId = ns("plot_successful_individuals_by_region"),
-          height = "600px"
-        ),
-        mod_download_ui(
-          id = ns("download_region_take_up")
-        )
+      align = "center",
+      style = "background-color: #FFFFFF;",
+      highcharter::highchartOutput(
+        outputId = ns("plot_successful_individuals_by_region"),
+        height = "600px"
       )
+    ),
+    mod_download_ui(
+      id = ns("download_region_take_up")
     )
-    ####
   )
 }
 
@@ -67,7 +60,7 @@ mod_06_take_up_region_server <- function(id) {
       dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_region_df) %>%
       dplyr::mutate(
         TAKE_UP_PER_THOUSAND = janitor::round_half_up(
-          TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_POPULATION * 1000
+          TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_POPULATION * 1000, 1
         ),
         TOTAL_SUCCESSFUL_INDIVIDUALS = round(TOTAL_SUCCESSFUL_INDIVIDUALS, -1)
       )
@@ -92,14 +85,14 @@ mod_06_take_up_region_server <- function(id) {
         highcharter::hc_title(
           text = "Estimated take-up of NHS Low Income Scheme (2015/16 to 2020/21)"
         ) %>%
-        highcharter::hc_subtitle(
-          text = paste(
-            "Rates are rounded to the nearest whole number. <br> Hover",
-            " over the region in the legend to highlight."
-          ),
-          verticalAlign = "bottom",
-          align = "right"
-        ) %>%
+        # highcharter::hc_subtitle(
+        #   text = paste(
+        #     "Rates are rounded to the nearest whole number. <br> Hover",
+        #     " over the region in the legend to highlight."
+        #   ),
+        #   verticalAlign = "bottom",
+        #   align = "right"
+        # ) %>%
         highcharter::hc_yAxis(
           title = list(text = "per thousand of the general population")
         ) %>%
@@ -107,7 +100,8 @@ mod_06_take_up_region_server <- function(id) {
           title = list(text = "Financial year")
         ) %>%
         highcharter::hc_tooltip(
-          shared = TRUE
+          shared = TRUE,
+          valueDecimals = 1
         )
     })
 
