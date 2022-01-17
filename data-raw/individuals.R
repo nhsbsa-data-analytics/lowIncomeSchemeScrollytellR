@@ -30,7 +30,7 @@ individuals_by_age_band_df <- individuals_by_age_band_df %>%
   ) %>%
   dplyr::group_by(FINANCIAL_YEAR) %>%
   dplyr::mutate(
-    PCT_INDIVIDUALS = janitor::round_half_up(TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100),
+    PCT_INDIVIDUALS = janitor::round_half_up(TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100, 1),
     TOTAL_INDIVIDUALS = round(TOTAL_INDIVIDUALS, -1)
   ) %>%
   dplyr::ungroup()
@@ -57,7 +57,7 @@ individuals_by_client_group_df <- individuals_by_client_group_df %>%
   ) %>%
   group_by(FINANCIAL_YEAR) %>%
   mutate(
-    PCT_INDIVIDUALS = janitor::round_half_up(TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100),
+    PCT_INDIVIDUALS = janitor::round_half_up(TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100, 1),
     TOTAL_INDIVIDUALS = round(TOTAL_INDIVIDUALS, -1)
   ) %>%
   ungroup()
@@ -85,7 +85,7 @@ individuals_by_imd_health_df <- individuals_by_imd_df %>%
   ) %>%
   group_by(FINANCIAL_YEAR, DEPRIVATION) %>%
   mutate(
-    PCT_INDIVIDUALS = janitor::round_half_up(TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100),
+    PCT_INDIVIDUALS = janitor::round_half_up(TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100, 1),
     TOTAL_INDIVIDUALS = round(TOTAL_INDIVIDUALS, -1)
   ) %>%
   ungroup()

@@ -17,11 +17,12 @@ mod_04_applications_over_time_ui <- function(id) {
       "2019/20, with a sharp decline during the COVID-19 pandemic."
     ),
     fluidRow(
+      align = "center",
       style = "background-color: #FFFFFF;",
-      highcharter::highchartOutput(ns("plot_applications")),
-      mod_download_ui(
-        id = ns("download_applications")
-      )
+      highcharter::highchartOutput(ns("plot_applications"))
+    ),
+    mod_download_ui(
+      id = ns("download_applications")
     ),
     br(),
     p(
@@ -62,13 +63,13 @@ mod_04_applications_over_time_server <- function(id) {
         highcharter::hc_title(
           text = "Number of NHS Low Income Scheme applications in England (2015/16 to 2020/21)"
         ) %>%
-        highcharter::hc_subtitle(
-          text = paste(
-            "Numbers are rounded to the nearest 10."
-          ),
-          verticalAlign = "bottom",
-          align = "right"
-        ) %>%
+        # highcharter::hc_subtitle(
+        #   text = paste(
+        #     "Numbers are rounded to the nearest 10."
+        #   ),
+        #   verticalAlign = "bottom",
+        #   align = "right"
+        # ) %>%
         highcharter::hc_yAxis(
           min = 0,
           labels = list(

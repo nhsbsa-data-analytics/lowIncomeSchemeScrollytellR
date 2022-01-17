@@ -63,7 +63,7 @@ applications_outcome_df <- applications_df %>%
   ungroup() %>%
   group_by(FINANCIAL_YEAR) %>%
   mutate(
-    PCT_OUTCOMES = janitor::round_half_up(TOTAL_APPLICATIONS / sum(TOTAL_APPLICATIONS) * 100),
+    PCT_OUTCOMES = janitor::round_half_up(TOTAL_APPLICATIONS / sum(TOTAL_APPLICATIONS) * 100, 1),
     TOTAL_APPLICATIONS = round(TOTAL_APPLICATIONS, -1)
   ) %>%
   ungroup()
@@ -88,7 +88,7 @@ applications_outcome_student_df <- applications_df %>%
   ungroup() %>%
   group_by(TYPE, FINANCIAL_YEAR) %>%
   mutate(
-    PCT_OUTCOMES = janitor::round_half_up(TOTAL_APPLICATIONS / sum(TOTAL_APPLICATIONS) * 100),
+    PCT_OUTCOMES = janitor::round_half_up(TOTAL_APPLICATIONS / sum(TOTAL_APPLICATIONS) * 100, 1),
     TOTAL_APPLICATIONS = round(TOTAL_APPLICATIONS, -1)
   ) %>%
   ungroup()
