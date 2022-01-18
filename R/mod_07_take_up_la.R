@@ -194,7 +194,7 @@ mod_07_take_up_la_server <- function(id) {
         dplyr::group_by(FINANCIAL_YEAR, PCD_LAD_NAME) %>%
         dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
         dplyr::mutate(
-          value = janitor::round_half_up(TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000,1)
+          value = janitor::round_half_up(TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000, 1)
         ) %>%
         dplyr::select(PCD_LAD_NAME, FINANCIAL_YEAR, value)
 
@@ -311,7 +311,7 @@ mod_07_take_up_la_server <- function(id) {
         dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
         dplyr::mutate(
           LA_TAKE_UP_PER_THOUSAND = janitor::round_half_up(TOTAL_SUCCESSFUL_INDIVIDUALS /
-            TOTAL_ADULT_POPULATION * 1000)
+            TOTAL_ADULT_POPULATION * 1000, 1)
         ) %>%
         dplyr::left_join(lowIncomeSchemeScrollytellR::imd_decile_df %>%
           tidyr::complete(INDEX_OF_MULT_DEPRIV_DECILE,

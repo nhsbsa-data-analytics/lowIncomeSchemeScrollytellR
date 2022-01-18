@@ -58,6 +58,22 @@ mod_definitions_ui <- function(id) {
       "tax credit claim are also entitled to the same help."
     ),
     br(),
+    h6("Client group"),
+    p(
+      "Applicants are allocated a client group by assessors based on the main source ",
+      "of household income. This includes: ",
+      tags$li("Asylum Seeker (not from the National Asylum Support Service)"),
+      tags$li(
+        "Benefits & Others includes claimants of benefit such as Universal Credit",
+        " and Employment and Support Allowance, people in nil income ",
+        "(e.g. supported by family and friends), people between courses or ",
+        "study, religious order occupants and care home residents."
+      ),
+      tags$li("Earner"),
+      tags$li("Pensioner"),
+      tags$li("Student")
+    ),
+    br(),
     h6("The English Indices of Deprivation"),
     p(
       tags$b("The English Indices of Deprivation"),
