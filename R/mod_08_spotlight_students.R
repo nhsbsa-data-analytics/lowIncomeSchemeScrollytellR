@@ -227,7 +227,7 @@ mod_08_spotlight_students_server <- function(id) {
       dplyr::mutate(
         value = janitor::round_half_up(
           TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS /
-            TOTAL_STUDENT_POPULATION * 100
+            TOTAL_STUDENT_POPULATION * 100, 1
         ),
         TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS = round(TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS, -1)
       )

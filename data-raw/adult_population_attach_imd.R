@@ -93,7 +93,7 @@ imd_decile_df <- adult_population_imd_db %>%
   mutate(IMD_DECILE_P = IMD_DECILE_COUNT_LAD / sum(IMD_DECILE_COUNT_LAD) * 100) %>%
   ungroup() %>%
   collect() %>%
-  mutate(IMD_DECILE_P = janitor::round_half_up(IMD_DECILE_P))
+  mutate(IMD_DECILE_P = janitor::round_half_up(IMD_DECILE_P, 1))
 
 
 
