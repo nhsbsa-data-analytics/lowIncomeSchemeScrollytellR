@@ -80,6 +80,20 @@ app_ui <- function(request) {
           br(),
           mod_definitions_ui("definitions_ui_1")
         )
+      ),
+      tabPanel(
+        title = "Contact us",
+        fluidPage(
+          br(),
+          mod_contact_ui("contact_ui_1")
+        )
+      ),
+      tabPanel(
+        title = "Accessibility statement",
+        fluidPage(
+          br(),
+          mod_accessibility_ui("accessibility_ui_1")
+        )
       )
     ),
     br(),

@@ -115,8 +115,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
         ) %>%
         highcharter::hc_subtitle(
           text = paste(
-            "Note: This excludes lead applicants without an age band.", "<br>",
-            "Numbers are rounded to the nearest 10. Percentages are rounded to the nearest whole number."
+            "Note: This excludes lead applicants without an age band."
           ),
           verticalAlign = "bottom",
           align = "right"
@@ -174,8 +173,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
         ) %>%
         highcharter::hc_subtitle(
           text = paste(
-            "Note: This excludes lead applicants with an unknown client group.", "<br>",
-            "Numbers are rounded to the nearest 10. Percentages are rounded to the nearest whole number."
+            "Note: This excludes lead applicants with an unknown client group."
           ),
           verticalAlign = "bottom",
           align = "right"
