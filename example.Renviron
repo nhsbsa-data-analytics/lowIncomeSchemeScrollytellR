@@ -1,4 +1,4 @@
-DB_CONNECTION = "blah:blah/blah"
-DB_USERNAME = "blah"
-DB_PASSWORD = "blah"
+# Save this file as .Renviron and the environment variables will be set automatically
+DB_DALP_USERNAME = "blah"
+DB_DALP_PASSWORD = "blah"
 STATXPLORE_API_KEY = "blah"
