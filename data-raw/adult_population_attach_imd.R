@@ -1,5 +1,3 @@
-library(magrittr)
-library(nhsbsaR)
 library(dplyr)
 library(dbplyr)
 
@@ -63,7 +61,7 @@ adult_population_df <- adult_population_imd_db %>%
   summarise(TOTAL_ADULT_POPULATION = sum(TOTAL_POPULATION)) %>%
   ungroup() %>%
   mutate(
-    FINANCIAL_YEAR = dplyr::case_when(
+    FINANCIAL_YEAR = case_when(
       POPULATION_YEAR == 2015 ~ "2015/16",
       POPULATION_YEAR == 2016 ~ "2016/17",
       POPULATION_YEAR == 2017 ~ "2017/18",
