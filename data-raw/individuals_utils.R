@@ -8,9 +8,9 @@ reformat_co_applicants <- function(df, time_col) {
   # Count the co-applicants
   co_applicants <- df %>%
     filter(MAX_INDIVIDUALS_COVERED == 2) %>%
-    group_by(!!as.name(time_col)) %>%
+    group_by(.data[[time_col]]) %>%
     summarise(TOTAL_APPLICANTS = sum(TOTAL_APPLICANTS)) %>%
-    select(!!as.name(time_col), TOTAL_APPLICANTS)
+    select(.data[[time_col]], TOTAL_APPLICANTS)
 
   # Get the dummy columns we need to add
   non_dummy_cols <- c(time_col, "MAX_INDIVIDUALS_COVERED", "TOTAL_APPLICANTS")
@@ -37,25 +37,27 @@ aggregate_individuals <- function(df,
 
   # Get the max individuals covered and count the total applicants
   df <- df %>%
-    group_by(!!as.name(time_col), ..., COMPOSITE_ID) %>%
+    group_by(.data[[time_col]], ..., COMPOSITE_ID) %>%
     summarise(MAX_INDIVIDUALS_COVERED = max(INDIVIDUALS_COVERED)) %>%
     ungroup() %>%
-    group_by(!!as.name(time_col), ..., MAX_INDIVIDUALS_COVERED) %>%
+    group_by(.data[[time_col]], ..., MAX_INDIVIDUALS_COVERED) %>%
     summarise(TOTAL_APPLICANTS = n_distinct(COMPOSITE_ID)) %>%
     ungroup()
 
   # Deal with max individuals (whether multiplying or reformatting)
   if (multiply_max_individuals) {
     df %>%
-      group_by(!!as.name(time_col), ...) %>%
-      summarise({{ total_col }} := sum(MAX_INDIVIDUALS_COVERED * TOTAL_APPLICANTS)) %>%
+      group_by(.data[[time_col]], ...) %>%
+      summarise(
+        {{ total_col }} := sum(MAX_INDIVIDUALS_COVERED * TOTAL_APPLICANTS)
+      ) %>%
       ungroup() %>%
       collect()
   } else {
     df %>%
       collect() %>%
       reformat_co_applicants(., time_col) %>%
-      group_by(!!as.name(time_col), ...) %>%
+      group_by(.data[[time_col]], ...) %>%
       summarise({{ total_col }} := sum(TOTAL_APPLICANTS)) %>%
       ungroup()
   }
