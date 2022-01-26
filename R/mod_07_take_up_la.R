@@ -176,9 +176,6 @@ mod_07_take_up_la_server <- function(id) {
               )
             )
           )
-        ) %>%
-        highcharter::hc_credits(
-          enabled = TRUE
         )
     })
 
