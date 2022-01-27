@@ -25,6 +25,7 @@ mod_contact_ui <- function(id) {
         url = "https://www.nhsbsa.nhs.uk/check-if-youre-eligible-help"
       )
     ),
+    br(),
     p(
       enurl(
         text = "Apply online for the NHS Low Income Scheme",
