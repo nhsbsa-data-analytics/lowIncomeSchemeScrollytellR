@@ -12,80 +12,82 @@ mod_07_take_up_la_ui <- function(id) {
   tagList(
     fluidPage(
       fluidRow(
-        fluidRow(
-          col_4(
-            style = "margin-bottom: 0;",
-            div(
-              br(),
-              br(),
-              p(
-                "The chart and map show estimated take-up by local authority area relative ",
-                "to the population and deprivation profile of a local authority, based on ",
-                a(
-                  "MHCLG methodology.",
-                  href = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/833947/IoD2019_Research_Report.pdf",
-                  target = "_blank"
+        col_4(
+          style = "margin-bottom: 0;",
+          div(
+            br(),
+            br(),
+            p(
+              "The chart and map show estimated take-up by local authority ",
+              "area relative to the population and deprivation profile of a ",
+              "local authority, based on ",
+              enurl(
+                url = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/833947/IoD2019_Research_Report.pdf",
+                text = "MHCLG methodology."
+              )
+            ),
+            br(),
+            br(),
+            shiny::htmlOutput(
+              ns("text")
+            )
+          )
+        ),
+        col_8(
+          fluidRow(
+            style = "background-color: #FFFFFF;",
+            h6(
+              "Estimated take-up of NHS Low Income Scheme by Index of ",
+              "Multiple Deprivation for English Local Authorities (2015/16 ",
+              "to 2020/21)"
+            ),
+            col_6(
+              style = "margin-bottom: 0;",
+              shiny::selectInput(
+                inputId = ns("input_region"),
+                label = "Region:",
+                choices = c(
+                  "East Midlands",
+                  "East of England",
+                  "London",
+                  "North East",
+                  "North West",
+                  "South East",
+                  "South West",
+                  "West Midlands",
+                  "Yorkshire and The Humber"
                 ),
-              ),
-              br(),
-              br(),
-              shiny::htmlOutput(
-                ns("text")
+                selected = "North West"
               )
             )
           ),
-          col_8(
-            fluidRow(
-              style = "background-color: #FFFFFF;",
-              h6("Estimated take-up of NHS Low Income Scheme by Index of Multiple Deprivation for English Local Authorities (2015/16 to 2020/21)"),
-              column(
-                width = 6,
-                style = "margin-bottom: 0;",
-                shiny::selectInput(
-                  inputId = ns("input_region"),
-                  label = "Region:",
-                  choices = c(
-                    "East Midlands",
-                    "East of England",
-                    "London",
-                    "North East",
-                    "North West",
-                    "South East",
-                    "South West",
-                    "West Midlands",
-                    "Yorkshire and The Humber"
-                  ),
-                  selected = "North West"
-                )
-              )
-            ),
-            fluidRow(
-              align = "center",
-              style = "background-color: #FFFFFF;",
-              col_6(
-                style = "margin-bottom: 0;",
-                highcharter::highchartOutput(
-                  outputId = ns("plot_selected_region_la"),
-                  height = "450px"
-                )
-              ),
-              col_6(
-                style = "margin-bottom: 0;",
-                tags$b("Click map"), " to see IMD decile distribution by selected local authority",
-                br(),
-                highcharter::highchartOutput(
-                  outputId = ns("plot_imd_decile_by_selected_la"),
-                  height = "300px",
-                  width = "100%" # this is a bar graph to show LSOA decile distribution of selected la
-                )
-              ),
+          fluidRow(
+            align = "center",
+            style = "background-color: #FFFFFF;",
+            col_6(
+              style = "margin-bottom: 0;",
               highcharter::highchartOutput(
-                outputId = ns("scatter_successful_individuals_by_la_imd"),
+                outputId = ns("plot_selected_region_la"),
                 height = "450px"
               )
             ),
-            mod_download_ui(id = ns("la_take_up_download"))
-          )
+            col_6(
+              style = "margin-bottom: 0;",
+              tags$b("Click map"), " to see IMD decile distribution by ",
+              "selected local authority",
+              br(),
+              highcharter::highchartOutput(
+                outputId = ns("plot_imd_decile_by_selected_la"),
+                height = "300px",
+                width = "100%"
+              )
+            ),
+            highcharter::highchartOutput(
+              outputId = ns("scatter_successful_individuals_by_la_imd"),
+              height = "450px"
+            )
+          ),
+          mod_download_ui(id = ns("la_take_up_download"))
         )
       )
     )
@@ -103,21 +105,35 @@ mod_07_take_up_la_server <- function(id) {
 
       # Calculate %s
       plot_df <- lowIncomeSchemeScrollytellR::adult_population_df %>%
-        dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
+        dplyr::inner_join(
+          y = lowIncomeSchemeScrollytellR::successful_individuals_by_la_df
+        ) %>%
         dplyr::mutate(
-          LA_TAKE_UP_PER_THOUSAND = janitor::round_half_up(TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000, 1)
+          LA_TAKE_UP_PER_THOUSAND = janitor::round_half_up(
+            x = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000, 
+            digits = 1
+          )
         )
 
       # Format for highcharter animation
       # Removed as it confused with drop down menu (need to check though)
       plot_sequence_df <- plot_df %>%
-        tidyr::complete(FINANCIAL_YEAR, tidyr::nesting(PCD_REGION_NAME, PCD_LAD_NAME, PCD_LAD_IMD_RANK),
+        tidyr::complete(
+          FINANCIAL_YEAR, 
+          tidyr::nesting(PCD_REGION_NAME, PCD_LAD_NAME, PCD_LAD_IMD_RANK),
           fill = list(LA_TAKE_UP_PER_THOUSAND = 0)
         ) %>%
         dplyr::group_by(PCD_REGION_NAME, PCD_LAD_NAME, PCD_LAD_IMD_RANK) %>%
         dplyr::do(sequence = .$LA_TAKE_UP_PER_THOUSAND) %>%
-        # Mutate to create color variable to reflect selected region with lightgrey and darkblue colour
-        dplyr::mutate(color = ifelse(PCD_REGION_NAME == input$input_region, "#003087", "#DDE1E4")) %>%
+        # Mutate to create color variable to reflect selected region with 
+        # lightgrey and darkblue colour
+        dplyr::mutate(
+          color = ifelse(
+            test = PCD_REGION_NAME == input$input_region, 
+            yes = "#003087", 
+            no = "#DDE1E4"
+          )
+        ) %>%
         dplyr::ungroup()
 
       # Create plot
@@ -153,7 +169,7 @@ mod_07_take_up_la_server <- function(id) {
           title = list(text = "Local authority deprivation rank (2019)")
         ) %>%
         highcharter::hc_yAxis(
-          max = ceiling(max(plot_df$LA_TAKE_UP_PER_THOUSAND) / 5) * 5,
+          max = max(plot_df$LA_TAKE_UP_PER_THOUSAND),
           title = list(text = "Take-up per thousand of the population aged 16+ years")
         ) %>%
         highcharter::hc_tooltip(
@@ -182,30 +198,33 @@ mod_07_take_up_la_server <- function(id) {
     # click local authority and show decile distribution
     output$plot_selected_region_la <- highcharter::renderHighchart({
       req(input$input_region)
-      # req(input$input_year)
 
-      # la data frame, change to sequence data but only for selected region and year
+      # LA data frame, change to sequence data but only for selected region
       plot_df <- lowIncomeSchemeScrollytellR::adult_population_df %>%
         dplyr::filter(PCD_REGION_NAME == input$input_region) %>%
-        # dplyr::filter(FINANCIAL_YEAR == input$input_year) %>%
         dplyr::group_by(FINANCIAL_YEAR, PCD_LAD_NAME) %>%
-        dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
+        dplyr::inner_join(
+          y = lowIncomeSchemeScrollytellR::successful_individuals_by_la_df
+        ) %>%
         dplyr::mutate(
-          value = janitor::round_half_up(TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000, 1)
+          value = janitor::round_half_up(
+            x = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000, 
+            digits = 1
+          )
         ) %>%
         dplyr::select(PCD_LAD_NAME, FINANCIAL_YEAR, value)
 
-      # filter la_map as well
+      # Filter la_map
       la_map <- lowIncomeSchemeScrollytellR::la_map %>%
         dplyr::inner_join(lowIncomeSchemeScrollytellR::region_la_lookup) %>%
         dplyr::filter(PCD_REGION_NAME == input$input_region) %>%
         sf::st_transform(crs = 27700) %>%
         geojsonsf::sf_geojson() %>%
-        jsonlite::fromJSON(simplifyVector = F)
-
+        jsonlite::fromJSON(simplifyVector = FALSE)
 
       plot_sequence_series <- plot_df %>%
-        tidyr::complete(FINANCIAL_YEAR, PCD_LAD_NAME,
+        tidyr::complete(
+          FINANCIAL_YEAR, PCD_LAD_NAME,
           fill = list(value = 0)
         ) %>%
         dplyr::group_by(PCD_LAD_NAME) %>%
@@ -256,7 +275,8 @@ mod_07_take_up_la_server <- function(id) {
 
         la_imd_count <- lowIncomeSchemeScrollytellR::imd_decile_df %>%
           # complete and fill to keep all IMD DECILE values from 1- 10
-          tidyr::complete(INDEX_OF_MULT_DEPRIV_DECILE,
+          tidyr::complete(
+            INDEX_OF_MULT_DEPRIV_DECILE,
             tidyr::nesting(PCD_LAD_NAME, PCD_REGION_NAME),
             fill = list(IMD_DECILE_COUNT_LAD = 0, IMD_DECILE_P = 0)
           ) %>%
@@ -267,7 +287,10 @@ mod_07_take_up_la_server <- function(id) {
         la_imd_count %>%
           highcharter::hchart(
             type = "column",
-            highcharter::hcaes(x = INDEX_OF_MULT_DEPRIV_DECILE, y = IMD_DECILE_P)
+            highcharter::hcaes(
+              x = INDEX_OF_MULT_DEPRIV_DECILE, 
+              y = IMD_DECILE_P
+            )
           ) %>%
           theme_nhsbsa() %>%
           highcharter::hc_credits(enabled = FALSE) %>%
@@ -276,9 +299,9 @@ mod_07_take_up_la_server <- function(id) {
               input$mapclick
             })
           ) %>%
-          highcharter::hc_subtitle(
-            text = "Note:  IMD rank is based on English indicies of deprivation 2019.",
-            verticalAlign = "bottom"
+          highcharter::hc_caption(
+            text = "IMD rank is based on English indicies of deprivation 2019.",
+            align = "right"
           ) %>%
           highcharter::hc_yAxis(
             title = list(
@@ -296,31 +319,56 @@ mod_07_take_up_la_server <- function(id) {
           ) %>%
           highcharter::hc_tooltip(
             shared = FALSE,
-            formatter = highcharter::JS("function () { return '<b>2019 IMD decile: </b>' + this.point.x + '<br>' + '<b>Percentage: </b>' + this.point.y.toFixed(1) + '%';}")
+            formatter = highcharter::JS(
+              "
+              function () { 
+              
+                outHTML = 
+                  '<b>2019 IMD decile: </b>' + this.point.x + '<br>' + 
+                  '<b>Percentage: </b>' + this.point.y + '%'
+                
+                return outHTML
+               
+              } 
+              "
+            )
           )
       })
     })
 
     # Download data
     la_take_up_download_df <- reactive({
+      
       lowIncomeSchemeScrollytellR::adult_population_df %>%
         dplyr::filter(PCD_REGION_NAME == input$input_region) %>%
-        dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
-        dplyr::mutate(
-          LA_TAKE_UP_PER_THOUSAND = janitor::round_half_up(TOTAL_SUCCESSFUL_INDIVIDUALS /
-            TOTAL_ADULT_POPULATION * 1000, 1)
+        dplyr::inner_join(
+          y = lowIncomeSchemeScrollytellR::successful_individuals_by_la_df
         ) %>%
-        dplyr::left_join(lowIncomeSchemeScrollytellR::imd_decile_df %>%
-          tidyr::complete(INDEX_OF_MULT_DEPRIV_DECILE,
-            tidyr::nesting(PCD_LAD_NAME, PCD_REGION_NAME),
-            fill = list(IMD_DECILE_COUNT_LAD = 0, IMD_DECILE_P = 0)
-          ),
-        by = c("PCD_LAD_NAME", "PCD_REGION_NAME")
+        dplyr::mutate(
+          LA_TAKE_UP_PER_THOUSAND = janitor::round_half_up(
+            x = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000, 
+            digits = 1
+          )
+        ) %>%
+        dplyr::left_join(
+          y = lowIncomeSchemeScrollytellR::imd_decile_df %>%
+            tidyr::complete(
+              INDEX_OF_MULT_DEPRIV_DECILE,
+              tidyr::nesting(PCD_LAD_NAME, PCD_REGION_NAME),
+              fill = list(IMD_DECILE_COUNT_LAD = 0, IMD_DECILE_P = 0)
+            ),
+          by = c("PCD_LAD_NAME", "PCD_REGION_NAME")
         ) %>%
         dplyr::select(
-          FINANCIAL_YEAR, PCD_LAD_NAME, PCD_REGION_NAME, PCD_LAD_IMD_RANK, LA_TAKE_UP_PER_THOUSAND,
-          INDEX_OF_MULT_DEPRIV_DECILE, IMD_DECILE_P
+          FINANCIAL_YEAR, 
+          PCD_LAD_NAME, 
+          PCD_REGION_NAME, 
+          PCD_LAD_IMD_RANK, 
+          LA_TAKE_UP_PER_THOUSAND,
+          INDEX_OF_MULT_DEPRIV_DECILE, 
+          IMD_DECILE_P
         )
+      
     })
 
     mod_download_server(
@@ -333,7 +381,9 @@ mod_07_take_up_la_server <- function(id) {
     # dynamic text
     plot_df <- reactive({
       lowIncomeSchemeScrollytellR::adult_population_df %>%
-        dplyr::inner_join(lowIncomeSchemeScrollytellR::successful_individuals_by_la_df) %>%
+        dplyr::inner_join(
+          y = lowIncomeSchemeScrollytellR::successful_individuals_by_la_df
+        ) %>%
         dplyr::filter(FINANCIAL_YEAR == "2019/20") %>%
         dplyr::mutate(
           p = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000

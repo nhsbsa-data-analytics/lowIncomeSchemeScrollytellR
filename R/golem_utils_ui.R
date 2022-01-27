@@ -243,7 +243,7 @@ rep_br <- function(times = 1) {
 #' enurl("https://www.thinkr.fr", "ThinkR")
 #' @importFrom shiny tags
 enurl <- function(url, text) {
-  tags$a(href = url, text)
+  tags$a(href = url, text, target = "_blank")
 }
 
 #' Columns wrappers
@@ -264,6 +264,11 @@ col_10 <- function(...) {
 }
 
 #' @importFrom shiny column
+col_9 <- function(...) {
+  column(8, ...)
+}
+
+#' @importFrom shiny column
 col_8 <- function(...) {
   column(8, ...)
 }
@@ -273,6 +278,10 @@ col_6 <- function(...) {
   column(6, ...)
 }
 
+#' @importFrom shiny column
+col_5 <- function(...) {
+  column(5, ...)
+}
 
 #' @importFrom shiny column
 col_4 <- function(...) {
