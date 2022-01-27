@@ -19,6 +19,18 @@ mod_contact_ui <- function(id) {
       )
     ),
     br(),
+    p(
+      enurl(
+        text = "Check if you're able to get help to pay NHS charges",
+        url = "https://www.nhsbsa.nhs.uk/check-if-youre-eligible-help"
+      )
+    ),
+    p(
+      enurl(
+        text = "Apply online for the NHS Low Income Scheme",
+        url = "https://services.nhsbsa.nhs.uk/apply-for-help-with-nhs-costs/apply-online"
+      )
+    ),
     br(),
     br(),
     br(),
