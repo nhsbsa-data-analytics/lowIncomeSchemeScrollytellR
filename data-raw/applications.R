@@ -1,15 +1,12 @@
-library(magrittr)
-library(nhsbsaR)
 library(dplyr)
+library(dbplyr)
 
 # Set up connection to the DB
 con <- nhsbsaR::con_nhsbsa(database = "DALP")
 
 # Create a lazy table from the low income scheme base query
-base_df <- dplyr::tbl(
-  src = con,
-  from = dbplyr::sql("SELECT * FROM KAYGO.INT_602_LOW_INCOME_SCHEME_BASE")
-)
+base_df <- con %>%
+  tbl(from = in_schema("KAYGO", "INT_602_LOW_INCOME_SCHEME_BASE"))
 
 # Applications
 applications_df <- base_df %>%

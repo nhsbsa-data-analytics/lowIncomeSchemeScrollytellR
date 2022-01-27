@@ -1,4 +1,4 @@
-library(magrittr)
+library(dplyr)
 
 
 # Download the raw data-files by using the download link from:
@@ -45,7 +45,7 @@ student_population_df <- raw_student_df %>%
   # First filter Country of HE provider = England
   # Exclude Region = 'All'
   # and select remaining field 'All
-  dplyr::filter(
+  filter(
     he_provider != "Total",
     country_of_he_provider == "England",
     region_of_he_provider != "All",
@@ -55,12 +55,12 @@ student_population_df <- raw_student_df %>%
     category_marker == "Total",
     category == "Total"
   ) %>%
-  dplyr::mutate(number = as.numeric(number)) %>%
-  dplyr::rename(ACADEMIC_YEAR = academic_year) %>%
+  mutate(number = as.numeric(number)) %>%
+  rename(ACADEMIC_YEAR = academic_year) %>%
   # Aggregate to regional level
-  dplyr::group_by(ACADEMIC_YEAR, PCD_REGION_NAME = region_of_he_provider) %>%
-  dplyr::summarise(TOTAL_STUDENT_POPULATION = sum(number)) %>%
-  dplyr::ungroup()
+  group_by(ACADEMIC_YEAR, PCD_REGION_NAME = region_of_he_provider) %>%
+  summarise(TOTAL_STUDENT_POPULATION = sum(number)) %>%
+  ungroup()
 
 
 usethis::use_data(student_population_df, overwrite = TRUE)
