@@ -150,9 +150,6 @@ mod_08_spotlight_students_server <- function(id) {
         highcharter::hc_tooltip(
           shared = FALSE,
           formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Total Applications: </b>' + (Math.round(this.point.y / 500) * 500 / 1000).toFixed(0) + 'k';}")
-        ) %>%
-        highcharter::hc_credits(
-          enabled = TRUE
         )
     })
 
@@ -206,9 +203,6 @@ mod_08_spotlight_students_server <- function(id) {
         highcharter::hc_tooltip(
           shared = TRUE,
           headerFormat = "<b> {point.name} </b>", valueSuffix = "%", valueDecimals = 1
-        ) %>%
-        highcharter::hc_credits(
-          enabled = TRUE
         )
     })
 

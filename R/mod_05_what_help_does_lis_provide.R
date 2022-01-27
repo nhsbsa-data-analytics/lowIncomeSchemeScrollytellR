@@ -114,9 +114,6 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
         highcharter::hc_tooltip(
           shared = TRUE,
           headerFormat = "<b> {point.name} </b>", valueSuffix = "%", valueDecimals = 1
-        ) %>%
-        highcharter::hc_credits(
-          enabled = TRUE
         )
     })
 

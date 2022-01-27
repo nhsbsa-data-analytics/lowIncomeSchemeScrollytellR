@@ -110,6 +110,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
           startIndex = 4
         ) %>%
         theme_nhsbsa() %>%
+        highcharter::hc_legend(enabled = FALSE) %>%
         highcharter::hc_title(
           text = "Age band of NHS Low Income Scheme lead applicants in England (2015/16 to 2020/21)"
         ) %>%
@@ -135,9 +136,6 @@ mod_03_who_applies_to_lis_server <- function(id) {
         highcharter::hc_tooltip(
           shared = FALSE,
           formatter = highcharter::JS("function () { return '<b>Age band (5 years): </b>' + this.point.category + '<br/>' + '<b>Percentage: </b>' + this.point.y.toFixed(1) + '%';}")
-        ) %>%
-        highcharter::hc_credits(
-          enabled = TRUE
         )
     })
 
@@ -192,9 +190,6 @@ mod_03_who_applies_to_lis_server <- function(id) {
           shared = TRUE,
           headerFormat = "<b> {point.name} </b>", valueSuffix = "%", valueDecimals = 1
           # formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Percentage: </b>' + this.point.y + '%';}")
-        ) %>%
-        highcharter::hc_credits(
-          enabled = TRUE
         )
     })
 
@@ -265,9 +260,6 @@ mod_03_who_applies_to_lis_server <- function(id) {
         highcharter::hc_tooltip(
           shared = FALSE,
           formatter = highcharter::JS("function () { return '<b>Deprivation: </b>' + this.series.name + '<br>' + '<b>Decile: </b>' + parseInt(this.point.category) + '<br>' + '<b>Percentage: </b>' + this.point.y.toFixed(1)  + '%';}")
-        ) %>%
-        highcharter::hc_credits(
-          enabled = TRUE
         )
     })
 

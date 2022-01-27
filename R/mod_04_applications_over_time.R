@@ -83,9 +83,6 @@ mod_04_applications_over_time_server <- function(id) {
         highcharter::hc_tooltip(
           shared = FALSE,
           formatter = highcharter::JS("function () { return '<b>Financial Year: </b>' + this.point.FINANCIAL_YEAR + '<br/>' + '<b>Total Applications: </b>' + (Math.round(this.point.y / 500) * 500 / 1000).toFixed(0) + 'k';}")
-        ) %>%
-        highcharter::hc_credits(
-          enabled = TRUE
         )
     })
 
