@@ -30,13 +30,20 @@ mod_10_footer_ui <- function(id) {
               target = "_blank",
               alt = "NHSBSA link"
             ),
-            " and available to view on GitLab."
+            " and available to view on ",
+            a(
+              style = "color: #231f20;",
+              tags$b("GitHub"),
+              href = "https://github.com/nhsbsa-data-analytics/lowIncomeSchemeScrollytellR",
+              target = "_blank"
+            ),
+            "."
           )
         ),
         column(
           width = 3,
           align = "right",
-          p("© MIT")
+          p("© APLv2")
         )
       )
     )
