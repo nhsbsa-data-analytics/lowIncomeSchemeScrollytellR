@@ -94,8 +94,8 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
         highcharter::hchart(
           type = "column",
           highcharter::hcaes(
-            x = FINANCIAL_YEAR, 
-            y = PCT_OUTCOMES, 
+            x = FINANCIAL_YEAR,
+            y = PCT_OUTCOMES,
             group = OUTCOME_LEVEL2
           )
         ) %>%
@@ -113,8 +113,8 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
         ) %>%
         highcharter::hc_tooltip(
           shared = TRUE,
-          headerFormat = "<b> {point.name} </b>", 
-          valueSuffix = "%", 
+          headerFormat = "<b> {point.name} </b>",
+          valueSuffix = "%",
           valueDecimals = 1
         )
     })

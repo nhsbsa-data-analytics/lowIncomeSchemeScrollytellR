@@ -56,7 +56,7 @@ mod_06_take_up_region_server <- function(id) {
 
     # Calculate take-up rate per 1k adult population of each region
     # Because of inner join from other data-raw output, calculating SDC here
-    successful_individuals_by_region_df <- 
+    successful_individuals_by_region_df <-
       lowIncomeSchemeScrollytellR::adult_population_df %>%
       dplyr::group_by(FINANCIAL_YEAR, PCD_REGION_NAME) %>%
       dplyr::summarise(TOTAL_POPULATION = sum(TOTAL_ADULT_POPULATION)) %>%
@@ -73,30 +73,29 @@ mod_06_take_up_region_server <- function(id) {
 
 
     # Create chart
-    output$plot_successful_individuals_by_region <- 
+    output$plot_successful_individuals_by_region <-
       highcharter::renderHighchart({
-        
         successful_individuals_by_region_df %>%
-        highcharter::hchart(
-          type = "line",
-          highcharter::hcaes(
-            x = FINANCIAL_YEAR, 
-            y = TAKE_UP_PER_THOUSAND,
-            group = PCD_REGION_NAME
+          highcharter::hchart(
+            type = "line",
+            highcharter::hcaes(
+              x = FINANCIAL_YEAR,
+              y = TAKE_UP_PER_THOUSAND,
+              group = PCD_REGION_NAME
+            )
+          ) %>%
+          theme_nhsbsa(stack = NA) %>%
+          highcharter::hc_yAxis(
+            title = list(text = "Per thousand of the general population")
+          ) %>%
+          highcharter::hc_xAxis(
+            title = list(text = "Financial year")
+          ) %>%
+          highcharter::hc_tooltip(
+            shared = TRUE,
+            valueDecimals = 1
           )
-        ) %>%
-        theme_nhsbsa(stack = NA) %>%
-        highcharter::hc_yAxis(
-          title = list(text = "Per thousand of the general population")
-        ) %>%
-        highcharter::hc_xAxis(
-          title = list(text = "Financial year")
-        ) %>%
-        highcharter::hc_tooltip(
-          shared = TRUE,
-          valueDecimals = 1
-        )
-    })
+      })
 
     # Add data download
     mod_download_server(
@@ -108,7 +107,6 @@ mod_06_take_up_region_server <- function(id) {
           OVER16_POPULATION = TOTAL_POPULATION
         )
     )
-    
   })
 }
 

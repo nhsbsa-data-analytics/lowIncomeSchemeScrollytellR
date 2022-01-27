@@ -32,7 +32,6 @@ mod_10_footer_ui <- function(id) {
             a(
               style = "color: #231f20;",
               tags$b("GitHub"),
-
               href = "https://github.com/nhsbsa-data-analytics/lowIncomeSchemeScrollytellR",
               target = "_blank"
             ),

@@ -110,7 +110,7 @@ mod_07_take_up_la_server <- function(id) {
         ) %>%
         dplyr::mutate(
           LA_TAKE_UP_PER_THOUSAND = janitor::round_half_up(
-            x = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000, 
+            x = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000,
             digits = 1
           )
         )
@@ -119,18 +119,18 @@ mod_07_take_up_la_server <- function(id) {
       # Removed as it confused with drop down menu (need to check though)
       plot_sequence_df <- plot_df %>%
         tidyr::complete(
-          FINANCIAL_YEAR, 
+          FINANCIAL_YEAR,
           tidyr::nesting(PCD_REGION_NAME, PCD_LAD_NAME, PCD_LAD_IMD_RANK),
           fill = list(LA_TAKE_UP_PER_THOUSAND = 0)
         ) %>%
         dplyr::group_by(PCD_REGION_NAME, PCD_LAD_NAME, PCD_LAD_IMD_RANK) %>%
         dplyr::do(sequence = .$LA_TAKE_UP_PER_THOUSAND) %>%
-        # Mutate to create color variable to reflect selected region with 
+        # Mutate to create color variable to reflect selected region with
         # lightgrey and darkblue colour
         dplyr::mutate(
           color = ifelse(
-            test = PCD_REGION_NAME == input$input_region, 
-            yes = "#003087", 
+            test = PCD_REGION_NAME == input$input_region,
+            yes = "#003087",
             no = "#DDE1E4"
           )
         ) %>%
@@ -208,7 +208,7 @@ mod_07_take_up_la_server <- function(id) {
         ) %>%
         dplyr::mutate(
           value = janitor::round_half_up(
-            x = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000, 
+            x = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000,
             digits = 1
           )
         ) %>%
@@ -288,7 +288,7 @@ mod_07_take_up_la_server <- function(id) {
           highcharter::hchart(
             type = "column",
             highcharter::hcaes(
-              x = INDEX_OF_MULT_DEPRIV_DECILE, 
+              x = INDEX_OF_MULT_DEPRIV_DECILE,
               y = IMD_DECILE_P
             )
           ) %>%
@@ -321,15 +321,15 @@ mod_07_take_up_la_server <- function(id) {
             shared = FALSE,
             formatter = highcharter::JS(
               "
-              function () { 
-              
-                outHTML = 
-                  '<b>2019 IMD decile: </b>' + this.point.x + '<br>' + 
+              function () {
+
+                outHTML =
+                  '<b>2019 IMD decile: </b>' + this.point.x + '<br>' +
                   '<b>Percentage: </b>' + this.point.y + '%'
-                
+
                 return outHTML
-               
-              } 
+
+              }
               "
             )
           )
@@ -338,7 +338,6 @@ mod_07_take_up_la_server <- function(id) {
 
     # Download data
     la_take_up_download_df <- reactive({
-      
       lowIncomeSchemeScrollytellR::adult_population_df %>%
         dplyr::filter(PCD_REGION_NAME == input$input_region) %>%
         dplyr::inner_join(
@@ -346,7 +345,7 @@ mod_07_take_up_la_server <- function(id) {
         ) %>%
         dplyr::mutate(
           LA_TAKE_UP_PER_THOUSAND = janitor::round_half_up(
-            x = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000, 
+            x = TOTAL_SUCCESSFUL_INDIVIDUALS / TOTAL_ADULT_POPULATION * 1000,
             digits = 1
           )
         ) %>%
@@ -360,15 +359,14 @@ mod_07_take_up_la_server <- function(id) {
           by = c("PCD_LAD_NAME", "PCD_REGION_NAME")
         ) %>%
         dplyr::select(
-          FINANCIAL_YEAR, 
-          PCD_LAD_NAME, 
-          PCD_REGION_NAME, 
-          PCD_LAD_IMD_RANK, 
+          FINANCIAL_YEAR,
+          PCD_LAD_NAME,
+          PCD_REGION_NAME,
+          PCD_LAD_IMD_RANK,
           LA_TAKE_UP_PER_THOUSAND,
-          INDEX_OF_MULT_DEPRIV_DECILE, 
+          INDEX_OF_MULT_DEPRIV_DECILE,
           IMD_DECILE_P
         )
-      
     })
 
     mod_download_server(

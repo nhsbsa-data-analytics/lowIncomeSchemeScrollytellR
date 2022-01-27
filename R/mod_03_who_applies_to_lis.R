@@ -97,7 +97,7 @@ mod_03_who_applies_to_lis_ui <- function(id) {
 mod_03_who_applies_to_lis_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    
+
     # Pyramid plot for age band
     output$plot_individuals_by_age_band <- highcharter::renderHighchart({
 
@@ -143,14 +143,14 @@ mod_03_who_applies_to_lis_server <- function(id) {
           shared = FALSE,
           formatter = highcharter::JS(
             "
-            function () { 
-              
-              outHTML = 
-                '<b>Age band (5 years): </b>' + this.point.category + '<br/>' + 
+            function () {
+
+              outHTML =
+                '<b>Age band (5 years): </b>' + this.point.category + '<br/>' +
                 '<b>Percentage: </b>' + this.point.y + '%'
-              
+
               return outHTML
-            
+
             }
             "
           )
@@ -176,8 +176,8 @@ mod_03_who_applies_to_lis_server <- function(id) {
         highcharter::hchart(
           type = "column",
           highcharter::hcaes(
-            x = FINANCIAL_YEAR, 
-            y = PCT_INDIVIDUALS, 
+            x = FINANCIAL_YEAR,
+            y = PCT_INDIVIDUALS,
             group = CLIENTGROUP_DESC_FORMAT
           )
         ) %>%
@@ -195,8 +195,8 @@ mod_03_who_applies_to_lis_server <- function(id) {
         ) %>%
         highcharter::hc_tooltip(
           shared = TRUE,
-          headerFormat = "<b> {point.name} </b>", 
-          valueSuffix = "%", 
+          headerFormat = "<b> {point.name} </b>",
+          valueSuffix = "%",
           valueDecimals = 1
         )
     })
@@ -205,12 +205,12 @@ mod_03_who_applies_to_lis_server <- function(id) {
     mod_download_server(
       id = "download_individuals_by_client_group",
       filename = "individual_client_group.csv",
-      export_data = 
+      export_data =
         lowIncomeSchemeScrollytellR::individuals_by_client_group_df %>%
-        dplyr::rename(
-          COUNT_APPLICANTS_BY_OUTCOME = TOTAL_INDIVIDUALS,
-          PERCENTAGE_APPLICANTS_BY_OUTCOME = PCT_INDIVIDUALS
-        )
+          dplyr::rename(
+            COUNT_APPLICANTS_BY_OUTCOME = TOTAL_INDIVIDUALS,
+            PERCENTAGE_APPLICANTS_BY_OUTCOME = PCT_INDIVIDUALS
+          )
     )
 
 
@@ -257,15 +257,15 @@ mod_03_who_applies_to_lis_server <- function(id) {
           shared = FALSE,
           formatter = highcharter::JS(
             "
-            function () { 
-              
-              outHTML = 
-                '<b>Deprivation: </b>' + this.series.name + '<br>' + 
-                '<b>Decile: </b>' + parseInt(this.point.category) + '<br>' + 
+            function () {
+
+              outHTML =
+                '<b>Deprivation: </b>' + this.series.name + '<br>' +
+                '<b>Decile: </b>' + parseInt(this.point.category) + '<br>' +
                 '<b>Percentage: </b>' + this.point.y + '%'
-              
+
               return outHTML
-            
+
             }
             "
           )
@@ -276,12 +276,12 @@ mod_03_who_applies_to_lis_server <- function(id) {
     mod_download_server(
       id = "download_individuals_by_deprivation",
       filename = "individual_deprivation.csv",
-      export_data = 
+      export_data =
         lowIncomeSchemeScrollytellR::individuals_by_imd_health_df %>%
-        dplyr::rename(
-          COUNT_APPLICANTS_BY_OUTCOME = TOTAL_INDIVIDUALS,
-          PERCENTAGE_APPLICANTS_BY_OUTCOME = PCT_INDIVIDUALS
-        )
+          dplyr::rename(
+            COUNT_APPLICANTS_BY_OUTCOME = TOTAL_INDIVIDUALS,
+            PERCENTAGE_APPLICANTS_BY_OUTCOME = PCT_INDIVIDUALS
+          )
     )
   })
 }

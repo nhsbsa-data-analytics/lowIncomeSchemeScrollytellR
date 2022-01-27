@@ -77,14 +77,14 @@ mod_04_applications_over_time_server <- function(id) {
           shared = FALSE,
           formatter = highcharter::JS(
             "
-            function () { 
-            
-              outHTML = 
-                '<b>Financial Year: </b>' + this.point.FINANCIAL_YEAR + '<br/>' + 
+            function () {
+
+              outHTML =
+                '<b>Financial Year: </b>' + this.point.FINANCIAL_YEAR + '<br/>' +
                 '<b>Total Applications: </b>' + (Math.round(this.point.y / 500) * 500 / 1000).toFixed(0) + 'k'
-            
+
               return outHTML
-            
+
             }
             "
           )

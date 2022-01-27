@@ -94,12 +94,17 @@ mod_definitions_ui <- function(id) {
     h6("Applicants"),
     p(
       "NHS Low Income Scheme records only retain the latest applicant ",
-      "information against any single case reference ID. ",
+      "information against any single case reference ID. "
+    ),
+    p(
       "Where an applicant showed potential duplicate applications, ",
       "for example two or more cases created on the same date, priority is ",
       "given based on the outcome of the application ",
       "(Full benefit > Partial benefit > No assistance > ",
-      "Abandoned/Withdrawn > Ongoing). Applicant age has been defined ",
+      "Abandoned/Withdrawn > Ongoing)."
+    ),
+    p(
+      "Applicant age has been defined ",
       "as the age at the point of registration based on the applicant’s ",
       "date of birth., If this resulted in an age calculated as either under ",
       "16 or over 100, the age is classified as unknown."
