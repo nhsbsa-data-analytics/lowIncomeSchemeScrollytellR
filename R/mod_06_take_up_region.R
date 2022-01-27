@@ -80,7 +80,8 @@ mod_06_take_up_region_server <- function(id) {
         highcharter::hchart(
           type = "line",
           highcharter::hcaes(
-            x = FINANCIAL_YEAR, y = TAKE_UP_PER_THOUSAND,
+            x = FINANCIAL_YEAR, 
+            y = TAKE_UP_PER_THOUSAND,
             group = PCD_REGION_NAME
           )
         ) %>%
