@@ -58,6 +58,62 @@ mod_definitions_ui <- function(id) {
       "tax credit claim are also entitled to the same help."
     ),
     br(),
+    h6("Applications"),
+    p(
+      "Application data is taken from a snapshot copy of the NHSBSA’s ",
+      "internal database for processing applications to the ",
+      "NHS Low Income Scheme, this snapshot was taken on ",
+      "1st December 2021 and includes applications processed from ",
+      "April 2015 onwards."
+    ),
+    p(
+      "Application data includes records where applicants have made ",
+      "an application via an HC1 form, either by paper or through ",
+      "the digital application process, although digital applications ",
+      "were only introduced from November 2018 onwards and are still ",
+      "being rolled out. "
+    ),
+    p(
+      "Each application record includes the applicant’s name, address, ",
+      "date of birth and details of the application outcome.  ",
+      "Where a certificate has been issued or an application withdrawn, ",
+      "this is captured within the data and used to identify the outcome.  ",
+      "Where a certificate has not been issued and the application was ",
+      "registered prior to 1st January 2021, it is assumed that the ",
+      "application has been abandoned.  Applications registered from ",
+      "2021 onwards, where no certificate has been issued or withdrawn, ",
+      "are recorded as ongoing."
+    ),
+    p(
+      "Applications have been assigned against a reporting period based on the ",
+      "financial year in which the application was registered.",
+      "Application data has been limited to where a valid UK postcode can be ",
+      "associated with the application."
+    ),
+    br(),
+    h6("Applicants"),
+    p(
+      "NHS Low Income Scheme records only retain the latest applicant ",
+      "information against any single case reference ID. ",
+      "Where an applicant showed potential duplicate applications, ",
+      "for example two or more cases created on the same date, priority is ",
+      "given based on the outcome of the application ",
+      "(Full benefit > Partial benefit > No assistance > ",
+      "Abandoned/Withdrawn > Ongoing). Applicant age has been defined ",
+      "as the age at the point of registration based on the applicant’s ",
+      "date of birth., If this resulted in an age calculated as either under ",
+      "16 or over 100, the age is classified as unknown."
+    ),
+    br(),
+    h6("Individuals covered by the application"),
+    p(
+      "Applicants can apply either for themselves only or include dependants ",
+      "within the same household. The database only includes details of a ",
+      "partner as dependent (not children) and does not include any demographic ",
+      "information about the partner. Therefore each certificate has only ",
+      "been identified as covering one or two people. "
+    ),
+    br(),
     h6("Client group"),
     p(
       "Applicants are allocated a client group by assessors based on the main source ",
