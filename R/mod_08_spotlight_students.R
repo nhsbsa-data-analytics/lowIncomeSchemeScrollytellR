@@ -306,7 +306,7 @@ mod_08_spotlight_students_server <- function(id) {
     mod_download_server(
       id = "download_student_individuals_by_region",
       file = "student_take_up.csv",
-      export_data = student_individuals_by_region_download_df %>%
+      export_data = student_individuals_by_region %>%
         dplyr::rename(STUDENT_TAKE_UP = value)
     )
   })
