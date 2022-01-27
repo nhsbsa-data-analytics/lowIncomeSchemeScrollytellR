@@ -23,7 +23,7 @@ mod_10_footer_ui <- function(id) {
           p(
             "Developed by the ",
             a(
-              style = "color: #768692;",
+              style = "color: #231f20;",
               "NHS Business Services Authority",
               href = "https://www.nhsbsa.nhs.uk/",
               target = "_blank"
