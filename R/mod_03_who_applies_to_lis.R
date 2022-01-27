@@ -12,22 +12,27 @@ mod_03_who_applies_to_lis_ui <- function(id) {
   tagList(
     h4("Who applies to the NHS Low Income Scheme in England?"),
     p(
-      "Around 7 in 10 applicants are ",
-      "single applicants and the remainder are applying as part of a couple/dual application."
+      "Around 7 in 10 applicants are single applicants and the remainder are ",
+      "applying as part of a couple/dual application."
     ),
     p(
-      "We only hold age for the lead applicant (person making the application).",
-      "One in four lead applicants are aged 15 to 24 years in 2019/20.",
-      "This age group have the highest number of applications in each year observed."
+      "We only hold age for the lead applicant (person making the ",
+      "application). One in four lead applicants are aged 15 to 24 years in ",
+      "2019/20. This age group have the highest number of applications in ",
+      "each year observed."
     ),
     fluidRow(
-      HTML('<label for="play-range" style = "visibility: hidden;">year-range</label>'),
       align = "center",
       style = "background-color: #FFFFFF;",
+      h6(
+        "Age band of NHS Low Income Scheme lead applicants in England ",
+        "(2015/16 to 2020/21)"
+      ),
       highcharter::highchartOutput(
         outputId = ns("plot_individuals_by_age_band"),
-        height = "500px"
-      )
+        height = "300px"
+      ),
+      HTML("<label for='play-range' style = 'visibility: hidden;'>year-range</label>"),
     ),
     mod_download_ui(
       id = ns("download_individuals_by_age_band")
@@ -45,8 +50,13 @@ mod_03_who_applies_to_lis_ui <- function(id) {
     fluidRow(
       align = "center",
       style = "background-color: #FFFFFF;",
+      h6(
+        "Client group of NHS Low Income Scheme applications in England ",
+        "(2015/16 to 2020/21)"
+      ),
       highcharter::highchartOutput(
-        outputId = ns("plot_individuals_by_client_group")
+        outputId = ns("plot_individuals_by_client_group"),
+        height = "300px"
       )
     ),
     mod_download_ui(
@@ -62,13 +72,18 @@ mod_03_who_applies_to_lis_ui <- function(id) {
       ),
       " decile chart."
     ),
-    p(
-      "This trend is consistent in each year observed."
-    ),
+    p("This trend is consistent in each year observed."),
     fluidRow(
       align = "center",
       style = "background-color: #FFFFFF;",
-      highcharter::highchartOutput(outputId = ns("plot_individuals_by_deprivation"))
+      h6(
+        "Deprivation decile of NHS Low Income Scheme individuals in England ",
+        "(2015/16 to 2020/21)"
+      ),
+      highcharter::highchartOutput(
+        outputId = ns("plot_individuals_by_deprivation"),
+        height = "300px"
+      )
     ),
     mod_download_ui(
       id = ns("download_individuals_by_deprivation")
@@ -82,14 +97,14 @@ mod_03_who_applies_to_lis_ui <- function(id) {
 mod_03_who_applies_to_lis_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+    
     # Pyramid plot for age band
     output$plot_individuals_by_age_band <- highcharter::renderHighchart({
-      # Pull the max p
-      max_p <- max(abs(lowIncomeSchemeScrollytellR::individuals_by_age_band_df$PCT_INDIVIDUALS))
 
       # Format for highcharter animation
       plot_series_list <- lowIncomeSchemeScrollytellR::individuals_by_age_band_df %>%
-        tidyr::complete(FINANCIAL_YEAR, BAND_5YEARS,
+        tidyr::complete(
+          FINANCIAL_YEAR, BAND_5YEARS,
           fill = list(value = 0)
         ) %>%
         dplyr::group_by(BAND_5YEARS) %>%
@@ -102,7 +117,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
 
       # Create plot
       highcharter::highchart() %>%
-        highcharter::hc_chart(type = "column", marginBottom = 120) %>%
+        highcharter::hc_chart(type = "column", marginBottom = 100) %>%
         highcharter::hc_add_series_list(x = plot_series_list) %>%
         highcharter::hc_motion(
           labels = unique(lowIncomeSchemeScrollytellR::individuals_by_age_band_df$FINANCIAL_YEAR),
@@ -110,53 +125,48 @@ mod_03_who_applies_to_lis_server <- function(id) {
           startIndex = 4
         ) %>%
         theme_nhsbsa() %>%
-        highcharter::hc_title(
-          text = "Age band of NHS Low Income Scheme lead applicants in England (2015/16 to 2020/21)"
-        ) %>%
-        highcharter::hc_subtitle(
-          text = paste(
-            "Note: This excludes lead applicants without an age band."
-          ),
-          verticalAlign = "bottom",
+        highcharter::hc_legend(enabled = FALSE) %>%
+        highcharter::hc_caption(
+          text = "This excludes lead applicants without an age band.",
           align = "right"
         ) %>%
         highcharter::hc_xAxis(
-          title = list(text = "Age band"),
+          title = list(text = "Age band (5 years)"),
           categories = sort(unique(lowIncomeSchemeScrollytellR::individuals_by_age_band_df$BAND_5YEARS)),
           reversed = FALSE
         ) %>%
         highcharter::hc_yAxis(
-          max = ceiling(max_p / 5) * 5,
-          labels = list(
-            formatter = highcharter::JS("function(){ return Math.abs(this.value) ;}")
-          ),
+          max = max(lowIncomeSchemeScrollytellR::individuals_by_age_band_df$PCT_INDIVIDUALS),
           title = list(text = "Percentage of applicants")
         ) %>%
         highcharter::hc_tooltip(
           shared = FALSE,
-          formatter = highcharter::JS("function () { return '<b>Age band (5 years): </b>' + this.point.category + '<br/>' + '<b>Percentage: </b>' + this.point.y.toFixed(1) + '%';}")
-        ) %>%
-        highcharter::hc_credits(
-          enabled = TRUE
+          formatter = highcharter::JS(
+            "
+            function () { 
+              
+              outHTML = 
+                '<b>Age band (5 years): </b>' + this.point.category + '<br/>' + 
+                '<b>Percentage: </b>' + this.point.y + '%'
+              
+              return outHTML
+            
+            }
+            "
+          )
         )
     })
-
-    # Rename variable
-
-    individuals_by_age_band_download_df <- lowIncomeSchemeScrollytellR::individuals_by_age_band_df %>%
-      dplyr::rename(
-        COUNT_APPLICANTS_BY_AGE_GROUP = TOTAL_INDIVIDUALS,
-        PERCENTAGE_APPLICANTS_BY_AGE_GROUP = PCT_INDIVIDUALS
-      )
-
 
     # Add data to download button
     mod_download_server(
       id = "download_individuals_by_age_band",
       filename = "applicants_age_band.csv",
-      export_data = individuals_by_age_band_download_df
+      export_data = lowIncomeSchemeScrollytellR::individuals_by_age_band_df %>%
+        dplyr::rename(
+          COUNT_APPLICANTS_BY_AGE_GROUP = TOTAL_INDIVIDUALS,
+          PERCENTAGE_APPLICANTS_BY_AGE_GROUP = PCT_INDIVIDUALS
+        )
     )
-
 
     # Stacked column plot by client group
     output$plot_individuals_by_client_group <- highcharter::renderHighchart({
@@ -165,24 +175,19 @@ mod_03_who_applies_to_lis_server <- function(id) {
       lowIncomeSchemeScrollytellR::individuals_by_client_group_df %>%
         highcharter::hchart(
           type = "column",
-          highcharter::hcaes(x = FINANCIAL_YEAR, y = PCT_INDIVIDUALS, group = CLIENTGROUP_DESC_FORMAT)
+          highcharter::hcaes(
+            x = FINANCIAL_YEAR, 
+            y = PCT_INDIVIDUALS, 
+            group = CLIENTGROUP_DESC_FORMAT
+          )
         ) %>%
         theme_nhsbsa() %>%
-        highcharter::hc_title(
-          text = "Client group of NHS Low Income Scheme applications in England (2015/16 to 2020/21)"
-        ) %>%
-        highcharter::hc_subtitle(
-          text = paste(
-            "Note: This excludes lead applicants with an unknown client group."
-          ),
-          verticalAlign = "bottom",
+        highcharter::hc_caption(
+          text = "This excludes lead applicants with an unknown client group.",
           align = "right"
         ) %>%
         highcharter::hc_yAxis(
           max = 100,
-          labels = list(
-            formatter = highcharter::JS("function(){ return this.value ;}")
-          ),
           title = list(text = "Percentage of applications")
         ) %>%
         highcharter::hc_xAxis(
@@ -190,27 +195,22 @@ mod_03_who_applies_to_lis_server <- function(id) {
         ) %>%
         highcharter::hc_tooltip(
           shared = TRUE,
-          headerFormat = "<b> {point.name} </b>", valueSuffix = "%", valueDecimals = 1
-          # formatter = highcharter::JS("function () { return '<b>Client Group: </b>' + this.series.name + '<br>' + '<b>Percentage: </b>' + this.point.y + '%';}")
-        ) %>%
-        highcharter::hc_credits(
-          enabled = TRUE
+          headerFormat = "<b> {point.name} </b>", 
+          valueSuffix = "%", 
+          valueDecimals = 1
         )
     })
-
-    # Change column name
-    individuals_by_client_group_download_df <- lowIncomeSchemeScrollytellR::individuals_by_client_group_df %>%
-      dplyr::rename(
-        COUNT_APPLICANTS_BY_OUTCOME = TOTAL_INDIVIDUALS,
-        PERCENTAGE_APPLICANTS_BY_OUTCOME = PCT_INDIVIDUALS
-      )
-
 
     # Add data to download button
     mod_download_server(
       id = "download_individuals_by_client_group",
       filename = "individual_client_group.csv",
-      export_data = individuals_by_client_group_download_df
+      export_data = 
+        lowIncomeSchemeScrollytellR::individuals_by_client_group_df %>%
+        dplyr::rename(
+          COUNT_APPLICANTS_BY_OUTCOME = TOTAL_INDIVIDUALS,
+          PERCENTAGE_APPLICANTS_BY_OUTCOME = PCT_INDIVIDUALS
+        )
     )
 
 
@@ -243,46 +243,45 @@ mod_03_who_applies_to_lis_server <- function(id) {
           startIndex = 4
         ) %>%
         theme_nhsbsa(stack = NA) %>%
-        highcharter::hc_title(
-          text = "Deprivation decile of NHS Low Income Scheme individuals in England (2015/16 to 2020/21)"
-        ) %>%
-        # highcharter::hc_subtitle(
-        #   text = paste("Numbers are rounded to the nearest 10. Percentages are rounded to the nearest whole number."),
-        #   verticalAlign = "bottom",
-        #   align = "right"
-        # ) %>%
         highcharter::hc_xAxis(
           categories = c("1<br>Most<br>deprived", 2:9, "10<br>Least<br>deprived"),
           title = list(text = "Deprivation decile")
         ) %>%
         highcharter::hc_yAxis(
-          max = ceiling(max(lowIncomeSchemeScrollytellR::individuals_by_imd_health_df$PCT_INDIVIDUALS) / 5) * 5,
-          labels = list(
-            formatter = highcharter::JS("function(){ return this.value ;}")
-          ),
-          title = list(text = "Percentage of individuals covered by the application")
+          max = max(lowIncomeSchemeScrollytellR::individuals_by_imd_health_df$PCT_INDIVIDUALS),
+          title = list(
+            text = "Percentage of individuals covered by the application"
+          )
         ) %>%
         highcharter::hc_tooltip(
           shared = FALSE,
-          formatter = highcharter::JS("function () { return '<b>Deprivation: </b>' + this.series.name + '<br>' + '<b>Decile: </b>' + parseInt(this.point.category) + '<br>' + '<b>Percentage: </b>' + this.point.y.toFixed(1)  + '%';}")
-        ) %>%
-        highcharter::hc_credits(
-          enabled = TRUE
+          formatter = highcharter::JS(
+            "
+            function () { 
+              
+              outHTML = 
+                '<b>Deprivation: </b>' + this.series.name + '<br>' + 
+                '<b>Decile: </b>' + parseInt(this.point.category) + '<br>' + 
+                '<b>Percentage: </b>' + this.point.y + '%'
+              
+              return outHTML
+            
+            }
+            "
+          )
         )
     })
-
-    # Change column name
-    individuals_by_deprivation_download_df <- lowIncomeSchemeScrollytellR::individuals_by_imd_health_df %>%
-      dplyr::rename(
-        COUNT_APPLICANTS_BY_OUTCOME = TOTAL_INDIVIDUALS,
-        PERCENTAGE_APPLICANTS_BY_OUTCOME = PCT_INDIVIDUALS
-      )
 
     # Add data to download button
     mod_download_server(
       id = "download_individuals_by_deprivation",
       filename = "individual_deprivation.csv",
-      export_data = individuals_by_deprivation_download_df
+      export_data = 
+        lowIncomeSchemeScrollytellR::individuals_by_imd_health_df %>%
+        dplyr::rename(
+          COUNT_APPLICANTS_BY_OUTCOME = TOTAL_INDIVIDUALS,
+          PERCENTAGE_APPLICANTS_BY_OUTCOME = PCT_INDIVIDUALS
+        )
     )
   })
 }

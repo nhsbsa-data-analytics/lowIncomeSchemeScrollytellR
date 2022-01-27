@@ -1,49 +1,46 @@
-library(magrittr)
-library(nhsbsaR)
-library(dplyr)
+library(dbplyr)
+library(dbplyr)
 source("data-raw/individuals_utils.R")
 
 # Set up connection to the DB
 con <- nhsbsaR::con_nhsbsa(database = "DALP")
 
 # Create a lazy table from the low income scheme base query
-base_df <- dplyr::tbl(
-  src = con,
-  from = dbplyr::sql("SELECT * FROM KAYGO.INT_602_LOW_INCOME_SCHEME_BASE")
-)
+base_df <- con %>%
+  tbl(from = in_schema("KAYGO", "INT_602_LOW_INCOME_SCHEME_BASE"))
 
 # Filter out NA COMPOSITE_IDs
 base_df <- base_df %>%
-  dplyr::filter(COMPOSITE_ID != "na")
+  filter(COMPOSITE_ID != "na")
 
 # TOTAL_INDIVIDUALS per BAND_5YEARS
 individuals_by_age_band_df <- base_df %>%
   aggregate_individuals(., BAND_5YEARS, multiply_max_individuals = FALSE) %>%
-  dplyr::arrange(FINANCIAL_YEAR, desc(BAND_5YEARS))
+  arrange(FINANCIAL_YEAR, desc(BAND_5YEARS))
 
 # Calculate TOTAL_INDIVIDUALS and PCT_INDIVIDUALS
 # It is overall figure so all values are greater than 5 (don't need to do recode step)
 # calculate raw value and change to janitor::round_half_up
 individuals_by_age_band_df <- individuals_by_age_band_df %>%
-  dplyr::filter(
+  filter(
     !(BAND_5YEARS %in% c("Co-applicant", "Unknown"))
   ) %>%
-  dplyr::group_by(FINANCIAL_YEAR) %>%
-  dplyr::mutate(
+  group_by(FINANCIAL_YEAR) %>%
+  mutate(
     PCT_INDIVIDUALS = janitor::round_half_up(TOTAL_INDIVIDUALS / sum(TOTAL_INDIVIDUALS) * 100, 1),
     TOTAL_INDIVIDUALS = round(TOTAL_INDIVIDUALS, -1)
   ) %>%
-  dplyr::ungroup()
+  ungroup()
 
 
 
 # TOTAL_INDIVIDUALS per CLIENTGROUP_DESC_FORMAT
 individuals_by_client_group_df <- base_df %>%
   aggregate_individuals(., CLIENTGROUP_DESC_FORMAT, multiply_max_individuals = FALSE) %>%
-  dplyr::mutate(CLIENTGROUP_DESC_FORMAT = gsub("_", "/", CLIENTGROUP_DESC_FORMAT)) %>%
-  dplyr::collect() %>%
-  dplyr::mutate(
-    CLIENTGROUP_DESC_FORMAT = dplyr::case_when(
+  mutate(CLIENTGROUP_DESC_FORMAT = gsub("_", "/", CLIENTGROUP_DESC_FORMAT)) %>%
+  collect() %>%
+  mutate(
+    CLIENTGROUP_DESC_FORMAT = case_when(
       CLIENTGROUP_DESC_FORMAT == "Asylum Seeker (not NAS)" ~ "Asylum Seeker (not from the National Asylum Support Service)",
       TRUE ~ CLIENTGROUP_DESC_FORMAT
     )
@@ -94,18 +91,18 @@ individuals_by_imd_health_df <- individuals_by_imd_df %>%
 
 # TOTAL_SUCCESSFUL_INDIVIDUALS per PCD_REGION_NAME
 successful_individuals_by_region_df <- base_df %>%
-  dplyr::filter(OUTCOME_LEVEL1 == "Successful") %>%
+  filter(OUTCOME_LEVEL1 == "Successful") %>%
   aggregate_individuals(
     df = .,
     PCD_REGION_NAME,
     multiply_max_individuals = TRUE,
     total_col = "TOTAL_SUCCESSFUL_INDIVIDUALS"
   ) %>%
-  dplyr::arrange(FINANCIAL_YEAR, PCD_REGION_NAME)
+  arrange(FINANCIAL_YEAR, PCD_REGION_NAME)
 
 # TOTAL_SUCCESSFUL_INDIVIDUALS per Local Authority
 successful_individuals_by_la_df <- base_df %>%
-  dplyr::filter(OUTCOME_LEVEL1 == "Successful") %>%
+  filter(OUTCOME_LEVEL1 == "Successful") %>%
   aggregate_individuals(
     df = .,
     PCD_LAD_NAME,
@@ -113,7 +110,7 @@ successful_individuals_by_la_df <- base_df %>%
     multiply_max_individuals = TRUE,
     total_col = "TOTAL_SUCCESSFUL_INDIVIDUALS"
   ) %>%
-  dplyr::arrange(FINANCIAL_YEAR, PCD_LAD_NAME)
+  arrange(FINANCIAL_YEAR, PCD_LAD_NAME)
 
 
 usethis::use_data(individuals_by_age_band_df, overwrite = TRUE)

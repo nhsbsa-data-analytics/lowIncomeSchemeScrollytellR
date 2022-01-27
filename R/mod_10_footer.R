@@ -18,30 +18,28 @@ mod_10_footer_ui <- function(id) {
       align = "center",
       fluidRow(
         style = "background-color: #D8DDE0; max-width: 950px; padding: 15px",
-        column(
-          width = 9,
+        col_9(
           align = "left",
           p(
             "Developed by the ",
             a(
-              style = "color: #231f20;",
-              tags$b("NHS Business Services Authority"),
+              style = "color: #768692;",
+              "NHS Business Services Authority",
               href = "https://www.nhsbsa.nhs.uk/",
-              target = "_blank",
-              alt = "NHSBSA link"
+              target = "_blank"
             ),
             " and available to view on ",
             a(
               style = "color: #231f20;",
               tags$b("GitHub"),
+
               href = "https://github.com/nhsbsa-data-analytics/lowIncomeSchemeScrollytellR",
               target = "_blank"
             ),
             "."
           )
         ),
-        column(
-          width = 3,
+        col_3(
           align = "right",
           p("© APLv2")
         )

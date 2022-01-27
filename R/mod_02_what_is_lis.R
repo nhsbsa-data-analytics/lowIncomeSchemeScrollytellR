@@ -13,10 +13,9 @@ mod_02_what_is_lis_ui <- function(id) {
     h4("What is the NHS Low Income Scheme?"),
     p(
       "The ",
-      a(
-        "NHS Low Income Scheme",
-        href = "https://www.nhsbsa.nhs.uk/nhs-low-income-scheme",
-        target = "_blank"
+      enurl(
+        url = "https://www.nhsbsa.nhs.uk/nhs-low-income-scheme",
+        text = "NHS Low Income Scheme"
       ),
       " (LIS) provides income related help to people who are not ",
       tippy(

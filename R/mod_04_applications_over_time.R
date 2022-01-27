@@ -19,7 +19,10 @@ mod_04_applications_over_time_ui <- function(id) {
     fluidRow(
       align = "center",
       style = "background-color: #FFFFFF;",
-      highcharter::highchartOutput(ns("plot_applications"))
+      highcharter::highchartOutput(
+        outputId = ns("plot_applications"),
+        height = "300px"
+      )
     ),
     mod_download_ui(
       id = ns("download_applications")
@@ -63,29 +66,28 @@ mod_04_applications_over_time_server <- function(id) {
         highcharter::hc_title(
           text = "Number of NHS Low Income Scheme applications in England (2015/16 to 2020/21)"
         ) %>%
-        # highcharter::hc_subtitle(
-        #   text = paste(
-        #     "Numbers are rounded to the nearest 10."
-        #   ),
-        #   verticalAlign = "bottom",
-        #   align = "right"
-        # ) %>%
         highcharter::hc_yAxis(
           min = 0,
-          labels = list(
-            formatter = highcharter::JS("function(){ return Math.abs(this.value) / 1000; }")
-          ),
-          title = list(text = "Total number of applications (thousands)")
+          title = list(text = "Total number of applications")
         ) %>%
         highcharter::hc_xAxis(
           title = list(text = "Financial year")
         ) %>%
         highcharter::hc_tooltip(
           shared = FALSE,
-          formatter = highcharter::JS("function () { return '<b>Financial Year: </b>' + this.point.FINANCIAL_YEAR + '<br/>' + '<b>Total Applications: </b>' + (Math.round(this.point.y / 500) * 500 / 1000).toFixed(0) + 'k';}")
-        ) %>%
-        highcharter::hc_credits(
-          enabled = TRUE
+          formatter = highcharter::JS(
+            "
+            function () { 
+            
+              outHTML = 
+                '<b>Financial Year: </b>' + this.point.FINANCIAL_YEAR + '<br/>' + 
+                '<b>Total Applications: </b>' + (Math.round(this.point.y / 500) * 500 / 1000).toFixed(0) + 'k'
+            
+              return outHTML
+            
+            }
+            "
+          )
         )
     })
 

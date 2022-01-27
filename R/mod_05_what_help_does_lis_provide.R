@@ -17,43 +17,47 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
       "necessary outgoings, plus any savings or investments."
     ),
     p(
-      "In 2019/20:, ",
+      "In 2019/20:",
       tags$ul(
         tags$li(
-          "Just over half of applications (53%) resulted in ",
-          "a HC2 award (full benefit), which typically provides ",
-          "full help with health costs."
+          "Just over half of applications (53%) resulted in a HC2 award (full ",
+          "benefit), which typically provides full help with health costs."
         ),
         tags$li(
-          "Just under one-quarter (23%) resulted in ",
-          "a HC3 award (partial benefit) . Partial benefit ",
-          "offers differing levels of help towards health costs ",
-          "such as dental treatment and eye tests according to ",
+          "Just under one-quarter (23%) resulted in a HC3 award (partial ",
+          "benefit) . Partial benefit offers differing levels of help towards ",
+          "health costs such as dental treatment and eye tests according to ",
           "assessed income, and no assistance with prescription costs."
         ),
         tags$li(
-          "Around one in ten applications are withdrawn or ",
-          "abandoned due to insufficient information provided by ",
-          "the applicant."
+          "Around one in ten applications are withdrawn or abandoned due to ",
+          "insufficient information provided by the applicant."
         )
       ),
       p(
-        "
-      The remaining applications are deemed unnecessary, either because ",
+        "The remaining applications are deemed unnecessary, either because ",
         "applicants:"
       ),
       tags$ul(
         tags$li("Are already receiving other benefits (8%)"),
         tags$li("Have excess income too high to qualify (4%)"),
         tags$li(
-          "Have more than £16 thousand in savings, investments or property (0.4%)"
+          "Have more than £16 thousand in savings, investments or property ",
+          "(0.4%)"
         )
       ),
       br(),
       fluidRow(
         align = "center",
         style = "background-color: #FFFFFF;",
-        highcharter::highchartOutput(ns("plot_applications_by_outcome"))
+        h6(
+          "Outcome of NHS Low Income Scheme applications in England (2015/16 ",
+          "to 2020/21)"
+        ),
+        highcharter::highchartOutput(
+          outputId = ns("plot_applications_by_outcome"),
+          height = "300px"
+        )
       ),
       mod_download_ui(
         id = ns("download_applications_outcome")
@@ -61,12 +65,14 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
       br(),
       p(
         "There is a decline in applications receiving full and partial help, ",
-        "between 2015/16 and 2019/20 from 87% to 76%. Whereas there is an increase in the ",
-        "proportion of applications:"
+        "between 2015/16 and 2019/20 from 87% to 76%. Whereas there is an ",
+        "increase in the proportion of applications:"
       ),
       tags$ul(
         tags$li("Which have been withdrawn/abandoned."),
-        tags$li("Where applicants are already in receipt of qualifying benefits."),
+        tags$li(
+          "Where applicants are already in receipt of qualifying benefits."
+        ),
         tags$li("Where applicants have excess income too high to qualify.")
       )
     )
@@ -87,25 +93,19 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
       lowIncomeSchemeScrollytellR::applications_outcome_df %>%
         highcharter::hchart(
           type = "column",
-          highcharter::hcaes(x = FINANCIAL_YEAR, y = PCT_OUTCOMES, group = OUTCOME_LEVEL2)
+          highcharter::hcaes(
+            x = FINANCIAL_YEAR, 
+            y = PCT_OUTCOMES, 
+            group = OUTCOME_LEVEL2
+          )
         ) %>%
         theme_nhsbsa() %>%
-        highcharter::hc_title(
-          text = "Outcome of NHS Low Income Scheme applications in England (2015/16 to 2020/21)"
-        ) %>%
-        highcharter::hc_subtitle(
-          text = paste(
-            "Note: Excludes ongoing applications." # , "<br>",
-            # "Numbers are rounded to the nearest 10. Percentages are rounded to the nearest whole number."
-          ),
-          verticalAlign = "bottom",
+        highcharter::hc_caption(
+          text = "Excludes ongoing applications.",
           align = "right"
         ) %>%
         highcharter::hc_yAxis(
           max = 100,
-          labels = list(
-            formatter = highcharter::JS("function(){ return this.value ;}")
-          ),
           title = list(text = "Percentage of applications")
         ) %>%
         highcharter::hc_xAxis(
@@ -113,26 +113,22 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
         ) %>%
         highcharter::hc_tooltip(
           shared = TRUE,
-          headerFormat = "<b> {point.name} </b>", valueSuffix = "%", valueDecimals = 1
-        ) %>%
-        highcharter::hc_credits(
-          enabled = TRUE
+          headerFormat = "<b> {point.name} </b>", 
+          valueSuffix = "%", 
+          valueDecimals = 1
         )
     })
-
-    # Swap NAs for "c" for data download
-    applications_outcome_download_df <- lowIncomeSchemeScrollytellR::applications_outcome_df %>%
-      dplyr::rename(
-        OUTCOME = OUTCOME_LEVEL2,
-        APPLICATIONS = TOTAL_APPLICATIONS,
-        OUTCOME_PERCENTAGE = PCT_OUTCOMES
-      )
 
     # Add data to download button
     mod_download_server(
       id = "download_applications_outcome",
       filename = "applications_outcomes.csv",
-      export_data = applications_outcome_download_df
+      export_data = lowIncomeSchemeScrollytellR::applications_outcome_df %>%
+        dplyr::rename(
+          OUTCOME = OUTCOME_LEVEL2,
+          APPLICATIONS = TOTAL_APPLICATIONS,
+          OUTCOME_PERCENTAGE = PCT_OUTCOMES
+        )
     )
   })
 }
