@@ -120,3 +120,7 @@ body { background-color: var(--nhs-pale-grey); }
 .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
   background-color: var(--nhs-mid-grey);
 }
+
+#medium{
+  font-size: 14pt;
+}

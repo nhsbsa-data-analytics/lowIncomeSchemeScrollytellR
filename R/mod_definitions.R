@@ -153,11 +153,10 @@ mod_definitions_ui <- function(id) {
       "One of the seven domains is Health Deprivation which is useful ",
       "when looking at deprivation in a healthcare setting.",
       "Further information can be found",
-      a(
-        "here.",
-        href = "https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019",
-        target = "_blank"
-      ),
+      enurl(
+        url = "https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019",
+        text = "here."
+      )
     )
   )
 }

@@ -56,10 +56,7 @@ app_ui <- function(request) {
               br(),
               scrollytell::scrolly_section(
                 id = "06_take_up_region",
-                mod_06_take_up_region_ui("06_take_up_region_ui_1")
-              ),
-              scrollytell::scrolly_section(
-                id = "07_take_up_la",
+                mod_06_take_up_region_ui("06_take_up_region_ui_1"),
                 mod_07_take_up_la_ui("07_take_up_la_ui_1")
               ),
               scrollytell::scrolly_section(
