@@ -80,9 +80,9 @@ mod_08_spotlight_students_ui <- function(id) {
       "education in England by academic year."
     ),
     p(
-      "Estimated take-up is the number of people receiving full or partial ",
-      "benefit from the NHS Low Income Scheme from student applications, as a ",
-      "percentage of the eligible population."
+      "Estimated take-up is the number of people who receive full or partial ",
+      "benefit from the NHS Low Income Scheme from student applications ",
+      "submitted in the time period, as a percentage of the eligible population."
     ),
     p(
       "Estimated take-up was around 4% in the 2015/16 Academic Year reducing ",
