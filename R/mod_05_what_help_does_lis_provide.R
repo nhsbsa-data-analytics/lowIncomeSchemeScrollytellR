@@ -101,7 +101,10 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
         ) %>%
         theme_nhsbsa() %>%
         highcharter::hc_caption(
-          text = "Excludes ongoing applications.",
+          text = paste(
+            "Excludes ongoing applications.",
+            "<br>", "Percentages are rounded to one decimal."
+          ),
           align = "right"
         ) %>%
         highcharter::hc_yAxis(

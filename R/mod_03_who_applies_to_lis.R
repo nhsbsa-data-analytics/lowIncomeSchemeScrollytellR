@@ -127,7 +127,10 @@ mod_03_who_applies_to_lis_server <- function(id) {
         theme_nhsbsa() %>%
         highcharter::hc_legend(enabled = FALSE) %>%
         highcharter::hc_caption(
-          text = "This excludes lead applicants without an age band.",
+          text = paste(
+            "This excludes lead applicants without an age band.",
+            "<br>", "Percentages are rounded to one decimal."
+          ),
           align = "right"
         ) %>%
         highcharter::hc_xAxis(
@@ -183,7 +186,10 @@ mod_03_who_applies_to_lis_server <- function(id) {
         ) %>%
         theme_nhsbsa() %>%
         highcharter::hc_caption(
-          text = "This excludes lead applicants with an unknown client group.",
+          text = paste(
+            "This excludes lead applicants with an unknown client group.",
+            "<br>", "Percentages are rounded to one decimal."
+          ),
           align = "right"
         ) %>%
         highcharter::hc_yAxis(
@@ -243,6 +249,10 @@ mod_03_who_applies_to_lis_server <- function(id) {
           startIndex = 4
         ) %>%
         theme_nhsbsa(stack = NA) %>%
+        highcharter::hc_caption(
+          text = "Percentages are rounded to one decimal.",
+          align = "right"
+        ) %>%
         highcharter::hc_xAxis(
           categories = c("1<br>Most<br>deprived", 2:9, "10<br>Least<br>deprived"),
           title = list(text = "Deprivation decile")

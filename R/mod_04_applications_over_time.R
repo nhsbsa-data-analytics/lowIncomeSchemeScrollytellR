@@ -63,6 +63,10 @@ mod_04_applications_over_time_server <- function(id) {
           highcharter::hcaes(x = FINANCIAL_YEAR, y = TOTAL_APPLICATIONS)
         ) %>%
         theme_nhsbsa() %>%
+        highcharter::hc_caption(
+          text = "Numbers are rounded to the nearest multiple of ten.",
+          align = "right"
+        ) %>%
         highcharter::hc_title(
           text = "Number of NHS Low Income Scheme applications in England (2015/16 to 2020/21)"
         ) %>%
@@ -81,7 +85,7 @@ mod_04_applications_over_time_server <- function(id) {
 
               outHTML =
                 '<b>Financial Year: </b>' + this.point.FINANCIAL_YEAR + '<br/>' +
-                '<b>Total Applications: </b>' + (Math.round(this.point.y / 500) * 500 / 1000).toFixed(0) + 'k'
+                '<b>Total Applications: </b>' + ((this.point.y / 500) * 500 / 1000).toFixed(0) + 'k'
 
               return outHTML
 

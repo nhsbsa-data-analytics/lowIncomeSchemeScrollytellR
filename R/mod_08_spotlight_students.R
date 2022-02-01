@@ -108,8 +108,8 @@ mod_08_spotlight_students_ui <- function(id) {
           "and 2019/20."
         )
       ),
-      col_6(
-        offset = 1,
+      col_7(
+        # offset = 1,
         style = "background-color: #FFFFFF;",
         h6(
           "Estimated take-up of NHS Low Income Scheme Student individuals by ",
@@ -147,6 +147,10 @@ mod_08_spotlight_students_server <- function(id) {
           )
         ) %>%
         theme_nhsbsa(palette = "highlight") %>%
+        highcharter::hc_caption(
+          text = "Numbers are rounded to the nearest multiple of ten.",
+          align = "right"
+        ) %>%
         highcharter::hc_legend(reversed = TRUE) %>%
         highcharter::hc_xAxis(
           title = list(text = "Financial year")
@@ -220,7 +224,10 @@ mod_08_spotlight_students_server <- function(id) {
         ) %>%
         theme_nhsbsa() %>%
         highcharter::hc_caption(
-          text = "Excludes ongoing applications.",
+          text = paste(
+            "Excludes ongoing applications.",
+            "<br>", "Percentages are rounded to one decimal."
+          ),
           align = "right"
         ) %>%
         highcharter::hc_legend(reversed = TRUE) %>%
@@ -296,8 +303,15 @@ mod_08_spotlight_students_server <- function(id) {
           ) %>%
           theme_nhsbsa() %>%
           highcharter::hc_subtitle(
-            text = "Students were allocated to a region based on the address on the application."
+            text = paste(
+              "Students were allocated to a region based on the address on the application.",
+              "<br>", "Take-up per thousand of the student population are rounded to one decimal."
+            ),
+            align = "right"
           ) %>%
+          # highcharter::hc_subtitle(
+          #   text = "Students were allocated to a region based on the address on the application."
+          # ) %>%
           highcharter::hc_colorAxis(min = 0, max = 6) %>%
           highcharter::hc_legend(enabled = FALSE)
       })

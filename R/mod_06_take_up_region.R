@@ -88,6 +88,10 @@ mod_06_take_up_region_server <- function(id) {
             )
           ) %>%
           theme_nhsbsa(stack = NA) %>%
+          highcharter::hc_caption(
+            text = "Take-up per thousand of the general population are rounded to one decimal.",
+            align = "right"
+          ) %>%
           highcharter::hc_yAxis(
             title = list(text = "Per thousand of the general population")
           ) %>%

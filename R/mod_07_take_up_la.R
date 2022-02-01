@@ -54,7 +54,7 @@ mod_07_take_up_la_ui <- function(id) {
           )
         ),
         col_12(
-          align = "justify",
+          align = "left",
           style = "margin-bottom: 0;",
           shiny::htmlOutput(
             ns("text")
@@ -160,6 +160,10 @@ mod_07_take_up_la_server <- function(id) {
           startIndex = 4
         ) %>%
         theme_nhsbsa(stack = NA) %>%
+        highcharter::hc_caption(
+          text = "Take-up per thousand of the general population are rounded to one decimal.",
+          align = "right"
+        ) %>%
         highcharter::hc_xAxis(
           min = 1,
           max = 330, # Pad to ensure we can see the 314 label
