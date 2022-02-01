@@ -90,6 +90,15 @@ mod_definitions_ui <- function(id) {
       "Application data has been limited to where a valid UK postcode can be ",
       "associated with the application."
     ),
+    p(
+      "Each application is assigned a unique reference number at the point of ",
+      "creation, and this reference number is used throughout the ",
+      "lifecycle of the application, up to and including the production of ",
+      "any certificate. In cases where an applicant may abandon an application ",
+      "and submit a new application, this would result in a new unique ",
+      "reference number being created. Application counts throughout ",
+      "this report are based on a count of the unique reference numbers."
+    ),
     br(),
     h6("Applicants"),
     p(
@@ -108,6 +117,17 @@ mod_definitions_ui <- function(id) {
       "as the age at the point of registration based on the applicant’s ",
       "date of birth., If this resulted in an age calculated as either under ",
       "16 or over 100, the age is classified as unknown."
+    ),
+    p(
+      "As no consistent unique applicant reference number exists within the ",
+      "NHS Low Income Scheme system, individual applicants have been ",
+      "identified based on a derived composite identifier based on a ",
+      "combination of their personal information ",
+      "(forename, surname, date of birth and postcode). ",
+      "Where an application does not include any of the required personal ",
+      "information, no composite identifier can be created and ",
+      "therefore the applicant will not be included in any applicant counts.",
+      "There are 0.15% of applicants without composite ID."
     ),
     br(),
     h6("Individuals covered by the application"),
