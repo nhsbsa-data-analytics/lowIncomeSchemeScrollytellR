@@ -4,6 +4,13 @@
 
 _“Without this scheme I could not afford to pay for most of the services I receive free help with. Thank you.”_    
 
-Using a combination of analytics, user research and customer survey data we explored whether the NHS Low Income Scheme in England reaches its intended audience and meets user needs. In this article we consider take-up of the scheme.
+Using a combination of analytics, user research and customer survey data we 
+explored whether the NHS Low Income Scheme in England reaches its intended 
+audience and meets user needs. In this article we consider take-up of the scheme.
 
-The report covers a period of five years from 2015/16 to 2020/21 but analysis focuses on the period, up to 2019/20 to avoid any changes due to coronavirus (COVID-19).
+In this article we consider take-up of the scheme, based on people who are 
+applying for certificates as opposed to those who hold certificates. 
+It covers a period of five years from 2015/16 to 2020/21 but analysis 
+focuses on 2019/20 to avoid any changes due to coronavirus (COVID-19). 
+Reported applicant and application volumnes are estimated based 
+on the methodology described in 'Definitions'.

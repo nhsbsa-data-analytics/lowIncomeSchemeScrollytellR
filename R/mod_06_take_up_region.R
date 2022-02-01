@@ -12,8 +12,10 @@ mod_06_take_up_region_ui <- function(id) {
   tagList(
     h4("Estimated take-up is low and decreasing over time"),
     p(
-      "Estimated take-up is the number of people who have received full or ",
-      "partial benefit per thousand of the general population aged 16 or over."
+      "Estimated take-up is the number of people who receive full or ",
+      "partial benefit from applications to the NHS Low Income Scheme ,",
+      "submitted in the time period, per thousand of the general ",
+      "population aged 16 or over."
     ),
     br(),
     p(

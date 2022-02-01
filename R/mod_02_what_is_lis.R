@@ -34,8 +34,9 @@ mod_02_what_is_lis_ui <- function(id) {
       tags$li("NHS wigs and fabric supports")
     ),
     p(
-      "Certificates are generally issued from periods of between 6 months ",
-      "and 5 years."
+      "The majority of certificates are issued for a year but some are ",
+      "issued from periods of between 6 months and 5 years, ",
+      "depending on circumstances."
     )
   )
 }
