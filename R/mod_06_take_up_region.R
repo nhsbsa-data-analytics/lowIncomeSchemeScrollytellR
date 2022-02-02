@@ -43,7 +43,7 @@ mod_06_take_up_region_ui <- function(id) {
         height = "350px"
       )
     ),
-    mod_download_ui(
+    mod_nhs_download_ui(
       id = ns("download_successful_individuals_by_region_df")
     )
   )
@@ -104,7 +104,7 @@ mod_06_take_up_region_server <- function(id) {
       })
 
     # Add data download
-    mod_download_server(
+    mod_nhs_download_server(
       id = "download_successful_individuals_by_region_df",
       filename = "successful_individuals_by_region_df.csv",
       export_data = successful_individuals_by_region_df %>%

@@ -6,7 +6,6 @@
 #' @noRd
 app_server <- function(input, output, session) {
   # Application server logic
-  mod_00_header_server("00_header_ui_1")
   mod_01_intro_server("01_intro_ui_1")
   mod_02_what_is_lis_server("02_what_is_lis_ui_1")
   mod_03_who_applies_to_lis_server("03_who_applies_to_lis_ui_1")
@@ -16,8 +15,6 @@ app_server <- function(input, output, session) {
   mod_07_take_up_la_server("07_take_up_la_ui_1")
   mod_08_spotlight_students_server("08_spotlight_students_ui_1")
   mod_09_final_thoughts_server("09_final_thoughts_ui_1")
-  mod_10_footer_server("10_footer_ui_1")
-  mod_navlistPanel_server("navlistPanel_ui_1")
   mod_definitions_server("definitions_ui_1")
 
   output$scrolly <- scrollytell::renderScrollytell({

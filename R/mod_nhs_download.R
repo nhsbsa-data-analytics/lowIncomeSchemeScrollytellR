@@ -1,4 +1,4 @@
-#' download UI Function
+#' nhs_download UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_download_ui <- function(id) {
+mod_nhs_download_ui <- function(id) {
   ns <- NS(id)
   tagList(
     fluidRow(
@@ -43,10 +43,10 @@ mod_download_ui <- function(id) {
   )
 }
 
-#' download Server Functions
+#' nhs_download Server Functions
 #'
 #' @noRd
-mod_download_server <- function(id, filename, export_data) {
+mod_nhs_download_server <- function(id, filename, export_data) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -60,7 +60,7 @@ mod_download_server <- function(id, filename, export_data) {
 }
 
 ## To be copied in the UI
-# mod_download_ui("download_ui_1")
+# mod_nhs_download_ui("nhs_download_ui_1")
 
 ## To be copied in the server
-# mod_download_server("download_ui_1")
+# mod_nhs_download_server("nhs_download_ui_1")

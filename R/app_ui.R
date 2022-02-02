@@ -13,7 +13,7 @@ app_ui <- function(request) {
     bootstrapLib(),
     # HTML('<label for="play-range" style = "visibility: hidden;">year-range</label>'),
     # First level UI elements
-    mod_00_header_ui("00_header_ui_1"),
+    nhs_header(),
     br(),
     tags$div(
       class = "nhsuk-width-container",
@@ -21,7 +21,7 @@ app_ui <- function(request) {
         class = "nhsuk-main-wrapper",
         id = "maincontent",
         role = "main",
-        mod_navlistPanel_ui(
+        nhs_navlistPanel(
           well = FALSE,
           widths = c(2, 10),
           tabPanel(
@@ -84,7 +84,7 @@ app_ui <- function(request) {
       )
     ),
     br(),
-    mod_10_footer_ui("10_footer_ui_1")
+    nhs_footer()
   )
 }
 

@@ -33,25 +33,21 @@ mod_07_take_up_la_ui <- function(id) {
           "Multiple Deprivation for English Local Authorities (2015/16 ",
           "to 2020/21)"
         ),
-        col_6(
-          align = "left",
-          style = "margin-bottom: 0;",
-          shiny::selectInput(
-            inputId = ns("input_region"),
-            label = "Region:",
-            choices = c(
-              "East Midlands",
-              "East of England",
-              "London",
-              "North East",
-              "North West",
-              "South East",
-              "South West",
-              "West Midlands",
-              "Yorkshire and The Humber"
-            ),
-            selected = "North West"
-          )
+        nhs_selectInput(
+          inputId = ns("input_region"),
+          label = "Region:",
+          choices = c(
+            "East Midlands",
+            "East of England",
+            "London",
+            "North East",
+            "North West",
+            "South East",
+            "South West",
+            "West Midlands",
+            "Yorkshire and The Humber"
+          ),
+          selected = "North West"
         ),
         col_12(
           align = "left",
@@ -88,7 +84,7 @@ mod_07_take_up_la_ui <- function(id) {
           )
         )
       ),
-      mod_download_ui(id = ns("la_take_up_download"))
+      mod_nhs_download_ui(id = ns("la_take_up_download"))
     )
   )
 }
@@ -372,7 +368,7 @@ mod_07_take_up_la_server <- function(id) {
         )
     })
 
-    mod_download_server(
+    mod_nhs_download_server(
       id = "la_take_up_download",
       filename = "la_take_up.csv",
       export_data = la_take_up_download_df()
