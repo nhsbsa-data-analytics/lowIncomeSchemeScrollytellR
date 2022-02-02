@@ -11,6 +11,7 @@ app_ui <- function(request) {
     tags$html(class = "no-js", lang = "en"),
     # For some reasaon now need this
     bootstrapLib(),
+    fontawesome::fa_html_dependency(),
     # HTML('<label for="play-range" style = "visibility: hidden;">year-range</label>'),
     # First level UI elements
     nhs_header(),
