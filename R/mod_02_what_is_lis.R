@@ -19,7 +19,7 @@ mod_02_what_is_lis_ui <- function(id) {
       ),
       " (LIS) provides income related help to people who are not ",
       tippy(
-        text = "already entitled to help with health costs(HwHC)",
+        text = "already entitled to help with health costs (HwHC)",
         tooltip = tooltip_text$who_can_apply
       ),
       " if they have a low income. It is broadly the same as a means tested ",

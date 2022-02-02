@@ -23,7 +23,6 @@ mod_08_spotlight_students_ui <- function(id) {
         "years."
       )
     ),
-    br(),
     h6("A stronger downward trend in student applications in England"),
     p(
       "The total number of", tags$b(" student applications decreased by 29% "),
@@ -45,13 +44,15 @@ mod_08_spotlight_students_ui <- function(id) {
     ),
     mod_download_ui(id = ns("download_student_applications")),
     br(),
-    tags$em(
-      "It's a great scheme and efficiently run. I am extremely grateful for ",
-      "the help with prescription costs. However, I feel it is not advertised ",
-      "very well especially to students and people who do not know other ",
-      "people on benefits.(Student applicant)"
+    p(
+      tags$i(
+        style = "padding: 0 10%; display: block;",
+        "“It's a great scheme and efficiently run. I am extremely grateful ",
+        "for the help with prescription costs. However, I feel it is not ",
+        "advertised very well especially to students and people who do not ",
+        "know other people on benefits.”(Student applicant)"
+      )
     ),
-    br(),
     p(
       "Student applications are more likely to receive partial benefit than ",
       "non student applications and are less likely to be unsuccessful. There ",

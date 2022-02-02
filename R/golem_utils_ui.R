@@ -243,7 +243,12 @@ rep_br <- function(times = 1) {
 #' enurl("https://www.thinkr.fr", "ThinkR")
 #' @importFrom shiny tags
 enurl <- function(url, text) {
-  tags$a(href = url, text, target = "_blank")
+  tags$a(
+    href = url, 
+    text, 
+    target = "_blank", 
+    style = "text-decoration: underline"
+  )
 }
 
 #' Columns wrappers
@@ -379,6 +384,84 @@ make_action_button <- function(tag, inputId = NULL) {
   # return tag
   tag
 }
+
+
+#' Define tooltip text
+#'
+#' @noRd
+tooltip_text <- list(
+  # Already entitled to help with health cost
+  who_can_apply = tags$div(
+    class = "nhsuk-u-font-size-14",
+    tags$b("Who can apply"), 
+    br(),
+    "Anyone can apply as long as they do not ",
+    "have savings or investments over a certain limit.",
+    "You cannot get help if you or your partner (or both) have more than:",
+    tags$ul(
+      class = "nhsuk-u-font-size-14",
+      tags$li(
+        "£16,000 in savings, investments or property ",
+        "(not including the place where you live)"
+      ),
+      tags$li(
+        "£23,250 in savings, investments or property if you live ",
+        "permanently in a care home (£24,000 if you live in Wales)"
+      )
+    ),
+    tags$b("Who does not need to apply"), 
+    br(),
+    "You do not need to apply if ",
+    "you're already entitled to full help with health costs. You already ",
+    "get full help with health costs if you or your partner get:",
+    tags$ul(
+      class = "nhsuk-u-font-size-14",
+      tags$li("Income Support"),
+      tags$li("Income-based Jobseeker's Allowance"),
+      tags$li("Income-related Employment and Support Allowance"),
+      tags$li("Pension Credit Guarantee Credit"),
+      tags$li(
+        "Universal Credit - if your earnings during your last complete ",
+        "assessment period were £435 or less, or £935 or less if you had a ",
+        "child element or had limited capability for work"
+      )
+    ),
+    "You're also entitled to full help if you are named on, ",
+    "or entitled to, an NHS tax credit exemption certificate.",
+    "Any dependent children under 20 included on your benefit or ",
+    "tax credit claim are also entitled to the same help."
+  ),
+  # Benefits / Others
+  benefits_others = tags$span(
+    class = "nhsuk-u-font-size-14",
+    tags$b("Benefits & Others"), "includes claimants of benefit such as ",
+    "Universal Credit and Employment and Support Allowance, people in nil ",
+    "income (e.g. supported by family and friends), people between courses or ",
+    "study, religious order occupants and care home residents."
+  ),
+  # English IMD
+  english_imd = tags$span(
+    tags$b("The English Indices of Deprivation"),
+    "are official measures of relative deprivation for areas in England, ",
+    "ranking 32,844 areas in England according to their deprivation score ",
+    "and dividing them into 10 equal sized groups, or deciles.",
+    br(),
+    br(),
+    "Decile 1 represents the most deprived 10% of areas nationally and ",
+    "decile 10, the least deprived 10% of areas nationally.",
+    br(),
+    br(),
+    "The Index of Multiple Deprivation (IMD) is the most widely used of ",
+    "these measures and combines information from seven domains to produce ",
+    "an overall relative measure of deprivation. One of the seven domains ",
+    "is Health Deprivation which is useful when looking at deprivation in a ",
+    "healthcare setting. Further information can be found ",
+    enurl(
+      text = "here.",
+      url = "https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019"
+    )
+  )
+)
 
 
 # UNCOMMENT AND USE

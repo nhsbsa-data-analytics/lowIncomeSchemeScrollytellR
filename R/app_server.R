@@ -17,6 +17,7 @@ app_server <- function(input, output, session) {
   mod_08_spotlight_students_server("08_spotlight_students_ui_1")
   mod_09_final_thoughts_server("09_final_thoughts_ui_1")
   mod_10_footer_server("10_footer_ui_1")
+  mod_navlistPanel_server("navlistPanel_ui_1")
   mod_definitions_server("definitions_ui_1")
 
   output$scrolly <- scrollytell::renderScrollytell({

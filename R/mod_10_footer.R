@@ -10,37 +10,50 @@
 mod_10_footer_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    fluidRow(
-      style = "background-color: #005EB8; width: 100%; height: 3px"
-    ),
-    fluidRow(
-      style = "background-color: #D8DDE0; width: 100%",
-      align = "center",
-      fluidRow(
-        style = "background-color: #D8DDE0; max-width: 950px; padding: 15px",
-        col_9(
-          align = "left",
+    tags$footer(
+      role = "contentinfo",
+      tags$div(
+        class = "nhsuk-footer",
+        id = "nhsuk-footer",
+        tags$div(
+          class = "nhsuk-width-container app-width-container",
+          tags$ul(
+            class = "nhsuk-footer__list",
+            tags$li(
+              class = "nhsuk-footer__list-item",
+              a(
+                class = "nhsuk-footer__list-item-link",
+                style = "text-decoration: underline;",
+                href = "#",
+                target = "_blank",
+                "Accessibility statement"
+              )
+            ),
+            tags$li(
+              class = "nhsuk-footer__list-item",
+              a(
+                class = "nhsuk-footer__list-item-link",
+                style = "text-decoration: underline;",
+                href = "mailto:nhsbsa.dall@nhs.net",
+                target = "_blank",
+                "Contact us"
+              )
+            ),
+            tags$li(
+              class = "nhsuk-footer__list-item",
+              a(
+                class = "nhsuk-footer__list-item-link",
+                style = "text-decoration: underline;",
+                href = "https://github.com/nhsbsa-data-analytics/lowIncomeSchemeScrollytellR",
+                target = "_blank",
+                "GitHub"
+              )
+            )
+          ),
           p(
-            "Developed by the ",
-            a(
-              style = "color: #231f20;",
-              "NHS Business Services Authority",
-              href = "https://www.nhsbsa.nhs.uk/",
-              target = "_blank"
-            ),
-            " and available to view on ",
-            a(
-              style = "color: #231f20;",
-              "GitHub",
-              href = "https://github.com/nhsbsa-data-analytics/lowIncomeSchemeScrollytellR",
-              target = "_blank"
-            ),
-            "."
+            class = "nhsuk-footer__copyright",
+            "© APLv2"
           )
-        ),
-        col_3(
-          align = "right",
-          p("© APLv2")
         )
       )
     )

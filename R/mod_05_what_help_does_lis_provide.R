@@ -46,7 +46,6 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
           "(0.4%)"
         )
       ),
-      br(),
       fluidRow(
         align = "center",
         style = "background-color: #FFFFFF;",
