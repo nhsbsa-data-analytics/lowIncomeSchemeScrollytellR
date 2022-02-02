@@ -47,7 +47,8 @@ mod_07_take_up_la_ui <- function(id) {
             "West Midlands",
             "Yorkshire and The Humber"
           ),
-          selected = "North West"
+          selected = "North West",
+          full_width = FALSE
         ),
         col_12(
           align = "left",
