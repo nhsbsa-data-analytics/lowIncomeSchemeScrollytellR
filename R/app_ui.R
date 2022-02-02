@@ -9,6 +9,8 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     tags$html(class = "no-js", lang = "en"),
+    # For some reasaon now need this
+    bootstrapLib(),
     # HTML('<label for="play-range" style = "visibility: hidden;">year-range</label>'),
     # First level UI elements
     mod_00_header_ui("00_header_ui_1"),
