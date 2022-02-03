@@ -23,7 +23,6 @@ mod_08_spotlight_students_ui <- function(id) {
         "years."
       )
     ),
-    br(),
     h6("A stronger downward trend in student applications in England"),
     p(
       "The total number of", tags$b(" student applications decreased by 29% "),
@@ -43,15 +42,17 @@ mod_08_spotlight_students_ui <- function(id) {
         height = "300px"
       )
     ),
-    mod_download_ui(id = ns("download_student_applications")),
+    mod_nhs_download_ui(id = ns("download_student_applications")),
     br(),
-    tags$em(
-      "It's a great scheme and efficiently run. I am extremely grateful for ",
-      "the help with prescription costs. However, I feel it is not advertised ",
-      "very well especially to students and people who do not know other ",
-      "people on benefits.(Student applicant)"
+    p(
+      tags$i(
+        style = "padding: 0 10%; display: block;",
+        "“It's a great scheme and efficiently run. I am extremely grateful ",
+        "for the help with prescription costs. However, I feel it is not ",
+        "advertised very well especially to students and people who do not ",
+        "know other people on benefits.”(Student applicant)"
+      )
     ),
-    br(),
     p(
       "Student applications are more likely to receive partial benefit than ",
       "non student applications and are less likely to be unsuccessful. There ",
@@ -71,7 +72,7 @@ mod_08_spotlight_students_ui <- function(id) {
         height = "300px"
       )
     ),
-    mod_download_ui(id = ns("download_student_applications_by_outcome")),
+    mod_nhs_download_ui(id = ns("download_student_applications_by_outcome")),
     br(),
     h6("Estimated student take-up is also low and decreasing over time."),
     p(
@@ -119,7 +120,7 @@ mod_08_spotlight_students_ui <- function(id) {
           outputId = ns("plot_successful_student_individuals_by_region"),
           height = "600px"
         ),
-        mod_download_ui(id = ns("download_student_individuals_by_region"))
+        mod_nhs_download_ui(id = ns("download_student_individuals_by_region"))
       )
     )
   )
@@ -188,7 +189,7 @@ mod_08_spotlight_students_server <- function(id) {
     })
 
 
-    mod_download_server(
+    mod_nhs_download_server(
       id = "download_student_applications",
       filename = "student_applications.csv",
       export_data = lowIncomeSchemeScrollytellR::applications_student_df
@@ -247,7 +248,7 @@ mod_08_spotlight_students_server <- function(id) {
     })
 
 
-    mod_download_server(
+    mod_nhs_download_server(
       id = "download_student_applications_by_outcome",
       filename = "student_non_student_applications_by_outcome.csv",
       export_data =
@@ -316,7 +317,7 @@ mod_08_spotlight_students_server <- function(id) {
           highcharter::hc_legend(enabled = FALSE)
       })
 
-    mod_download_server(
+    mod_nhs_download_server(
       id = "download_student_individuals_by_region",
       file = "student_take_up.csv",
       export_data = student_individuals_by_region %>%

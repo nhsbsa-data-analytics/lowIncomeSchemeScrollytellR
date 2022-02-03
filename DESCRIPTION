@@ -37,9 +37,12 @@ Imports:
     attempt,
     markdown,
     nhsbsaR,
-    tippy
+    tippy,
+    covr,
+    spelling,
+    fontawesome
 Remotes:
-    statistiekcbs/scrollytell
+    statistiekcbs/scrollytell,
     nhsbsa-data-analytics/nhsbsaR
 Encoding: UTF-8
 LazyData: true

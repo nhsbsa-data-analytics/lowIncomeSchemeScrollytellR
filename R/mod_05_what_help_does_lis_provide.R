@@ -46,7 +46,6 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
           "(0.4%)"
         )
       ),
-      br(),
       fluidRow(
         align = "center",
         style = "background-color: #FFFFFF;",
@@ -59,7 +58,7 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
           height = "300px"
         )
       ),
-      mod_download_ui(
+      mod_nhs_download_ui(
         id = ns("download_applications_outcome")
       ),
       br(),
@@ -123,7 +122,7 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
     })
 
     # Add data to download button
-    mod_download_server(
+    mod_nhs_download_server(
       id = "download_applications_outcome",
       filename = "applications_outcomes.csv",
       export_data = lowIncomeSchemeScrollytellR::applications_outcome_df %>%

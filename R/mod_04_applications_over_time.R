@@ -24,7 +24,7 @@ mod_04_applications_over_time_ui <- function(id) {
         height = "300px"
       )
     ),
-    mod_download_ui(
+    mod_nhs_download_ui(
       id = ns("download_applications")
     ),
     br(),
@@ -96,7 +96,7 @@ mod_04_applications_over_time_server <- function(id) {
     })
 
     # Add data to download button
-    mod_download_server(
+    mod_nhs_download_server(
       id = "download_applications",
       filename = "applications.csv",
       export_data = lowIncomeSchemeScrollytellR::applications_overall_df

@@ -10,9 +10,7 @@
 mod_definitions_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    # includeMarkdown("inst/app/www/mod_definitions.md") # didn't render nicely..
     h4("Definitions"),
-    br(),
     h6("The NHS Low Income Scheme"),
     p(
       tags$b("The NHS Low Income Scheme"),
@@ -21,34 +19,37 @@ mod_definitions_ui <- function(id) {
       "It is broadly the same as a means tested ",
       "benefit but also takes into account council tax and housing costs."
     ),
-    br(),
     h6("Who can apply?"),
     p(
       "Anyone can apply as long as they do not have savings ",
       "or investments over a certain limit.",
       "You cannot get help if you or your partner (or both) have more than:",
-      tags$li(
-        "£16,000 in savings, investments or property ",
-        "(not including the place where you live)"
-      ),
-      tags$li(
-        "£23,250 in savings, investments or property if you live permanently in ",
-        "a care home (£24,000 if you live in Wales)"
+      tags$ul(
+        tags$li(
+          "£16,000 in savings, investments or property ",
+          "(not including the place where you live)"
+        ),
+        tags$li(
+          "£23,250 in savings, investments or property if you live permanently ",
+          "in a care home (£24,000 if you live in Wales)"
+        )
       )
     ),
-    br(),
     h6("Who does not need to apply?"),
     p(
-      "You do not need to apply if you're already entitled to full help with health costs.",
-      "You already get full help with health costs if you or your partner get:",
-      tags$li("Income Support"),
-      tags$li("Income-based Jobseeker's Allowance"),
-      tags$li("Income-related Employment and Support Allowance"),
-      tags$li("Pension Credit Guarantee Credit"),
-      tags$li(
-        "Universal Credit - if your earnings during your last complete ",
-        "assessment period were £435 or less, ",
-        "or £935 or less if you had a child element or had limited capability for work"
+      "You do not need to apply if you're already entitled to full help with ",
+      "health costs. You already get full help with health costs if you or ",
+      "your partner get:",
+      tags$ul(
+        tags$li("Income Support"),
+        tags$li("Income-based Jobseeker's Allowance"),
+        tags$li("Income-related Employment and Support Allowance"),
+        tags$li("Pension Credit Guarantee Credit"),
+        tags$li(
+          "Universal Credit - if your earnings during your last complete ",
+          "assessment period were £435 or less, or £935 or less if you had a ",
+          "child element or had limited capability for work"
+        )
       )
     ),
     p(
@@ -57,7 +58,6 @@ mod_definitions_ui <- function(id) {
       "Any dependent children under 20 included on your benefit or ",
       "tax credit claim are also entitled to the same help."
     ),
-    br(),
     h6("Applications"),
     p(
       "Application data is taken from a snapshot copy of the NHSBSA’s ",
@@ -99,7 +99,6 @@ mod_definitions_ui <- function(id) {
       "reference number being created. Application counts throughout ",
       "this report are based on a count of the unique reference numbers."
     ),
-    br(),
     h6("Applicants"),
     p(
       "NHS Low Income Scheme records only retain the latest applicant ",
@@ -129,7 +128,6 @@ mod_definitions_ui <- function(id) {
       "therefore the applicant will not be included in any applicant counts.",
       "There are 0.15% of applicants without composite ID."
     ),
-    br(),
     h6("Individuals covered by the application"),
     p(
       "Applicants can apply either for themselves only or include dependants ",
@@ -138,23 +136,23 @@ mod_definitions_ui <- function(id) {
       "information about the partner. Therefore each certificate has only ",
       "been identified as covering one or two people. "
     ),
-    br(),
     h6("Client group"),
     p(
-      "Applicants are allocated a client group by assessors based on the main source ",
-      "of household income. This includes: ",
-      tags$li("Asylum Seeker (not from the National Asylum Support Service)"),
-      tags$li(
-        "Benefits & Others includes claimants of benefit such as Universal Credit",
-        " and Employment and Support Allowance, people in nil income ",
-        "(e.g. supported by family and friends), people between courses or ",
-        "study, religious order occupants and care home residents."
-      ),
-      tags$li("Earner"),
-      tags$li("Pensioner"),
-      tags$li("Student")
+      "Applicants are allocated a client group by assessors based on the main ",
+      "source of household income. This includes:",
+      tags$ul(
+        tags$li("Asylum Seeker (not from the National Asylum Support Service)"),
+        tags$li(
+          "Benefits & Others includes claimants of benefit such as Universal ",
+          "Credit and Employment and Support Allowance, people in nil income ",
+          "(e.g. supported by family and friends), people between courses or ",
+          "study, religious order occupants and care home residents."
+        ),
+        tags$li("Earner"),
+        tags$li("Pensioner"),
+        tags$li("Student")
+      )
     ),
-    br(),
     h6("The English Indices of Deprivation"),
     p(
       tags$b("The English Indices of Deprivation"),
@@ -163,19 +161,18 @@ mod_definitions_ui <- function(id) {
       "and dividing them into 10 equal sized groups, or deciles."
     ),
     p(
-      "Decile 1 represents the most deprived 10% of areas nationally and decile 10, ",
-      "the least deprived 10% of areas nationally."
+      "Decile 1 represents the most deprived 10% of areas nationally and ",
+      "decile 10, the least deprived 10% of areas nationally."
     ),
     p(
-      "The Index of Multiple Deprivation (IMD) is the most widely used of these ",
-      "measures and combines information from seven domains to produce an overall ",
-      "relative measure of deprivation. ",
-      "One of the seven domains is Health Deprivation which is useful ",
-      "when looking at deprivation in a healthcare setting.",
-      "Further information can be found",
+      "The Index of Multiple Deprivation (IMD) is the most widely used of ",
+      "these measures and combines information from seven domains to produce ",
+      "an overall relative measure of deprivation. One of the seven domains ",
+      "is Health Deprivation which is useful when looking at deprivation in a ",
+      "healthcare setting. Further information can be found ",
       enurl(
-        url = "https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019",
-        text = "here."
+        text = "here.",
+        url = "https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019"
       )
     )
   )

@@ -34,7 +34,7 @@ mod_03_who_applies_to_lis_ui <- function(id) {
       ),
       HTML("<label for='play-range' style = 'visibility: hidden;'>year-range</label>"),
     ),
-    mod_download_ui(
+    mod_nhs_download_ui(
       id = ns("download_individuals_by_age_band")
     ),
     br(),
@@ -59,7 +59,7 @@ mod_03_who_applies_to_lis_ui <- function(id) {
         height = "300px"
       )
     ),
-    mod_download_ui(
+    mod_nhs_download_ui(
       id = ns("download_individuals_by_client_group")
     ),
     br(),
@@ -85,7 +85,7 @@ mod_03_who_applies_to_lis_ui <- function(id) {
         height = "300px"
       )
     ),
-    mod_download_ui(
+    mod_nhs_download_ui(
       id = ns("download_individuals_by_deprivation")
     )
   )
@@ -161,7 +161,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
     })
 
     # Add data to download button
-    mod_download_server(
+    mod_nhs_download_server(
       id = "download_individuals_by_age_band",
       filename = "applicants_age_band.csv",
       export_data = lowIncomeSchemeScrollytellR::individuals_by_age_band_df %>%
@@ -208,7 +208,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
     })
 
     # Add data to download button
-    mod_download_server(
+    mod_nhs_download_server(
       id = "download_individuals_by_client_group",
       filename = "individual_client_group.csv",
       export_data =
@@ -283,7 +283,7 @@ mod_03_who_applies_to_lis_server <- function(id) {
     })
 
     # Add data to download button
-    mod_download_server(
+    mod_nhs_download_server(
       id = "download_individuals_by_deprivation",
       filename = "individual_deprivation.csv",
       export_data =
