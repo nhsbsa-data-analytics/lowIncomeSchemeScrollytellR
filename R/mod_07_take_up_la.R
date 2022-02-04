@@ -10,83 +10,85 @@
 mod_07_take_up_la_ui <- function(id) {
   ns <- NS(id)
   tagList(
+    p(
+      "The chart and map show estimated take-up by local authority ",
+      "area relative to the population and deprivation profile of a ",
+      "local authority, based on ",
+      enurl(
+        url = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/833947/IoD2019_Research_Report.pdf",
+        text = "MHCLG methodology."
+      )
+    ),
     fluidRow(
-      style = "margin-bottom: 0;",
-      br(),
-      br(),
-      p(
-        "The chart and map show estimated take-up by local authority ",
-        "area relative to the population and deprivation profile of a ",
-        "local authority, based on ",
-        enurl(
-          url = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/833947/IoD2019_Research_Report.pdf",
-          text = "MHCLG methodology."
+      align = "center",
+      style = "background-color: #FFFFFF;",
+      h6(
+        "Estimated take-up of NHS Low Income Scheme by Index of ",
+        "Multiple Deprivation for English Local Authorities (2015/16 ",
+        "to 2020/21)"
+      ),
+      nhs_selectInput(
+        inputId = ns("input_region"),
+        label = "Region:",
+        choices = c(
+          "East Midlands",
+          "East of England",
+          "London",
+          "North East",
+          "North West",
+          "South East",
+          "South West",
+          "West Midlands",
+          "Yorkshire and The Humber"
+        ),
+        selected = "North West",
+        full_width = FALSE
+      ),
+      col_12(
+        align = "left",
+        style = "margin-bottom: 0;",
+        shiny::htmlOutput(
+          ns("text")
         )
       ),
-      br(),
-      br(),
-      fluidRow(
+      col_12(
+        style = "margin-bottom: 0;",
+        highcharter::highchartOutput(
+          outputId = ns("scatter_successful_individuals_by_la_imd"),
+          height = "400px"
+        ),
+        tags$label(
+          `for` = "play-range",
+          class = "visuallyhidden",
+          "year-range"
+        )
+      ),
+      col_6(
         align = "center",
-        style = "background-color: #FFFFFF;",
-        h6(
-          "Estimated take-up of NHS Low Income Scheme by Index of ",
-          "Multiple Deprivation for English Local Authorities (2015/16 ",
-          "to 2020/21)"
+        style = "margin-bottom: 0;",
+        highcharter::highchartOutput(
+          outputId = ns("plot_selected_region_la"),
+          height = "400px"
         ),
-        nhs_selectInput(
-          inputId = ns("input_region"),
-          label = "Region:",
-          choices = c(
-            "East Midlands",
-            "East of England",
-            "London",
-            "North East",
-            "North West",
-            "South East",
-            "South West",
-            "West Midlands",
-            "Yorkshire and The Humber"
-          ),
-          selected = "North West",
-          full_width = FALSE
-        ),
-        col_12(
-          align = "left",
-          style = "margin-bottom: 0;",
-          shiny::htmlOutput(
-            ns("text")
-          )
-        ),
-        col_12(
-          style = "margin-bottom: 0;",
-          highcharter::highchartOutput(
-            outputId = ns("scatter_successful_individuals_by_la_imd"),
-            height = "400px",
-            width = "100%"
-          )
-        ),
-        col_6(
-          align = "center",
-          style = "margin-bottom: 0;",
-          highcharter::highchartOutput(
-            outputId = ns("plot_selected_region_la"),
-            height = "400px"
-          )
-        ),
-        col_6(
-          align = "left",
-          tags$b("Click map"), " to see IMD decile distribution by ",
-          "selected local authority",
-          br(),
-          highcharter::highchartOutput(
-            outputId = ns("plot_imd_decile_by_selected_la"),
-            height = "350px",
-            width = "70%"
-          )
+        tags$label(
+          `for` = "play-range",
+          class = "visuallyhidden",
+          "year-range"
         )
       ),
-      mod_nhs_download_ui(id = ns("la_take_up_download"))
-    )
+      col_6(
+        align = "left",
+        tags$b("Click map"), " to see IMD decile distribution by ",
+        "selected local authority",
+        br(),
+        highcharter::highchartOutput(
+          outputId = ns("plot_imd_decile_by_selected_la"),
+          height = "350px",
+          width = "70%"
+        )
+      )
+    ),
+    mod_nhs_download_ui(id = ns("la_take_up_download"))
   )
 }
 

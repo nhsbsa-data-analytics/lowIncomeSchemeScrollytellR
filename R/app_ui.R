@@ -9,10 +9,9 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     tags$html(class = "no-js", lang = "en"),
-    # For some reasaon now need this
+    # For some reason now need this
     bootstrapLib(),
     fontawesome::fa_html_dependency(),
-    # HTML('<label for="play-range" style = "visibility: hidden;">year-range</label>'),
     # First level UI elements
     nhs_header(),
     br(),

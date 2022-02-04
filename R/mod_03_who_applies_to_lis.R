@@ -32,7 +32,11 @@ mod_03_who_applies_to_lis_ui <- function(id) {
         outputId = ns("plot_individuals_by_age_band"),
         height = "300px"
       ),
-      HTML("<label for='play-range' style = 'visibility: hidden;'>year-range</label>"),
+      tags$label(
+        `for` = "play-range",
+        class = "visuallyhidden",
+        "year-range"
+      )
     ),
     mod_nhs_download_ui(
       id = ns("download_individuals_by_age_band")
@@ -83,6 +87,11 @@ mod_03_who_applies_to_lis_ui <- function(id) {
       highcharter::highchartOutput(
         outputId = ns("plot_individuals_by_deprivation"),
         height = "300px"
+      ),
+      tags$label(
+        `for` = "play-range",
+        class = "visuallyhidden",
+        "year-range"
       )
     ),
     mod_nhs_download_ui(
