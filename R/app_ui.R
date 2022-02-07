@@ -32,29 +32,21 @@ app_ui <- function(request) {
               scrollytell::scrolly_graph(),
               scrollytell::scrolly_sections(
                 scrollytell::scrolly_section(
-                  id = "dummy"
-                ),
-                br(),
-                scrollytell::scrolly_section(
                   id = "02_what_is_lis",
                   mod_02_what_is_lis_ui("02_what_is_lis_ui_1")
                 ),
-                br(),
                 scrollytell::scrolly_section(
                   id = "03_who_applies_to_lis",
                   mod_03_who_applies_to_lis_ui("03_who_applies_to_lis_ui_1")
                 ),
-                br(),
                 scrollytell::scrolly_section(
                   id = "04_applications_over_time",
                   mod_04_applications_over_time_ui("04_applications_over_time_ui_1")
                 ),
-                br(),
                 scrollytell::scrolly_section(
                   id = "05_what_help_does_lis_provide",
                   mod_05_what_help_does_lis_provide_ui("05_what_help_does_lis_provide_ui_1")
                 ),
-                br(),
                 scrollytell::scrolly_section(
                   id = "06_take_up_region",
                   mod_06_take_up_region_ui("06_take_up_region_ui_1")
