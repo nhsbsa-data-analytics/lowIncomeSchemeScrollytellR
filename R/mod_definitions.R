@@ -10,7 +10,7 @@
 mod_definitions_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    h4("Definitions"),
+    h1("Definitions"),
     h6("The NHS Low Income Scheme"),
     p(
       tags$b("The NHS Low Income Scheme"),

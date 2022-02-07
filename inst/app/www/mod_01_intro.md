@@ -1,4 +1,4 @@
-#### Take-up of the NHS Low Income Scheme in England
+# Take-up of the NHS Low Income Scheme in England
 
 **The NHS Low Income Scheme is valued by many of its users as it helps them afford health costs when needed. But estimated take-up of the scheme is low and decreasing over time, particularly amongst students. And there are people living in relative poverty who do not receive support.**
 
