@@ -118,7 +118,7 @@ mod_08_spotlight_students_ui <- function(id) {
         highcharter::highchartOutput(
           outputId = ns("plot_successful_student_individuals_by_region"),
           height = "600px"
-        ),
+        )
         mod_nhs_download_ui(id = ns("download_student_individuals_by_region"))
       )
     )
