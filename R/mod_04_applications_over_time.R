@@ -19,6 +19,12 @@ mod_04_applications_over_time_ui <- function(id) {
     fluidRow(
       align = "center",
       style = "background-color: #FFFFFF;",
+      p(
+        tags$b(
+          "Number of NHS Low Income Scheme applications in England (2015/16 ",
+          "to 2020/21)"
+        )
+      ),
       highcharter::highchartOutput(
         outputId = ns("plot_applications"),
         height = "300px"
@@ -66,9 +72,6 @@ mod_04_applications_over_time_server <- function(id) {
         highcharter::hc_caption(
           text = "Numbers are rounded to the nearest multiple of ten.",
           align = "right"
-        ) %>%
-        highcharter::hc_title(
-          text = "Number of NHS Low Income Scheme applications in England (2015/16 to 2020/21)"
         ) %>%
         highcharter::hc_yAxis(
           min = 0,

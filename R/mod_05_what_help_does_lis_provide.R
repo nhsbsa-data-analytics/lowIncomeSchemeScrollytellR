@@ -49,9 +49,11 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
       fluidRow(
         align = "center",
         style = "background-color: #FFFFFF;",
-        tags$b(
-          "Outcome of NHS Low Income Scheme applications in England (2015/16 ",
-          "to 2020/21)"
+        p(
+          tags$b(
+            "Outcome of NHS Low Income Scheme applications in England ",
+            "(2015/16 to 2020/21)"
+          )
         ),
         highcharter::highchartOutput(
           outputId = ns("plot_applications_by_outcome"),

@@ -80,9 +80,11 @@ mod_03_who_applies_to_lis_ui <- function(id) {
     fluidRow(
       align = "center",
       style = "background-color: #FFFFFF;",
-      tags$b(
-        "Deprivation decile of NHS Low Income Scheme individuals in England ",
-        "(2015/16 to 2020/21)"
+      p(
+        tags$b(
+          "Deprivation decile of NHS Low Income Scheme individuals in England ",
+          "(2015/16 to 2020/21)"
+        )
       ),
       highcharter::highchartOutput(
         outputId = ns("plot_individuals_by_deprivation"),

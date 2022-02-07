@@ -23,7 +23,7 @@ mod_08_spotlight_students_ui <- function(id) {
         "years."
       )
     ),
-    tags$b("A stronger downward trend in student applications in England"),
+    p(tags$b("A stronger downward trend in student applications in England")),
     p(
       "The total number of", tags$b(" student applications decreased by 29% "),
       "between 2015/16 and 2019/20, compared to a 10% decrease in non student ",
@@ -33,9 +33,11 @@ mod_08_spotlight_students_ui <- function(id) {
     fluidRow(
       align = "center",
       style = "background-color: #FFFFFF;",
-      tags$b(
-        "Number of NHS Low Income Scheme Student applications in England ",
-        "(2015/16 to 2020/21)"
+      p(
+        tags$b(
+          "Number of NHS Low Income Scheme Student applications in England ",
+          "(2015/16 to 2020/21)"
+        )
       ),
       highcharter::highchartOutput(
         outputId = ns("plot_student_applications"),
@@ -63,9 +65,11 @@ mod_08_spotlight_students_ui <- function(id) {
     fluidRow(
       align = "center",
       style = "background-color: #FFFFFF;",
-      tags$b(
-        "Outcome of NHS Low Income Scheme Student applications in England ",
-        "(2015/16 to 2020/21)"
+      p(
+        tags$b(
+          "Outcome of NHS Low Income Scheme Student applications in England ",
+          "(2015/16 to 2020/21)"
+        )
       ),
       highcharter::highchartOutput(
         outputId = ns("plot_student_applications_by_outcome"),
@@ -79,7 +83,9 @@ mod_08_spotlight_students_ui <- function(id) {
     ),
     mod_nhs_download_ui(id = ns("download_student_applications_by_outcome")),
     br(),
-    tags$b("Estimated student take-up is also low and decreasing over time."),
+    p(
+      tags$b("Estimated student take-up is also low and decreasing over time.")
+    ),
     p(
       "To determine estimated take-up for students, we have used a proxy for ",
       "the eligible population as the number of enrolled students in higher ",
@@ -116,9 +122,11 @@ mod_08_spotlight_students_ui <- function(id) {
       ),
       col_7(
         style = "background-color: #FFFFFF;",
-        tags$b(
-          "Estimated take-up of NHS Low Income Scheme Student individuals by ",
-          "England region 2015/16 to 2019/20"
+        p(
+          tags$b(
+            "Estimated take-up of NHS Low Income Scheme Student individuals ",
+            "by England region 2015/16 to 2019/20"
+          )
         ),
         highcharter::highchartOutput(
           outputId = ns("plot_successful_student_individuals_by_region"),
