@@ -24,9 +24,11 @@ mod_03_who_applies_to_lis_ui <- function(id) {
     fluidRow(
       align = "center",
       style = "background-color: #FFFFFF;",
-      tags$b(
-        "Age band of NHS Low Income Scheme lead applicants in England ",
-        "(2015/16 to 2020/21)"
+      p(
+        tags$b(
+          "Age band of NHS Low Income Scheme lead applicants in England ",
+          "(2015/16 to 2020/21)"
+        )
       ),
       highcharter::highchartOutput(
         outputId = ns("plot_individuals_by_age_band"),
@@ -54,9 +56,11 @@ mod_03_who_applies_to_lis_ui <- function(id) {
     fluidRow(
       align = "center",
       style = "background-color: #FFFFFF;",
-      tags$b(
-        "Client group of NHS Low Income Scheme applications in England ",
-        "(2015/16 to 2020/21)"
+      p(
+        tags$b(
+          "Client group of NHS Low Income Scheme applications in England ",
+          "(2015/16 to 2020/21)"
+        )
       ),
       highcharter::highchartOutput(
         outputId = ns("plot_individuals_by_client_group"),
