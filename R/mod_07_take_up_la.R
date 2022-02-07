@@ -56,11 +56,6 @@ mod_07_take_up_la_ui <- function(id) {
         highcharter::highchartOutput(
           outputId = ns("scatter_successful_individuals_by_la_imd"),
           height = "400px"
-        ),
-        tags$label(
-          `for` = "play-range",
-          class = "visuallyhidden",
-          "year-range"
         )
       ),
       col_6(
@@ -69,11 +64,6 @@ mod_07_take_up_la_ui <- function(id) {
         highcharter::highchartOutput(
           outputId = ns("plot_selected_region_la"),
           height = "400px"
-        ),
-        tags$label(
-          `for` = "play-range",
-          class = "visuallyhidden",
-          "year-range"
         )
       ),
       col_6(

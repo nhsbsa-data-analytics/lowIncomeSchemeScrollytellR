@@ -70,11 +70,6 @@ mod_08_spotlight_students_ui <- function(id) {
       highcharter::highchartOutput(
         outputId = ns("plot_student_applications_by_outcome"),
         height = "300px"
-      ),
-      tags$label(
-        `for` = "play-range",
-        class = "visuallyhidden",
-        "year-range"
       )
     ),
     mod_nhs_download_ui(id = ns("download_student_applications_by_outcome")),
@@ -123,12 +118,7 @@ mod_08_spotlight_students_ui <- function(id) {
         highcharter::highchartOutput(
           outputId = ns("plot_successful_student_individuals_by_region"),
           height = "600px"
-        ),
-        tags$label(
-          `for` = "play-range",
-          class = "visuallyhidden",
-          "year-range"
-        ),
+        )
         mod_nhs_download_ui(id = ns("download_student_individuals_by_region"))
       )
     )
