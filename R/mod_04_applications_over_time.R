@@ -10,7 +10,7 @@
 mod_04_applications_over_time_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    h4("There is a decrease in applications in England over time"),
+    h2("There is a decrease in applications in England over time"),
     p(
       "The total number of NHS Low Income Scheme applications in England has ",
       "declined by 15% from 350 thousand in 2015/16 to 298 thousand in ",

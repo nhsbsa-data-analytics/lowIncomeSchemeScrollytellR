@@ -10,7 +10,7 @@
 mod_06_take_up_region_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    h4("Estimated take-up is low and decreasing over time"),
+    h2("Estimated take-up is low and decreasing over time"),
     p(
       "Estimated take-up is the number of people who receive full or ",
       "partial benefit from applications to the NHS Low Income Scheme ,",
@@ -34,7 +34,7 @@ mod_06_take_up_region_ui <- function(id) {
     fluidRow(
       align = "center",
       style = "background-color: #FFFFFF;",
-      h6(
+      tags$b(
         "Estimated take-up of NHS Low Income Scheme in England (2015/16 to ",
         "2020/21)"
       ),

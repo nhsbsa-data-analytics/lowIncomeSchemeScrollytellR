@@ -10,7 +10,7 @@
 mod_08_spotlight_students_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    h4("Spotlight on student applicants in England"),
+    h2("Spotlight on student applicants in England"),
     p(
       "Student applications were considered in more detail, given the rate of ",
       "decline in applications."
@@ -23,7 +23,7 @@ mod_08_spotlight_students_ui <- function(id) {
         "years."
       )
     ),
-    h6("A stronger downward trend in student applications in England"),
+    tags$b("A stronger downward trend in student applications in England"),
     p(
       "The total number of", tags$b(" student applications decreased by 29% "),
       "between 2015/16 and 2019/20, compared to a 10% decrease in non student ",
@@ -33,7 +33,7 @@ mod_08_spotlight_students_ui <- function(id) {
     fluidRow(
       align = "center",
       style = "background-color: #FFFFFF;",
-      h6(
+      tags$b(
         "Number of NHS Low Income Scheme Student applications in England ",
         "(2015/16 to 2020/21)"
       ),
@@ -63,7 +63,7 @@ mod_08_spotlight_students_ui <- function(id) {
     fluidRow(
       align = "center",
       style = "background-color: #FFFFFF;",
-      h6(
+      tags$b(
         "Outcome of NHS Low Income Scheme Student applications in England ",
         "(2015/16 to 2020/21)"
       ),
@@ -79,7 +79,7 @@ mod_08_spotlight_students_ui <- function(id) {
     ),
     mod_nhs_download_ui(id = ns("download_student_applications_by_outcome")),
     br(),
-    h6("Estimated student take-up is also low and decreasing over time."),
+    tags$b("Estimated student take-up is also low and decreasing over time."),
     p(
       "To determine estimated take-up for students, we have used a proxy for ",
       "the eligible population as the number of enrolled students in higher ",
@@ -116,7 +116,7 @@ mod_08_spotlight_students_ui <- function(id) {
       ),
       col_7(
         style = "background-color: #FFFFFF;",
-        h6(
+        tags$b(
           "Estimated take-up of NHS Low Income Scheme Student individuals by ",
           "England region 2015/16 to 2019/20"
         ),

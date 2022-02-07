@@ -10,7 +10,7 @@
 mod_05_what_help_does_lis_provide_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    h4("What level of help do applicants receive in England?"),
+    h2("What level of help do applicants receive in England?"),
     p(
       "The level of help applicants receive depends on a ",
       tags$b("complex set of criteria"), " encompassing their weekly income, ",
@@ -49,7 +49,7 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
       fluidRow(
         align = "center",
         style = "background-color: #FFFFFF;",
-        h6(
+        tags$b(
           "Outcome of NHS Low Income Scheme applications in England (2015/16 ",
           "to 2020/21)"
         ),

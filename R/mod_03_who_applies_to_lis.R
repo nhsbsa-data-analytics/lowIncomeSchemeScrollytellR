@@ -10,7 +10,7 @@
 mod_03_who_applies_to_lis_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    h4("Who applies to the NHS Low Income Scheme in England?"),
+    h2("Who applies to the NHS Low Income Scheme in England?"),
     p(
       "Around 7 in 10 applicants are single applicants and the remainder are ",
       "applying as part of a couple/dual application."
@@ -24,7 +24,7 @@ mod_03_who_applies_to_lis_ui <- function(id) {
     fluidRow(
       align = "center",
       style = "background-color: #FFFFFF;",
-      h6(
+      tags$b(
         "Age band of NHS Low Income Scheme lead applicants in England ",
         "(2015/16 to 2020/21)"
       ),
@@ -54,7 +54,7 @@ mod_03_who_applies_to_lis_ui <- function(id) {
     fluidRow(
       align = "center",
       style = "background-color: #FFFFFF;",
-      h6(
+      tags$b(
         "Client group of NHS Low Income Scheme applications in England ",
         "(2015/16 to 2020/21)"
       ),
@@ -80,7 +80,7 @@ mod_03_who_applies_to_lis_ui <- function(id) {
     fluidRow(
       align = "center",
       style = "background-color: #FFFFFF;",
-      h6(
+      tags$b(
         "Deprivation decile of NHS Low Income Scheme individuals in England ",
         "(2015/16 to 2020/21)"
       ),

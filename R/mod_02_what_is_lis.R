@@ -10,7 +10,7 @@
 mod_02_what_is_lis_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    h4("What is the NHS Low Income Scheme?"),
+    h2("What is the NHS Low Income Scheme?"),
     p(
       "The ",
       enurl(
