@@ -8,9 +8,11 @@ app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
-    tags$html(class = "no-js", lang = "en"),
-    # For some reason now need this
+    # Need this for accessibility
+    tags$html(lang = "en"),
+    # Need this for shiny bootstrap dependencies
     bootstrapLib(),
+    # Need this for the play button
     fontawesome::fa_html_dependency(),
     # First level UI elements
     nhs_header(),
