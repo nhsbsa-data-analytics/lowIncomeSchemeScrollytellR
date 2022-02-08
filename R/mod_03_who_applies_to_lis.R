@@ -125,7 +125,6 @@ mod_03_who_applies_to_lis_server <- function(id) {
         dplyr::group_by(BAND_5YEARS) %>%
         dplyr::do(data = list(sequence = .$PCT_INDIVIDUALS)) %>%
         dplyr::ungroup() %>%
-        # dplyr::group_by(FINANCIAL_YEAR) %>%
         dplyr::do(data = .$data) %>%
         dplyr::mutate(name = "Age Band (5 Year)") %>%
         highcharter::list_parse()
