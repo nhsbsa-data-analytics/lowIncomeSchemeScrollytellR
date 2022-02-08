@@ -366,7 +366,7 @@ mod_07_take_up_la_server <- function(id) {
     mod_nhs_download_server(
       id = "la_take_up_download",
       filename = "la_take_up.csv",
-      export_data = la_take_up_download_df()
+      export_data = la_take_up_download_df
     )
 
 

@@ -53,12 +53,15 @@ mod_nhs_download_server <- function(id, filename, export_data) {
     output$download <- downloadHandler(
       filename = filename,
       content = function(file) {
-        write.csv(export_data, file, row.names = FALSE)
+        if (filename == "la_take_up.csv") {
+          write.csv(export_data(), file, row.names = FALSE)
+        } else {
+          write.csv(export_data, file, row.names = FALSE)
+        }
       }
     )
   })
 }
-
 ## To be copied in the UI
 # mod_nhs_download_ui("nhs_download_ui_1")
 

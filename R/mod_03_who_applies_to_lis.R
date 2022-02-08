@@ -296,16 +296,27 @@ mod_03_who_applies_to_lis_server <- function(id) {
         )
     })
 
+
+    # Try to passing reactive_flag as a parameter but downloahander didn't accept it so force df to reactive.
+    download_data <- reactive({
+      lowIncomeSchemeScrollytellR::individuals_by_imd_health_df %>%
+        dplyr::rename(
+          COUNT_APPLICANTS_BY_OUTCOME = TOTAL_INDIVIDUALS,
+          PERCENTAGE_APPLICANTS_BY_OUTCOME = PCT_INDIVIDUALS
+        )
+    })
+
+    # observe(print(download_data()))
+
     # Add data to download button
     mod_nhs_download_server(
       id = "download_individuals_by_deprivation",
       filename = "individual_deprivation.csv",
-      export_data =
-        lowIncomeSchemeScrollytellR::individuals_by_imd_health_df %>%
-          dplyr::rename(
-            COUNT_APPLICANTS_BY_OUTCOME = TOTAL_INDIVIDUALS,
-            PERCENTAGE_APPLICANTS_BY_OUTCOME = PCT_INDIVIDUALS
-          )
+      export_data = lowIncomeSchemeScrollytellR::individuals_by_imd_health_df %>%
+        dplyr::rename(
+          COUNT_APPLICANTS_BY_OUTCOME = TOTAL_INDIVIDUALS,
+          PERCENTAGE_APPLICANTS_BY_OUTCOME = PCT_INDIVIDUALS
+        )
     )
   })
 }
