@@ -19,15 +19,11 @@ mod_07_take_up_la_ui <- function(id) {
         text = "MHCLG methodology."
       )
     ),
-    fluidRow(
-      align = "center",
-      style = "background-color: #FFFFFF;",
-      p(
-        tags$b(
-          "Estimated take-up of NHS Low Income Scheme by Index of ",
-          "Multiple Deprivation for English Local Authorities (2015/16 ",
-          "to 2020/21)"
-        )
+    nhs_card(
+      heading = paste(
+        "Estimated take-up of NHS Low Income Scheme by Index of ",
+        "Multiple Deprivation for English Local Authorities (2015/16 ",
+        "to 2020/21)"
       ),
       nhs_selectInput(
         inputId = ns("input_region"),
@@ -46,41 +42,21 @@ mod_07_take_up_la_ui <- function(id) {
         selected = "North West",
         full_width = FALSE
       ),
-      col_12(
-        align = "left",
-        style = "margin-bottom: 0;",
-        shiny::htmlOutput(
-          ns("text")
-        )
-      ),
-      col_12(
-        style = "margin-bottom: 0;",
-        highcharter::highchartOutput(
-          outputId = ns("scatter_successful_individuals_by_la_imd"),
-          height = "400px"
-        )
-      ),
-      col_6(
-        align = "center",
-        style = "margin-bottom: 0;",
+      shiny::htmlOutput(ns("text")),
+      nhs_grid_2_col(
         highcharter::highchartOutput(
           outputId = ns("plot_selected_region_la"),
           height = "400px"
-        )
-      ),
-      col_6(
-        align = "left",
-        tags$b("Click map"), " to see IMD decile distribution by ",
-        "selected local authority",
-        br(),
+        ),
+
+        # Click map to see IMD decile distribution by selected local authority")</p>,
         highcharter::highchartOutput(
           outputId = ns("plot_imd_decile_by_selected_la"),
-          height = "350px",
-          width = "70%"
+          height = "350px"
         )
-      )
-    ),
-    mod_nhs_download_ui(id = ns("la_take_up_download"))
+      ),
+      mod_nhs_download_ui(id = ns("la_take_up_download"))
+    )
   )
 }
 

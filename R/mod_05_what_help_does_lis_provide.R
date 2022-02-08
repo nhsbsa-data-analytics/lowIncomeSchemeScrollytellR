@@ -46,22 +46,15 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
           "(0.4%)"
         )
       ),
-      fluidRow(
-        align = "center",
-        style = "background-color: #FFFFFF;",
-        p(
-          tags$b(
-            "Outcome of NHS Low Income Scheme applications in England ",
-            "(2015/16 to 2020/21)"
-          )
-        ),
+      nhs_card(
+        heading = "Outcome of NHS Low Income Scheme applications in England (2015/16 to 2020/21)",
         highcharter::highchartOutput(
           outputId = ns("plot_applications_by_outcome"),
-          height = "300px"
+          height = "350px"
+        ),
+        mod_nhs_download_ui(
+          id = ns("download_applications_outcome")
         )
-      ),
-      mod_nhs_download_ui(
-        id = ns("download_applications_outcome")
       ),
       br(),
       p(

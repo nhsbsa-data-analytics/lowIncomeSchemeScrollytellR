@@ -31,22 +31,15 @@ mod_06_take_up_region_ui <- function(id) {
       "from 13 in 2015/16 to 6 in 2020/21."
     ),
     br(),
-    fluidRow(
-      align = "center",
-      style = "background-color: #FFFFFF;",
-      p(
-        tags$b(
-          "Estimated take-up of NHS Low Income Scheme in England (2015/16 to ",
-          "2020/21)"
-        )
-      ),
+    nhs_card(
+      heading = "Estimated take-up of NHS Low Income Scheme in England (2015/16 to 2020/21)",
       highcharter::highchartOutput(
         outputId = ns("plot_successful_individuals_by_region"),
         height = "350px"
+      ),
+      mod_nhs_download_ui(
+        id = ns("download_successful_individuals_by_region_df")
       )
-    ),
-    mod_nhs_download_ui(
-      id = ns("download_successful_individuals_by_region_df")
     )
   )
 }

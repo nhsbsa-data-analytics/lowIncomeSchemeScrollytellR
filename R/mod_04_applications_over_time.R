@@ -16,22 +16,15 @@ mod_04_applications_over_time_ui <- function(id) {
       "declined by 15% from 350 thousand in 2015/16 to 298 thousand in ",
       "2019/20, with a sharp decline during the COVID-19 pandemic."
     ),
-    fluidRow(
-      align = "center",
-      style = "background-color: #FFFFFF;",
-      p(
-        tags$b(
-          "Number of NHS Low Income Scheme applications in England (2015/16 ",
-          "to 2020/21)"
-        )
-      ),
+    nhs_card(
+      heading = "Number of NHS Low Income Scheme applications in England (2015/16 to 2020/21)",
       highcharter::highchartOutput(
         outputId = ns("plot_applications"),
         height = "300px"
+      ),
+      mod_nhs_download_ui(
+        id = ns("download_applications")
       )
-    ),
-    mod_nhs_download_ui(
-      id = ns("download_applications")
     ),
     br(),
     p(

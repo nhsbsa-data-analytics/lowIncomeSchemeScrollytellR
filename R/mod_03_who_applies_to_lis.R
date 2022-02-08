@@ -21,27 +21,20 @@ mod_03_who_applies_to_lis_ui <- function(id) {
       "2019/20. This age group have the highest number of applications in ",
       "each year observed."
     ),
-    fluidRow(
-      align = "center",
-      style = "background-color: #FFFFFF;",
-      p(
-        tags$b(
-          "Age band of NHS Low Income Scheme lead applicants in England ",
-          "(2015/16 to 2020/21)"
-        )
-      ),
+    nhs_card(
+      heading = "Age band of NHS Low Income Scheme lead applicants in England (2015/16 to 2020/21)",
       highcharter::highchartOutput(
         outputId = ns("plot_individuals_by_age_band"),
-        height = "300px"
+        height = "350px"
       ),
       tags$label(
         `for` = "play-range",
         class = "visuallyhidden",
         "year-range"
+      ),
+      mod_nhs_download_ui(
+        id = ns("download_individuals_by_age_band")
       )
-    ),
-    mod_nhs_download_ui(
-      id = ns("download_individuals_by_age_band")
     ),
     br(),
     p(
@@ -53,22 +46,15 @@ mod_03_who_applies_to_lis_ui <- function(id) {
       ),
       " or earners."
     ),
-    fluidRow(
-      align = "center",
-      style = "background-color: #FFFFFF;",
-      p(
-        tags$b(
-          "Client group of NHS Low Income Scheme applications in England ",
-          "(2015/16 to 2020/21)"
-        )
-      ),
+    nhs_card(
+      heading = "Client group of NHS Low Income Scheme applications in England (2015/16 to 2020/21)",
       highcharter::highchartOutput(
         outputId = ns("plot_individuals_by_client_group"),
-        height = "300px"
+        height = "350px"
+      ),
+      mod_nhs_download_ui(
+        id = ns("download_individuals_by_client_group")
       )
-    ),
-    mod_nhs_download_ui(
-      id = ns("download_individuals_by_client_group")
     ),
     br(),
     p(
@@ -81,27 +67,20 @@ mod_03_who_applies_to_lis_ui <- function(id) {
       " decile chart."
     ),
     p("This trend is consistent in each year observed."),
-    fluidRow(
-      align = "center",
-      style = "background-color: #FFFFFF;",
-      p(
-        tags$b(
-          "Deprivation decile of NHS Low Income Scheme individuals in England ",
-          "(2015/16 to 2020/21)"
-        )
-      ),
+    nhs_card(
+      heading = "Deprivation decile of NHS Low Income Scheme individuals in England (2015/16 to 2020/21)",
       highcharter::highchartOutput(
         outputId = ns("plot_individuals_by_deprivation"),
-        height = "300px"
+        height = "350px"
       ),
       tags$label(
         `for` = "play-range",
         class = "visuallyhidden",
         "year-range"
+      ),
+      mod_nhs_download_ui(
+        id = ns("download_individuals_by_deprivation")
       )
-    ),
-    mod_nhs_download_ui(
-      id = ns("download_individuals_by_deprivation")
     )
   )
 }
