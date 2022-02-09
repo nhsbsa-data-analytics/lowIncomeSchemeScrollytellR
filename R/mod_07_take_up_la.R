@@ -20,11 +20,7 @@ mod_07_take_up_la_ui <- function(id) {
       )
     ),
     nhs_card(
-      heading = paste(
-        "Estimated take-up of NHS Low Income Scheme by Index of ",
-        "Multiple Deprivation for English Local Authorities (2015/16 ",
-        "to 2020/21)"
-      ),
+      heading = "Estimated take-up of NHS Low Income Scheme by Index of Multiple Deprivation for English Local Authorities (2015/16 to 2020/21)",
       nhs_selectInput(
         inputId = ns("input_region"),
         label = "Region:",
