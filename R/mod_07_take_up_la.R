@@ -39,13 +39,15 @@ mod_07_take_up_la_ui <- function(id) {
         full_width = FALSE
       ),
       shiny::htmlOutput(ns("text")),
+      highcharter::highchartOutput(
+        outputId = ns("scatter_successful_individuals_by_la_imd"),
+        height = "400px"
+      ),
       nhs_grid_2_col(
         highcharter::highchartOutput(
           outputId = ns("plot_selected_region_la"),
           height = "400px"
         ),
-
-        # Click map to see IMD decile distribution by selected local authority")</p>,
         highcharter::highchartOutput(
           outputId = ns("plot_imd_decile_by_selected_la"),
           height = "350px"
