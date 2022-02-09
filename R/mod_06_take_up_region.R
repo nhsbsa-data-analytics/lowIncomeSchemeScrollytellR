@@ -30,7 +30,6 @@ mod_06_take_up_region_ui <- function(id) {
       "and the North in general. Although the North East rate has declined ",
       "from 13 in 2015/16 to 6 in 2020/21."
     ),
-    br(),
     nhs_card(
       heading = "Estimated take-up of NHS Low Income Scheme in England (2015/16 to 2020/21)",
       highcharter::highchartOutput(
