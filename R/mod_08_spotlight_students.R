@@ -337,8 +337,7 @@ mod_08_spotlight_students_server <- function(id) {
             ),
             align = "right"
           ) %>%
-          highcharter::hc_colorAxis(min = 0, max = 6) %>%
-          highcharter::hc_legend(enabled = FALSE)
+          highcharter::hc_colorAxis(min = 0, max = 6)
       })
 
     mod_nhs_download_server(
