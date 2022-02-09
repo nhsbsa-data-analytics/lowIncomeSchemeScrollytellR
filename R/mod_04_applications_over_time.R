@@ -27,9 +27,7 @@ mod_04_applications_over_time_ui <- function(id) {
       )
     ),
     br(),
-    p(
-      "The rate of decline between 2015/16 and 2019/20 is highest amongst:"
-    ),
+    p("The rate of decline between 2015/16 and 2019/20 is highest amongst:"),
     tags$ul(
       tags$li("Those categorised as students at around 29%."),
       tags$li(
