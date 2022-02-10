@@ -2,7 +2,7 @@
 #'
 #' @importFrom shiny tagList
 nhs_animated_sliderInput <- function(inputId,
-                                     label = NULL,
+                                     label = "",
                                      choices,
                                      selected = NULL) {
 
