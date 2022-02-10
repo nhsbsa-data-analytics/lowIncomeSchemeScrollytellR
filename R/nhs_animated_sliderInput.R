@@ -34,6 +34,7 @@ nhs_animated_sliderInput <- function(inputId,
   play_button <- nhs_animated_sliderInput$children[[3]]
   other <- nhs_animated_sliderInput$children[[2]]
   play_button$attribs$style <- "width:5%; margin-top:20px; float:left;"
+  play_button$attribs$roll <- "button"
   nhs_animated_sliderInput$children[[2]] <- play_button
   nhs_animated_sliderInput$children[[3]] <- other
 
