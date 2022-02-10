@@ -40,7 +40,8 @@ Imports:
     tippy,
     covr,
     spelling,
-    fontawesome
+    fontawesome,
+    DT
 Remotes:
     statistiekcbs/scrollytell,
     nhsbsa-data-analytics/nhsbsaR
