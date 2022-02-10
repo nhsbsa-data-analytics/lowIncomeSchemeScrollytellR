@@ -35,7 +35,8 @@ nhs_animated_sliderInput <- function(inputId,
   other <- nhs_animated_sliderInput$children[[2]]
   play_button$attribs$style <- "width:5%; margin-top:20px; float:left;"
   play_button$attribs$roll <- "button"
-  other$attribs$`aria-label` <- "slider" # add this for accessibility
+  play_button$children[[1]]$attribs$`aria-label` <- "play-button" # accessibility
+  other$attribs$`aria-label` <- "slider" # accessibility
   nhs_animated_sliderInput$children[[2]] <- play_button
   nhs_animated_sliderInput$children[[3]] <- other
 
