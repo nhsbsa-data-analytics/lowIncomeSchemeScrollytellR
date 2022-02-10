@@ -2,10 +2,10 @@
 #'
 #' @importFrom shiny tagList
 nhs_animated_sliderInput <- function(inputId,
-                            label = NULL,
-                            choices,
-                            selected = NULL) {
-  
+                                     label = NULL,
+                                     choices,
+                                     selected = NULL) {
+
   # Create animated sliderInput
   nhs_animated_sliderInput <- shinyWidgets::sliderTextInput(
     inputId = inputId,
@@ -21,21 +21,21 @@ nhs_animated_sliderInput <- function(inputId,
 
   # Hack the CSS to look like an NHS sliderInput
   nhs_animated_sliderInput$children[[1]]$attribs$class <- "nhsuk-label"
-  
+
   # Put the play button and slider on the same line
   play_button <- nhs_animated_sliderInput$children[[3]]
   slider <- nhs_animated_sliderInput$children[[2]]
   play_button$attribs$style <- "width:5%; margin-top:20px; float:left;"
   nhs_animated_sliderInput$children[[2]] <- play_button
   nhs_animated_sliderInput$children[[3]] <- slider
-  
+
   tagList(
     tags$style(
       # Make the line a constant NHS pale grey
       ".irs--round .irs-line { background-color: #E8EDEE; }",
       ".irs--round .irs-bar { background-color: #E8EDEE; }",
       # Make the slider part NHS dark grey
-      ".irs--round .irs-handle { border: 4px solid #768692; box-shadow: 0px 0px 0px}", 
+      ".irs--round .irs-handle { border: 4px solid #768692; box-shadow: 0px 0px 0px}",
       ".irs--round .irs-single { background-color: #768692; }",
       ".irs--round .irs-single:before { border-top-color: #768692; }",
       # Colour the min and max background NHS pale grey
@@ -53,5 +53,4 @@ nhs_animated_sliderInput <- function(inputId,
       nhs_animated_sliderInput
     )
   )
-  
 }

@@ -62,11 +62,11 @@ mod_07_take_up_la_ui <- function(id) {
         nhs_animated_sliderInput(
           inputId = ns("financial_year"),
           choices = c(
-            "2015/16", 
-            "2016/17", 
-            "2017/18", 
-            "2018/19", 
-            "2019/20", 
+            "2015/16",
+            "2016/17",
+            "2017/18",
+            "2018/19",
+            "2019/20",
             "2020/21"
           ),
           selected = "2019/20"
@@ -83,7 +83,7 @@ mod_07_take_up_la_ui <- function(id) {
 mod_07_take_up_la_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    
+
     # Preprocess data
     merged_df <- lowIncomeSchemeScrollytellR::adult_population_df %>%
       dplyr::inner_join(
@@ -103,31 +103,29 @@ mod_07_take_up_la_server <- function(id) {
           TOTAL_SUCCESSFUL_INDIVIDUALS = 0
         )
       )
-    
+
     # Filter to the financial year
     financial_year_df <- reactive({
       req(input$input_region)
-      
-      merged_df %>% 
+
+      merged_df %>%
         dplyr::filter(FINANCIAL_YEAR == input$financial_year)
-      
     })
-    
+
     # Filter to region
     region_df <- reactive({
       req(input$financial_year)
       req(input$input_region)
-      
+
       financial_year_df() %>%
         dplyr::filter(PCD_REGION_NAME == input$input_region)
-      
     })
-    
+
     # Create scatter chart
     output$scatter_successful_individuals_by_la_imd <- highcharter::renderHighchart({
       req(input$financial_year)
       req(input$input_region)
-      
+
       # Create chart
       financial_year_df() %>%
         # Indicate selected region
@@ -141,8 +139,8 @@ mod_07_take_up_la_server <- function(id) {
         highcharter::hchart(
           type = "scatter",
           highcharter::hcaes(
-            x = PCD_LAD_IMD_RANK, 
-            y = LA_TAKE_UP_PER_THOUSAND, 
+            x = PCD_LAD_IMD_RANK,
+            y = LA_TAKE_UP_PER_THOUSAND,
             group = GROUP
           ),
           animation = FALSE
@@ -165,14 +163,13 @@ mod_07_take_up_la_server <- function(id) {
           headerFormat = "",
           pointFormat = "<b>Local authority:</b> {point.PCD_LAD_NAME} <br><b>2019 IMD rank:</b> {point.x} <br><b>Take-up:</b> {point.y:.1f} (per thousand of the general population)"
         )
-      
     })
-    
+
     # click local authority and show decile distribution
     output$plot_selected_region_la <- highcharter::renderHighchart({
       req(input$financial_year)
       req(input$input_region)
-      
+
       highcharter::highchart() %>%
         highcharter::hc_add_series_map(
           map = lowIncomeSchemeScrollytellR::la_map %>%
@@ -211,7 +208,6 @@ mod_07_take_up_la_server <- function(id) {
     # IMD chart
     observeEvent(input$mapclick, {
       output$plot_imd_decile_by_selected_la <- highcharter::renderHighchart({
-        
         req(input$mapclick)
 
         la_imd_count <- lowIncomeSchemeScrollytellR::imd_decile_df %>%
@@ -234,7 +230,9 @@ mod_07_take_up_la_server <- function(id) {
             )
           ) %>%
           theme_nhsbsa() %>%
-          highcharter::hc_title(text = glue::glue({input$mapclick})) %>%
+          highcharter::hc_title(text = glue::glue({
+            input$mapclick
+          })) %>%
           highcharter::hc_yAxis(
             title = list(
               text = "Percentage of LSOA in deprivation",
@@ -349,7 +347,7 @@ mod_07_take_up_la_server <- function(id) {
 
 
       main_text <- paste(
-        "In ", 
+        "In ",
         tags$b(paste0(input$financial_year, ","), highest_take_up_la()[1]), " ",
         "has the highest take-up per thousand of the general population in ",
         "the ", tags$b(input$input_region), ". Of all local authorities in ",

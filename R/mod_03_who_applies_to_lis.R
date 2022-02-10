@@ -36,17 +36,17 @@ mod_03_who_applies_to_lis_ui <- function(id) {
         nhs_animated_sliderInput(
           inputId = ns("slider_individuals_by_age_band"),
           choices = c(
-            "2015/16", 
-            "2016/17", 
-            "2017/18", 
-            "2018/19", 
-            "2019/20", 
+            "2015/16",
+            "2016/17",
+            "2017/18",
+            "2018/19",
+            "2019/20",
             "2020/21"
           ),
           selected = "2019/20"
         ),
         mod_nhs_download_ui(
-          id = ns("download_applications_outcome")
+          id = ns("download_individuals_by_age_band")
         )
       )
     ),
@@ -98,11 +98,11 @@ mod_03_who_applies_to_lis_ui <- function(id) {
         nhs_animated_sliderInput(
           inputId = ns("slider_individuals_by_deprivation"),
           choices = c(
-            "2015/16", 
-            "2016/17", 
-            "2017/18", 
-            "2018/19", 
-            "2019/20", 
+            "2015/16",
+            "2016/17",
+            "2017/18",
+            "2018/19",
+            "2019/20",
             "2020/21"
           ),
           selected = "2019/20"
@@ -121,20 +121,20 @@ mod_03_who_applies_to_lis_ui <- function(id) {
 mod_03_who_applies_to_lis_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    
+
     # Individuals by age band
-    
+
     # Add data to download button for all data
     mod_nhs_download_server(
       id = "download_individuals_by_age_band",
-      filename = "applicants_age_band.csv",
+      filename = "individuals_by_age_band.csv",
       export_data = lowIncomeSchemeScrollytellR::individuals_by_age_band_df
     )
-    
+
     # Bar chart by age band with an animation for financial year
     output$plot_individuals_by_age_band <- highcharter::renderHighchart({
       req(input$slider_individuals_by_age_band)
-      
+
       # Create chart
       lowIncomeSchemeScrollytellR::individuals_by_age_band_df %>%
         # Filter the data based on the slider value
@@ -173,16 +173,16 @@ mod_03_who_applies_to_lis_server <- function(id) {
           )
         )
     })
-    
+
     # Client group
-    
+
     # Add data to download button
     mod_nhs_download_server(
       id = "download_individuals_by_client_group",
-      filename = "individual_client_group.csv",
+      filename = "individuals_by_client_group.csv",
       export_data = lowIncomeSchemeScrollytellR::individuals_by_client_group_df
     )
-    
+
     # Stacked column plot by client group
     output$plot_individuals_by_client_group <- highcharter::renderHighchart({
 
@@ -209,20 +209,20 @@ mod_03_who_applies_to_lis_server <- function(id) {
           valueDecimals = 1
         )
     })
-    
+
     # Deprivation
-    
+
     # Add data to download button for all data
     mod_nhs_download_server(
       id = "download_individuals_by_deprivation",
-      filename = "individual_deprivation.csv",
+      filename = "individuals_by_deprivation.csv",
       export_data = lowIncomeSchemeScrollytellR::individuals_by_imd_health_df
     )
 
     # Column plot by deprivation with animation over time
     output$plot_individuals_by_deprivation <- highcharter::renderHighchart({
       req(input$slider_individuals_by_deprivation)
-      
+
       # Create chart
       lowIncomeSchemeScrollytellR::individuals_by_imd_health_df %>%
         # Filter the data based on the slider value
@@ -231,8 +231,8 @@ mod_03_who_applies_to_lis_server <- function(id) {
         highcharter::hchart(
           type = "column",
           highcharter::hcaes(
-            x = DECILE, 
-            y = PCT_INDIVIDUALS, 
+            x = DECILE,
+            y = PCT_INDIVIDUALS,
             group = DEPRIVATION
           ),
           animation = FALSE
@@ -267,7 +267,6 @@ mod_03_who_applies_to_lis_server <- function(id) {
           )
         )
     })
-
   })
 }
 

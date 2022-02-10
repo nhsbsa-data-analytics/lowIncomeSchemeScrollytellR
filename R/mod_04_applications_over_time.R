@@ -48,14 +48,14 @@ mod_04_applications_over_time_ui <- function(id) {
 mod_04_applications_over_time_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    
+
     # Add data to download button
     mod_nhs_download_server(
       id = "download_applications",
       filename = "applications.csv",
       export_data = lowIncomeSchemeScrollytellR::applications_overall_df
     )
-    
+
     # Time series plot
     output$plot_applications <- highcharter::renderHighchart({
 
@@ -90,7 +90,6 @@ mod_04_applications_over_time_server <- function(id) {
           )
         )
     })
-
   })
 }
 

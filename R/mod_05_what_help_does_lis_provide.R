@@ -59,7 +59,7 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
             "This excludes ongoing applications."
           ),
           mod_nhs_download_ui(
-            id = ns("download_applications_outcome")
+            id = ns("download_applications_by_outcome")
           )
         )
       ),
@@ -86,14 +86,14 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
 mod_05_what_help_does_lis_provide_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    
+
     # Add data to download button
     mod_nhs_download_server(
-      id = "download_applications_outcome",
-      filename = "applications_outcomes.csv",
+      id = "download_applications_by_outcome",
+      filename = "applications_by_outcomes.csv",
       export_data = lowIncomeSchemeScrollytellR::applications_outcome_df
     )
-    
+
     # Stacked column plot for outcome
     output$plot_applications_by_outcome <- highcharter::renderHighchart({
 
@@ -122,7 +122,6 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
           valueDecimals = 1
         )
     })
-
   })
 }
 
