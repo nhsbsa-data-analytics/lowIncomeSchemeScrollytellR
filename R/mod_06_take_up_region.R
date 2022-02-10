@@ -49,7 +49,7 @@ mod_06_take_up_region_ui <- function(id) {
 mod_06_take_up_region_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-
+    
     # Calculate take-up rate per 1k adult population of each region
     # Because of inner join from other data-raw output, calculating SDC here
     successful_individuals_by_region_df <-
@@ -68,6 +68,13 @@ mod_06_take_up_region_server <- function(id) {
       )
 
 
+    # Add data download
+    mod_nhs_download_server(
+      id = "download_successful_individuals_by_region_df",
+      filename = "successful_individuals_by_region_df.csv",
+      export_data = successful_individuals_by_region_df
+    )
+    
     # Create chart
     output$plot_successful_individuals_by_region <-
       highcharter::renderHighchart({
@@ -81,10 +88,6 @@ mod_06_take_up_region_server <- function(id) {
             )
           ) %>%
           theme_nhsbsa(stack = NA) %>%
-          highcharter::hc_caption(
-            text = "Take-up per thousand of the general population are rounded to one decimal.",
-            align = "right"
-          ) %>%
           highcharter::hc_yAxis(
             title = list(text = "Per thousand of the general population")
           ) %>%
@@ -97,16 +100,6 @@ mod_06_take_up_region_server <- function(id) {
           )
       })
 
-    # Add data download
-    mod_nhs_download_server(
-      id = "download_successful_individuals_by_region_df",
-      filename = "successful_individuals_by_region_df.csv",
-      export_data = successful_individuals_by_region_df %>%
-        dplyr::rename(
-          REGION_NAME = PCD_REGION_NAME,
-          OVER16_POPULATION = TOTAL_POPULATION
-        )
-    )
   })
 }
 

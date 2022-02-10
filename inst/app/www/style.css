@@ -44,3 +44,8 @@ and prevent them fading in / out) */
   position: absolute;
   width: 1px;
 }
+
+/* Stop greying out when an input changes */
+.recalculating {
+  opacity: 1.0;
+}

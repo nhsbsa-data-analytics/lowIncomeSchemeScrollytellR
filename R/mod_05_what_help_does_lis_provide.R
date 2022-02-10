@@ -52,8 +52,15 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
           outputId = ns("plot_applications_by_outcome"),
           height = "350px"
         ),
-        mod_nhs_download_ui(
-          id = ns("download_applications_outcome")
+        nhs_grid_2_col(
+          tags$text(
+            class = "highcharts-caption",
+            style = "font-size: 9pt",
+            "This excludes ongoing applications."
+          ),
+          mod_nhs_download_ui(
+            id = ns("download_applications_outcome")
+          )
         )
       ),
       br(),
@@ -79,7 +86,14 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
 mod_05_what_help_does_lis_provide_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-
+    
+    # Add data to download button
+    mod_nhs_download_server(
+      id = "download_applications_outcome",
+      filename = "applications_outcomes.csv",
+      export_data = lowIncomeSchemeScrollytellR::applications_outcome_df
+    )
+    
     # Stacked column plot for outcome
     output$plot_applications_by_outcome <- highcharter::renderHighchart({
 
@@ -94,13 +108,6 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
           )
         ) %>%
         theme_nhsbsa() %>%
-        highcharter::hc_caption(
-          text = paste(
-            "Excludes ongoing applications.",
-            "<br>", "Percentages are rounded to one decimal."
-          ),
-          align = "right"
-        ) %>%
         highcharter::hc_yAxis(
           max = 100,
           title = list(text = "Percentage of applications")
@@ -116,17 +123,6 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
         )
     })
 
-    # Add data to download button
-    mod_nhs_download_server(
-      id = "download_applications_outcome",
-      filename = "applications_outcomes.csv",
-      export_data = lowIncomeSchemeScrollytellR::applications_outcome_df %>%
-        dplyr::rename(
-          OUTCOME = OUTCOME_LEVEL2,
-          APPLICATIONS = TOTAL_APPLICATIONS,
-          OUTCOME_PERCENTAGE = PCT_OUTCOMES
-        )
-    )
   })
 }
 

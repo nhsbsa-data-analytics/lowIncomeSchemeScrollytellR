@@ -19,8 +19,9 @@ theme_nhsbsa <- function(hc, palette = NA, stack = "normal") {
     bar = list(groupPadding = 0.1)
   )
 
-  # Add the palettes
+  # Add the palettes (hack the highlight palette to have a lighter grey)
   theme_nhsbsa_hc$colors <- nhsbsaR::palette_nhsbsa(palette = palette)
+  theme_nhsbsa_hc$colors[theme_nhsbsa_hc$colors == "#768692"] <- "#d1d5d6"
   theme_nhsbsa_hc$colAxis <- list(
     min = 0,
     minColor = nhsbsaR::palette_nhsbsa(palette = "gradient")[1],

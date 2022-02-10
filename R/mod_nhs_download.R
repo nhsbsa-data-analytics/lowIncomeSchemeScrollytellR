@@ -10,11 +10,11 @@
 mod_nhs_download_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    fluidRow(
-      style = "background-color: #FFFFFF; height: 36px;",
+    tags$div(
+      style = "position:relative; height:55px;",
       tags$div(
         class = "nhsuk-action-link",
-        style = "margin-bottom: 0;",
+        style = "position:absolute; bottom:0; right:0; margin-bottom:0;",
         shiny::downloadLink(
           outputId = ns("download"),
           class = "nhsuk-action-link__link",

@@ -61,12 +61,28 @@ mod_08_spotlight_students_ui <- function(id) {
         outputId = ns("plot_student_applications_by_outcome"),
         height = "300px"
       ),
-      tags$label(
-        `for` = "play-range",
-        class = "visuallyhidden",
-        "year-range"
+      tags$text(
+        class = "highcharts-caption",
+        style = "font-size: 9pt",
+        "This excludes ongoing applications."
       ),
-      mod_nhs_download_ui(id = ns("download_student_applications_by_outcome"))
+      nhs_grid_2_col(
+        nhs_animated_sliderInput(
+          inputId = ns("slider_student_applications_by_outcome"),
+          choices = c(
+            "2015/16", 
+            "2016/17", 
+            "2017/18", 
+            "2018/19", 
+            "2019/20", 
+            "2020/21"
+          ),
+          selected = "2019/20"
+        ),
+        mod_nhs_download_ui(
+          id = ns("download_student_applications_by_outcome")
+        )
+      )
     ),
     br(),
     p(
@@ -116,7 +132,27 @@ mod_08_spotlight_students_ui <- function(id) {
           outputId = ns("table_successful_student_individuals_by_region")
         )
       ),
-      mod_nhs_download_ui(id = ns("download_student_individuals_by_region"))
+      tags$text(
+        class = "highcharts-caption",
+        style = "font-size: 9pt",
+        "Students were allocated to a region based on the address on the application."
+      ),
+      nhs_grid_2_col(
+        nhs_animated_sliderInput(
+          inputId = ns("slider_student_individuals_by_region"),
+          choices = c(
+            "2015/16", 
+            "2016/17", 
+            "2017/18", 
+            "2018/19", 
+            "2019/20"
+          ),
+          selected = "2019/20"
+        ),
+        mod_nhs_download_ui(
+          id = ns("download_student_individuals_by_region")
+        )
+      )
     )
   )
 }
@@ -128,8 +164,9 @@ mod_08_spotlight_students_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-
-    # Stacked column of student applications over time
+    # Number of applications over time
+    
+    # Create the chart
     output$plot_student_applications <- highcharter::renderHighchart({
 
       # Create plot
@@ -143,10 +180,6 @@ mod_08_spotlight_students_server <- function(id) {
           )
         ) %>%
         theme_nhsbsa(palette = "highlight") %>%
-        highcharter::hc_caption(
-          text = "Numbers are rounded to the nearest multiple of ten.",
-          align = "right"
-        ) %>%
         highcharter::hc_legend(reversed = TRUE) %>%
         highcharter::hc_xAxis(
           title = list(text = "Financial year")
@@ -183,52 +216,44 @@ mod_08_spotlight_students_server <- function(id) {
         )
     })
 
-
+    # Download the data
     mod_nhs_download_server(
       id = "download_student_applications",
       filename = "student_applications.csv",
       export_data = lowIncomeSchemeScrollytellR::applications_student_df
     )
 
-
+    # Student outcomes 
+    
+    # Ensure we have all combinations of data
+    applications_outcome_student_df <- 
+      lowIncomeSchemeScrollytellR::applications_outcome_student_df %>%
+      tidyr::complete(
+        FINANCIAL_YEAR, TYPE, OUTCOME_LEVEL2, 
+        fill = list(PCT_OUTCOMES = 0)
+      ) 
+    
+    # Create chart
     output$plot_student_applications_by_outcome <- highcharter::renderHighchart({
-
-      # Format for highcharter animation
-      plot_sequence_series_list <-
-        lowIncomeSchemeScrollytellR::applications_outcome_student_df %>%
-        tidyr::expand(FINANCIAL_YEAR, TYPE, OUTCOME_LEVEL2) %>%
-        dplyr::left_join(
-          y = lowIncomeSchemeScrollytellR::applications_outcome_student_df
+      req(input$slider_student_applications_by_outcome)
+      
+      applications_outcome_student_df %>%
+        dplyr::filter(
+          FINANCIAL_YEAR == input$slider_student_applications_by_outcome
         ) %>%
-        dplyr::mutate(p = tidyr::replace_na(PCT_OUTCOMES, 0)) %>%
-        dplyr::group_by(TYPE, OUTCOME_LEVEL2) %>%
-        dplyr::do(data = list(sequence = .$PCT_OUTCOMES)) %>%
-        dplyr::ungroup() %>%
-        dplyr::group_by(OUTCOME_LEVEL2) %>%
-        dplyr::do(data = .$data) %>%
-        dplyr::mutate(name = OUTCOME_LEVEL2) %>%
-        highcharter::list_parse()
-
-      # Create plot
-      highcharter::highchart() %>%
-        highcharter::hc_chart(type = "bar", marginBottom = 100) %>%
-        highcharter::hc_add_series_list(plot_sequence_series_list) %>%
-        highcharter::hc_motion(
-          labels = unique(lowIncomeSchemeScrollytellR::applications_outcome_student_df$FINANCIAL_YEAR),
-          series = c(0, 1, 2, 3, 4, 5, 6),
-          startIndex = 4
+        highcharter::hchart(
+          type = "bar",
+          highcharter::hcaes(
+            x = TYPE,
+            y = PCT_OUTCOMES,
+            group = OUTCOME_LEVEL2
+          ),
+          animation = FALSE
         ) %>%
         theme_nhsbsa() %>%
-        highcharter::hc_caption(
-          text = paste(
-            "Excludes ongoing applications.",
-            "<br>", "Percentages are rounded to one decimal."
-          ),
-          align = "right"
-        ) %>%
         highcharter::hc_legend(reversed = TRUE) %>%
         highcharter::hc_xAxis(
-          categories = unique(lowIncomeSchemeScrollytellR::applications_outcome_student_df$TYPE)
+          categories = unique(applications_outcome_student_df$TYPE)
         ) %>%
         highcharter::hc_yAxis(
           max = 100,
@@ -242,15 +267,16 @@ mod_08_spotlight_students_server <- function(id) {
         )
     })
 
-
+    # Download the data
     mod_nhs_download_server(
       id = "download_student_applications_by_outcome",
       filename = "student_non_student_applications_by_outcome.csv",
-      export_data =
-        lowIncomeSchemeScrollytellR::applications_outcome_student_df %>%
-          dplyr::rename(CATEGORY = TYPE, OUTCOME = OUTCOME_LEVEL2)
+      export_data = applications_outcome_student_df %>%
+        dplyr::rename(CATEGORY = TYPE, OUTCOME = OUTCOME_LEVEL2)
     )
-
+    
+    # Individuals by region
+    
     # Calculate rate per region
     student_individuals_by_region_df <-
       lowIncomeSchemeScrollytellR::student_population_df %>%
@@ -259,25 +285,43 @@ mod_08_spotlight_students_server <- function(id) {
         y = lowIncomeSchemeScrollytellR::successful_student_individuals_by_region_df
       ) %>%
       dplyr::mutate(
-        value = janitor::round_half_up(
+        PCT_SUCCESSFUL_STUDENT_INDIVIDUALS = janitor::round_half_up(
           x = TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS /
             TOTAL_STUDENT_POPULATION * 100,
           digits = 1
         ),
         TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS =
           round(TOTAL_SUCCESSFUL_STUDENT_INDIVIDUALS, -1)
+      ) %>%
+      # Get all combinations
+      tidyr::complete(
+        ACADEMIC_YEAR, PCD_REGION_NAME,
+        fill = list(PCT_SUCCESSFUL_STUDENT_INDIVIDUALS = 0)
       )
+    
+    # Filter the data to AY (so we can use it for the map and table)
+    student_individuals_by_region_filtered_df <- reactive({
+      req(input$slider_student_individuals_by_region)
+      
+      student_individuals_by_region_df %>% 
+        dplyr::filter(
+          ACADEMIC_YEAR == input$slider_student_individuals_by_region
+        )
+      
+    })
     
     # Create a table to go alongside the map
     output$table_successful_student_individuals_by_region <- DT::renderDT(
       expr = {
+        req(input$slider_student_individuals_by_region)
         
         # Format the table
-        student_individuals_by_region_df %>%
-          dplyr::arrange(desc(value)) %>%
+        student_individuals_by_region_filtered_df() %>%
+          dplyr::arrange(desc(PCT_SUCCESSFUL_STUDENT_INDIVIDUALS)) %>%
           dplyr::select(
             "<span class='nhsuk-body-s'>Region</span>" := PCD_REGION_NAME,
-            "<span class='nhsuk-body-s'>Take up (%)</span>" := value
+            "<span class='nhsuk-body-s'>Take up (%)</span>" := 
+              PCT_SUCCESSFUL_STUDENT_INDIVIDUALS
           ) %>%
           DT::datatable(
             escape = FALSE,
@@ -302,49 +346,29 @@ mod_08_spotlight_students_server <- function(id) {
     # Create chart
     output$plot_successful_student_individuals_by_region <-
       highcharter::renderHighchart({
-
-        # Format for highcharter animation
-        plot_sequence_series <- student_individuals_by_region_df %>%
-          tidyr::complete(
-            ACADEMIC_YEAR, PCD_REGION_NAME,
-            fill = list(value = 0)
-          ) %>%
-          dplyr::group_by(PCD_REGION_NAME) %>%
-          dplyr::do(sequence = .$value) %>%
-          highcharter::list_parse()
-
-        # Create plot
-        highcharter::highchart(type = "map") %>%
-          highcharter::hc_chart(marginBottom = 70) %>%
-          highcharter::hc_add_series(
-            data = plot_sequence_series,
-            mapData = region_map,
+        req(input$slider_student_individuals_by_region)
+        
+        highcharter::highchart() %>%
+          highcharter::hc_add_series_map(
+            map = lowIncomeSchemeScrollytellR::region_map,
+            df = student_individuals_by_region_filtered_df(),
             joinBy = "PCD_REGION_NAME",
+            value = "PCT_SUCCESSFUL_STUDENT_INDIVIDUALS",
             tooltip = list(
               headerFormat = "",
               pointFormat = "<b>Region:</b> {point.PCD_REGION_NAME}<br><b>Take-up:</b> {point.value}% (of the student population)<br>"
-            )
-          ) %>%
-          highcharter::hc_motion(
-            labels = unique(student_individuals_by_region_df$ACADEMIC_YEAR),
-            startIndex = 4
+            ),
+            animation = FALSE
           ) %>%
           theme_nhsbsa() %>%
-          highcharter::hc_subtitle(
-            text = paste(
-              "Students were allocated to a region based on the address on the application.",
-              "<br>", "Take-up per thousand of the student population are rounded to one decimal."
-            ),
-            align = "right"
-          ) %>%
           highcharter::hc_colorAxis(min = 0, max = 6)
+        
       })
 
     mod_nhs_download_server(
       id = "download_student_individuals_by_region",
       file = "student_take_up.csv",
-      export_data = student_individuals_by_region %>%
-        dplyr::rename(STUDENT_TAKE_UP = value)
+      export_data = student_individuals_by_region_df
     )
     
   })

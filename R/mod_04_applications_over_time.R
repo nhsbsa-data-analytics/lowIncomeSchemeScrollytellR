@@ -48,10 +48,16 @@ mod_04_applications_over_time_ui <- function(id) {
 mod_04_applications_over_time_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-
+    
+    # Add data to download button
+    mod_nhs_download_server(
+      id = "download_applications",
+      filename = "applications.csv",
+      export_data = lowIncomeSchemeScrollytellR::applications_overall_df
+    )
+    
     # Time series plot
     output$plot_applications <- highcharter::renderHighchart({
-
 
       # Create  plot
       lowIncomeSchemeScrollytellR::applications_overall_df %>%
@@ -60,10 +66,6 @@ mod_04_applications_over_time_server <- function(id) {
           highcharter::hcaes(x = FINANCIAL_YEAR, y = TOTAL_APPLICATIONS)
         ) %>%
         theme_nhsbsa() %>%
-        highcharter::hc_caption(
-          text = "Numbers are rounded to the nearest multiple of ten.",
-          align = "right"
-        ) %>%
         highcharter::hc_yAxis(
           min = 0,
           title = list(text = "Total number of applications")
@@ -89,12 +91,6 @@ mod_04_applications_over_time_server <- function(id) {
         )
     })
 
-    # Add data to download button
-    mod_nhs_download_server(
-      id = "download_applications",
-      filename = "applications.csv",
-      export_data = lowIncomeSchemeScrollytellR::applications_overall_df
-    )
   })
 }
 
