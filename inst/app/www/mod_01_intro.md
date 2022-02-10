@@ -6,14 +6,8 @@
 
 Using a combination of analytics, user research and customer survey data we 
 explored whether the NHS Low Income Scheme in England reaches its intended 
-audience and meets user needs. In this article we consider take-up of the scheme.
+audience and meets user needs.
 
-In this article we consider take-up of the scheme, based on people who are 
-applying for certificates as opposed to those who hold certificates. 
-It covers a period of five years from 2015/16 to 2020/21 but analysis 
-focuses on 2019/20 to avoid any changes due to coronavirus (COVID-19). 
-Reported applicant and application volumes are estimated based 
-on the methodology described in 'Definitions'. 
-In line with the NHSBSA’s Statistical Disclosure Control Policy, 
-counts are rounded to the nearest multiple of ten, 
-percentage and rate per thousand values are rounded to one decimal. 
+In this article we consider take-up of the scheme, based on people who are applying for certificates as opposed to those who hold certificates. It covers a period of five years from 2015/16 to 2020/21 but analysis focuses on 2019/20 to avoid any changes due to coronavirus (COVID-19). Reported applicant and application volumes are estimated based on the methodology described on our 'Definitions' page. 
+
+In line with NHSBSA Statistical Disclosure Control Policy, counts are rounded to the nearest multiple of ten, percentage and rate per thousand values are rounded to one decimal place. 

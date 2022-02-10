@@ -17,7 +17,7 @@ mod_02_what_is_lis_ui <- function(id) {
         url = "https://www.nhsbsa.nhs.uk/nhs-low-income-scheme",
         text = "NHS Low Income Scheme"
       ),
-      " (LIS) provides income related help to people who are not ",
+      " (LIS) provides help to people who are not ",
       tippy(
         text = "already entitled to help with health costs (HwHC)",
         tooltip = tooltip_text$who_can_apply
@@ -34,9 +34,9 @@ mod_02_what_is_lis_ui <- function(id) {
       tags$li("NHS wigs and fabric supports")
     ),
     p(
-      "The majority of certificates are issued for a year but some are ",
-      "issued from periods of between 6 months and 5 years, ",
-      "depending on circumstances."
+      "The majority of certificates are issued for a year, but some are ",
+      "issued for periods of between 6 months and 5 years, depending on ",
+      "circumstances."
     )
   )
 }
