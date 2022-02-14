@@ -56,7 +56,7 @@ mod_07_take_up_la_ui <- function(id) {
       tags$text(
         class = "highcharts-caption",
         style = "font-size: 9pt",
-        "Deprivation data uses 2019 estimates."
+        "Deprivation data uses 2019 estimates. Click map to see IMD decile distribution by selected local authority."
       ),
       nhs_grid_2_col(
         nhs_animated_sliderInput(
