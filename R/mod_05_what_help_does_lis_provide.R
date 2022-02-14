@@ -25,7 +25,7 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
         ),
         tags$li(
           "Just under one-quarter (23%) resulted in a HC3 award (partial ",
-          "benefit) . Partial benefit offers differing levels of help towards ",
+          "benefit). Partial benefit offers differing levels of help towards ",
           "health costs such as dental treatment and eye tests according to ",
           "assessed income, and no assistance with prescription costs."
         ),
@@ -39,11 +39,11 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
         "applicants:"
       ),
       tags$ul(
-        tags$li("Are already receiving other benefits (8%)"),
-        tags$li("Have excess income too high to qualify (4%)"),
+        tags$li("Are already receiving other benefits (8%)."),
+        tags$li("Have excess income too high to qualify (4%)."),
         tags$li(
           "Have more than £16 thousand in savings, investments or property ",
-          "(0.4%)"
+          "(0.4%)."
         )
       ),
       nhs_card(
