@@ -25,11 +25,14 @@ and prevent them fading in / out) */
 .tippy-tooltip{
     color: #212b32;
     background-color: #f0f4f5 !important;
+    border: 1px solid #425563;
+    border-radius: 0;
 }
 
 .tippy-backdrop {
   background-color: #f0f4f5;
 }
+
 
 /* Custom classes to help with accessibility */
 
