@@ -16,7 +16,7 @@ mod_07_take_up_la_ui <- function(id) {
       "local authority, based on ",
       enurl(
         url = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/833947/IoD2019_Research_Report.pdf",
-        text = "MHCLG methodology."
+        text = "Ministry of Housing, Communities & Local Government (MHCLG) methodology."
       )
     ),
     nhs_card(
