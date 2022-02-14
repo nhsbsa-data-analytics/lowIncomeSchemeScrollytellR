@@ -330,12 +330,7 @@ mod_08_spotlight_students_server <- function(id) {
           DT::datatable(
             escape = FALSE,
             rownames = FALSE,
-            options = list(
-              dom = "t",
-              scrollCollapse = TRUE,
-              paging = FALSE,
-              scrollY = "350px"
-            ),
+            options = list(dom = "t"),
             height = "400px",
             filter = "none"
           ) %>%
