@@ -5,15 +5,15 @@ nhs_animated_sliderInput <- function(inputId,
                                      label = "",
                                      choices,
                                      selected = NULL) {
-  
+
   # Pull the play and pause icons
   play <- icon("play", style = "color: #768692; font-size:20px")
   pause <- icon("pause", style = "color: #768692; font-size:20px")
-  
+
   # Remove the aria labels (for accessibility)
   play$attribs$`aria-label` <- NULL
   pause$attribs$`aria-label` <- NULL
-  
+
   # Create animated sliderInput
   nhs_animated_sliderInput <- shinyWidgets::sliderTextInput(
     inputId = inputId,
@@ -28,7 +28,7 @@ nhs_animated_sliderInput <- function(inputId,
   )
 
   # Hack the CSS to look like an NHS sliderInput
-  #nhs_animated_sliderInput$children[[1]]$attribs$class <- "nhsuk-label"
+  # nhs_animated_sliderInput$children[[1]]$attribs$class <- "nhsuk-label"
 
   # Put the play button and slider on the same line
   play_button <- nhs_animated_sliderInput$children[[3]]
