@@ -306,7 +306,9 @@ mod_08_spotlight_students_server <- function(id) {
       student_individuals_by_region_df %>%
         dplyr::filter(
           ACADEMIC_YEAR == input$slider_student_individuals_by_region
-        )
+        ) %>% 
+        dplyr::arrange(desc(PCT_SUCCESSFUL_STUDENT_INDIVIDUALS)) %>% 
+        dplyr::mutate(RANK = dplyr::row_number())
     })
 
     # Create a table to go alongside the map
@@ -316,14 +318,16 @@ mod_08_spotlight_students_server <- function(id) {
 
         # Format the table
         student_individuals_by_region_filtered_df() %>%
-          dplyr::arrange(desc(PCT_SUCCESSFUL_STUDENT_INDIVIDUALS)) %>%
+          dplyr::arrange(RANK) %>%
           dplyr::select(
+            "<span class='nhsuk-body-s'>Rank</span>" := RANK,
             "<span class='nhsuk-body-s'>Region</span>" := PCD_REGION_NAME,
             "<span class='nhsuk-body-s'>Take up (%)</span>" :=
               PCT_SUCCESSFUL_STUDENT_INDIVIDUALS
           ) %>%
           DT::datatable(
             escape = FALSE,
+            rownames = FALSE,
             options = list(
               dom = "t",
               scrollCollapse = TRUE,
@@ -333,9 +337,9 @@ mod_08_spotlight_students_server <- function(id) {
             height = "400px",
             filter = "none"
           ) %>%
-          DT::formatStyle(columns = 0:2, `font-size` = "14px") %>%
+          DT::formatStyle(columns = 0:3, `font-size` = "14px") %>%
           DT::formatRound(
-            columns = 2,
+            columns = 3,
             digits = 1
           )
       }
