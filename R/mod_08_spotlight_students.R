@@ -308,9 +308,7 @@ mod_08_spotlight_students_server <- function(id) {
       student_individuals_by_region_df %>%
         dplyr::filter(
           ACADEMIC_YEAR == input$slider_student_individuals_by_region
-        ) %>% 
-        dplyr::arrange(desc(PCT_SUCCESSFUL_STUDENT_INDIVIDUALS)) %>% 
-        dplyr::mutate(RANK = dplyr::row_number())
+        )
     })
 
     # Create a table to go alongside the map
@@ -320,7 +318,8 @@ mod_08_spotlight_students_server <- function(id) {
 
         # Format the table
         student_individuals_by_region_filtered_df() %>%
-          dplyr::arrange(RANK) %>%
+          dplyr::arrange(desc(PCT_SUCCESSFUL_STUDENT_INDIVIDUALS)) %>%
+          dplyr::mutate(RANK = dplyr::row_number()) %>%
           dplyr::select(
             "<span class='nhsuk-body-s'>Rank</span>" := RANK,
             "<span class='nhsuk-body-s'>Region</span>" := PCD_REGION_NAME,
