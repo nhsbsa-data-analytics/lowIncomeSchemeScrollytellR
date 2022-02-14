@@ -53,11 +53,12 @@ mod_nhs_download_server <- function(id, filename, export_data) {
     output$download <- downloadHandler(
       filename = filename,
       content = function(file) {
-        if (filename == "la_take_up.csv") {
-          write.csv(export_data(), file, row.names = FALSE)
-        } else {
-          write.csv(export_data, file, row.names = FALSE)
-        }
+        write.csv(
+          # Handle possibility of reactive input
+          x = if (is.data.frame(export_data)) export_data else export_data(),
+          file = file,
+          row.names = FALSE
+        )
       }
     )
   })
