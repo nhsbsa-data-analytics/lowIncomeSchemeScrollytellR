@@ -4,7 +4,8 @@
 nhs_animated_sliderInput <- function(inputId,
                                      label = "",
                                      choices,
-                                     selected = NULL) {
+                                     selected = NULL,
+                                     animate_interval = 1000) {
 
   # Pull the play and pause icons
   play <- icon("play", style = "color: #768692; font-size:20px")
@@ -23,17 +24,16 @@ nhs_animated_sliderInput <- function(inputId,
     animate = animationOptions(
       playButton = play,
       pauseButton = pause,
-      interval = 1500
-    )
+      interval = animate_interval
+    ),
+    hide_min_max = TRUE,
+    width = "200px"
   )
-
-  # Hack the CSS to look like an NHS sliderInput
-  # nhs_animated_sliderInput$children[[1]]$attribs$class <- "nhsuk-label"
 
   # Put the play button and slider on the same line
   play_button <- nhs_animated_sliderInput$children[[3]]
   other <- nhs_animated_sliderInput$children[[2]]
-  play_button$attribs$style <- "width:5%; margin-top:20px; float:left;"
+  play_button$attribs$style <- "width:5%; margin-top:27px; float:left;"
   play_button$attribs$roll <- "button"
   play_button$children[[1]]$attribs$`aria-label` <- "play-button" # accessibility
   other$attribs$`aria-label` <- "slider" # accessibility
@@ -47,21 +47,12 @@ nhs_animated_sliderInput <- function(inputId,
       ".irs--round .irs-bar { background-color: #E8EDEE; }",
       # Make the slider part NHS dark grey
       ".irs--round .irs-handle { border: 4px solid #768692; box-shadow: 0px 0px 0px}",
-      ".irs--round .irs-single { background-color: #768692; }",
-      ".irs--round .irs-single:before { border-top-color: #768692; }",
-      # Colour the min and max background NHS pale grey
-      ".irs--round .irs-min, .irs--round .irs-max { background-color: #E8EDEE; }",
-      # Put play and slider on the same line (for every slider)
-      ".js-irs-0 { width:85%; float:right; }",
-      ".js-irs-1 { width:85%; float:right; }",
-      ".js-irs-2 { width:85%; float:right; }",
-      ".js-irs-3 { width:85%; float:right; }",
-      ".js-irs-4 { width:85%; float:right; }",
-      ".js-irs-5 { width:85%; float:right; }"
+      # Make the text black
+      ".irs--round .irs-single { background-color: transparent; color: #231f20; line-height: 1.5; }",
+      # Put play and slider on the same line
+      ".irs.irs--round { width: 85%; float: right; }"
     ),
-    tags$div(
-      shinyWidgets::chooseSliderSkin(skin = "Round"),
-      nhs_animated_sliderInput
-    )
+    shinyWidgets::chooseSliderSkin(skin = "Round"),
+    nhs_animated_sliderInput
   )
 }

@@ -69,7 +69,9 @@ mod_07_take_up_la_ui <- function(id) {
             "2019/20",
             "2020/21"
           ),
-          selected = "2019/20"
+          selected = "2019/20",
+          # Slow as takes a while to load
+          animate_interval = 1500
         ),
         mod_nhs_download_ui(id = ns("la_take_up_download"))
       )

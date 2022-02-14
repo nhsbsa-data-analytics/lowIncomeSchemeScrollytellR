@@ -147,7 +147,9 @@ mod_08_spotlight_students_ui <- function(id) {
             "2018/19",
             "2019/20"
           ),
-          selected = "2019/20"
+          selected = "2019/20",
+          # Slow as takes a while to load
+          animate_interval = 1500
         ),
         mod_nhs_download_ui(
           id = ns("download_student_individuals_by_region")
