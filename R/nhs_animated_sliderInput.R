@@ -2,7 +2,7 @@
 #'
 #' @importFrom shiny tagList
 nhs_animated_sliderInput <- function(inputId,
-                                     label = "",
+                                     label = "label",
                                      choices,
                                      selected = NULL,
                                      animate_interval = 1000) {
@@ -50,7 +50,8 @@ nhs_animated_sliderInput <- function(inputId,
       # Make the text black
       ".irs--round .irs-single { background-color: transparent; color: #231f20; line-height: 1.5; }",
       # Put play and slider on the same line
-      ".irs.irs--round { width: 85%; float: right; }"
+      ".irs.irs--round { width: 85%; float: right; }",
+      "label{color: black; visibility:hidden; font-size: 1px}"
     ),
     shinyWidgets::chooseSliderSkin(skin = "Round"),
     nhs_animated_sliderInput
