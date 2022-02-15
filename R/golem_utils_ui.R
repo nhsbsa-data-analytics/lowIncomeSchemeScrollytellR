@@ -244,9 +244,9 @@ rep_br <- function(times = 1) {
 #' @importFrom shiny tags
 enurl <- function(url, text) {
   tags$a(
-    href = url, 
-    text, 
-    target = "_blank", 
+    href = url,
+    text,
+    target = "_blank",
     style = "text-decoration: underline"
   )
 }
@@ -393,7 +393,7 @@ tooltip_text <- list(
   # Already entitled to help with health cost
   who_can_apply = tags$div(
     class = "nhsuk-u-font-size-14",
-    tags$b("Who can apply"), 
+    tags$b("Who can apply"),
     br(),
     "Anyone can apply as long as they do not ",
     "have savings or investments over a certain limit.",
@@ -409,7 +409,7 @@ tooltip_text <- list(
         "permanently in a care home (£24,000 if you live in Wales)"
       )
     ),
-    tags$b("Who does not need to apply"), 
+    tags$b("Who does not need to apply"),
     br(),
     "You do not need to apply if ",
     "you're already entitled to full help with health costs. You already ",

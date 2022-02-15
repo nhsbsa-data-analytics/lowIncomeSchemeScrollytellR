@@ -1,4 +1,4 @@
-#### Final thoughts
+## Final thoughts
 
 Although the NHS Low Income Scheme provides great support to its recipients, the application rates have been steadily declining. 
 

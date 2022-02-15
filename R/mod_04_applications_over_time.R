@@ -10,27 +10,24 @@
 mod_04_applications_over_time_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    h4("There is a decrease in applications in England over time"),
+    h2("There is a decrease in applications in England over time"),
     p(
       "The total number of NHS Low Income Scheme applications in England has ",
       "declined by 15% from 350 thousand in 2015/16 to 298 thousand in ",
       "2019/20, with a sharp decline during the COVID-19 pandemic."
     ),
-    fluidRow(
-      align = "center",
-      style = "background-color: #FFFFFF;",
+    nhs_card(
+      heading = "Number of NHS Low Income Scheme applications in England (2015/16 to 2020/21)",
       highcharter::highchartOutput(
         outputId = ns("plot_applications"),
         height = "300px"
+      ),
+      mod_nhs_download_ui(
+        id = ns("download_applications")
       )
     ),
-    mod_nhs_download_ui(
-      id = ns("download_applications")
-    ),
     br(),
-    p(
-      "The rate of decline between 2015/16 and 2019/20 is highest amongst:"
-    ),
+    p("The rate of decline between 2015/16 and 2019/20 is highest amongst:"),
     tags$ul(
       tags$li("Those categorised as students at around 29%."),
       tags$li(
@@ -52,9 +49,15 @@ mod_04_applications_over_time_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
+    # Add data to download button
+    mod_nhs_download_server(
+      id = "download_applications",
+      filename = "applications.csv",
+      export_data = lowIncomeSchemeScrollytellR::applications_overall_df
+    )
+
     # Time series plot
     output$plot_applications <- highcharter::renderHighchart({
-
 
       # Create  plot
       lowIncomeSchemeScrollytellR::applications_overall_df %>%
@@ -63,13 +66,6 @@ mod_04_applications_over_time_server <- function(id) {
           highcharter::hcaes(x = FINANCIAL_YEAR, y = TOTAL_APPLICATIONS)
         ) %>%
         theme_nhsbsa() %>%
-        highcharter::hc_caption(
-          text = "Numbers are rounded to the nearest multiple of ten.",
-          align = "right"
-        ) %>%
-        highcharter::hc_title(
-          text = "Number of NHS Low Income Scheme applications in England (2015/16 to 2020/21)"
-        ) %>%
         highcharter::hc_yAxis(
           min = 0,
           title = list(text = "Total number of applications")
@@ -94,13 +90,6 @@ mod_04_applications_over_time_server <- function(id) {
           )
         )
     })
-
-    # Add data to download button
-    mod_nhs_download_server(
-      id = "download_applications",
-      filename = "applications.csv",
-      export_data = lowIncomeSchemeScrollytellR::applications_overall_df
-    )
   })
 }
 

@@ -10,10 +10,10 @@
 mod_06_take_up_region_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    h4("Estimated take-up is low and decreasing over time"),
+    h2("Estimated take-up is low and decreasing over time"),
     p(
       "Estimated take-up is the number of people who receive full or ",
-      "partial benefit from applications to the NHS Low Income Scheme ,",
+      "partial benefit from applications to the NHS Low Income Scheme,",
       "submitted in the time period, per thousand of the general ",
       "population aged 16 or over."
     ),
@@ -30,21 +30,15 @@ mod_06_take_up_region_ui <- function(id) {
       "and the North in general. Although the North East rate has declined ",
       "from 13 in 2015/16 to 6 in 2020/21."
     ),
-    br(),
-    fluidRow(
-      align = "center",
-      style = "background-color: #FFFFFF;",
-      h6(
-        "Estimated take-up of NHS Low Income Scheme in England (2015/16 to ",
-        "2020/21)"
-      ),
+    nhs_card(
+      heading = "Estimated take-up of NHS Low Income Scheme in England (2015/16 to 2020/21)",
       highcharter::highchartOutput(
         outputId = ns("plot_successful_individuals_by_region"),
         height = "350px"
+      ),
+      mod_nhs_download_ui(
+        id = ns("download_successful_individuals_by_region")
       )
-    ),
-    mod_nhs_download_ui(
-      id = ns("download_successful_individuals_by_region_df")
     )
   )
 }
@@ -74,6 +68,13 @@ mod_06_take_up_region_server <- function(id) {
       )
 
 
+    # Add data download
+    mod_nhs_download_server(
+      id = "download_successful_individuals_by_region",
+      filename = "successful_individuals_by_region.csv",
+      export_data = successful_individuals_by_region_df
+    )
+
     # Create chart
     output$plot_successful_individuals_by_region <-
       highcharter::renderHighchart({
@@ -87,10 +88,6 @@ mod_06_take_up_region_server <- function(id) {
             )
           ) %>%
           theme_nhsbsa(stack = NA) %>%
-          highcharter::hc_caption(
-            text = "Take-up per thousand of the general population are rounded to one decimal.",
-            align = "right"
-          ) %>%
           highcharter::hc_yAxis(
             title = list(text = "Per thousand of the general population")
           ) %>%
@@ -102,17 +99,6 @@ mod_06_take_up_region_server <- function(id) {
             valueDecimals = 1
           )
       })
-
-    # Add data download
-    mod_nhs_download_server(
-      id = "download_successful_individuals_by_region_df",
-      filename = "successful_individuals_by_region_df.csv",
-      export_data = successful_individuals_by_region_df %>%
-        dplyr::rename(
-          REGION_NAME = PCD_REGION_NAME,
-          OVER16_POPULATION = TOTAL_POPULATION
-        )
-    )
   })
 }
 

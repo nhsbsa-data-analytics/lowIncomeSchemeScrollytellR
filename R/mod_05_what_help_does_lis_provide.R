@@ -10,7 +10,7 @@
 mod_05_what_help_does_lis_provide_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    h4("What level of help do applicants receive in England?"),
+    h2("What level of help do applicants receive in England?"),
     p(
       "The level of help applicants receive depends on a ",
       tags$b("complex set of criteria"), " encompassing their weekly income, ",
@@ -25,7 +25,7 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
         ),
         tags$li(
           "Just under one-quarter (23%) resulted in a HC3 award (partial ",
-          "benefit) . Partial benefit offers differing levels of help towards ",
+          "benefit). Partial benefit offers differing levels of help towards ",
           "health costs such as dental treatment and eye tests according to ",
           "assessed income, and no assistance with prescription costs."
         ),
@@ -39,27 +39,29 @@ mod_05_what_help_does_lis_provide_ui <- function(id) {
         "applicants:"
       ),
       tags$ul(
-        tags$li("Are already receiving other benefits (8%)"),
-        tags$li("Have excess income too high to qualify (4%)"),
+        tags$li("Are already receiving other benefits (8%)."),
+        tags$li("Have excess income too high to qualify (4%)."),
         tags$li(
           "Have more than £16 thousand in savings, investments or property ",
-          "(0.4%)"
+          "(0.4%)."
         )
       ),
-      fluidRow(
-        align = "center",
-        style = "background-color: #FFFFFF;",
-        h6(
-          "Outcome of NHS Low Income Scheme applications in England (2015/16 ",
-          "to 2020/21)"
-        ),
+      nhs_card(
+        heading = "Outcome of NHS Low Income Scheme applications in England (2015/16 to 2020/21)",
         highcharter::highchartOutput(
           outputId = ns("plot_applications_by_outcome"),
-          height = "300px"
+          height = "350px"
+        ),
+        nhs_grid_2_col(
+          tags$text(
+            class = "highcharts-caption",
+            style = "font-size: 9pt",
+            "This excludes ongoing applications."
+          ),
+          mod_nhs_download_ui(
+            id = ns("download_applications_by_outcome")
+          )
         )
-      ),
-      mod_nhs_download_ui(
-        id = ns("download_applications_outcome")
       ),
       br(),
       p(
@@ -85,6 +87,13 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
+    # Add data to download button
+    mod_nhs_download_server(
+      id = "download_applications_by_outcome",
+      filename = "applications_by_outcomes.csv",
+      export_data = lowIncomeSchemeScrollytellR::applications_outcome_df
+    )
+
     # Stacked column plot for outcome
     output$plot_applications_by_outcome <- highcharter::renderHighchart({
 
@@ -99,13 +108,6 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
           )
         ) %>%
         theme_nhsbsa() %>%
-        highcharter::hc_caption(
-          text = paste(
-            "Excludes ongoing applications.",
-            "<br>", "Percentages are rounded to one decimal."
-          ),
-          align = "right"
-        ) %>%
         highcharter::hc_yAxis(
           max = 100,
           title = list(text = "Percentage of applications")
@@ -120,18 +122,6 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
           valueDecimals = 1
         )
     })
-
-    # Add data to download button
-    mod_nhs_download_server(
-      id = "download_applications_outcome",
-      filename = "applications_outcomes.csv",
-      export_data = lowIncomeSchemeScrollytellR::applications_outcome_df %>%
-        dplyr::rename(
-          OUTCOME = OUTCOME_LEVEL2,
-          APPLICATIONS = TOTAL_APPLICATIONS,
-          OUTCOME_PERCENTAGE = PCT_OUTCOMES
-        )
-    )
   })
 }
 
