@@ -44,4 +44,3 @@ nhs_grid_3_col <- function(col_1, col_2, col_3) {
     )
   )
 }
-
