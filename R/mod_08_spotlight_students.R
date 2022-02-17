@@ -310,22 +310,29 @@ mod_08_spotlight_students_server <- function(id) {
           ACADEMIC_YEAR == input$slider_student_individuals_by_region
         )
     })
-
+    
+    # Create a reactive table 
+    table <- reactive({
+      req(input$slider_student_individuals_by_region)
+      
+      student_individuals_by_region_filtered_df() %>%
+        dplyr::arrange(desc(PCT_SUCCESSFUL_STUDENT_INDIVIDUALS)) %>%
+        dplyr::mutate(RANK = dplyr::row_number()) %>%
+        dplyr::select(
+          "<span class='nhsuk-body-s'>Rank</span>" := RANK,
+          "<span class='nhsuk-body-s'>Region</span>" := PCD_REGION_NAME,
+          "<span class='nhsuk-body-s'>Take up (%)</span>" :=
+            PCT_SUCCESSFUL_STUDENT_INDIVIDUALS
+        )
+      
+    })
+    
     # Create a table to go alongside the map
-    output$table_successful_student_individuals_by_region <- DT::renderDT(
-      expr = {
+    output$table_successful_student_individuals_by_region <- DT::renderDT({
         req(input$slider_student_individuals_by_region)
 
         # Format the table
-        student_individuals_by_region_filtered_df() %>%
-          dplyr::arrange(desc(PCT_SUCCESSFUL_STUDENT_INDIVIDUALS)) %>%
-          dplyr::mutate(RANK = dplyr::row_number()) %>%
-          dplyr::select(
-            "<span class='nhsuk-body-s'>Rank</span>" := RANK,
-            "<span class='nhsuk-body-s'>Region</span>" := PCD_REGION_NAME,
-            "<span class='nhsuk-body-s'>Take up (%)</span>" :=
-              PCT_SUCCESSFUL_STUDENT_INDIVIDUALS
-          ) %>%
+        table() %>%
           DT::datatable(
             escape = FALSE,
             rownames = FALSE,
@@ -338,6 +345,18 @@ mod_08_spotlight_students_server <- function(id) {
             columns = 3,
             digits = 1
           )
+    })
+    
+    # Prevent table from flickering
+    # https://github.com/rstudio/DT/issues/168
+    proxy <- DT::dataTableProxy(ns("table_successful_student_individuals_by_region"))
+    observeEvent(
+      eventExpr = input$slider_student_individuals_by_region,
+      handlerExpr = {
+        DT::replaceData(
+          proxy = proxy, 
+          data = table()
+        )
       }
     )
 
