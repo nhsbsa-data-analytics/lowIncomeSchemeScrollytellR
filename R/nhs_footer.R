@@ -17,7 +17,7 @@ nhs_footer <- function() {
               a(
                 class = "nhsuk-footer__list-item-link",
                 style = "text-decoration: underline;",
-                href = "#",
+                href = "https://www.nhsbsa.nhs.uk/accessibility-statement-take-nhs-low-income-scheme-england-report",
                 target = "_blank",
                 "Accessibility statement"
               )
