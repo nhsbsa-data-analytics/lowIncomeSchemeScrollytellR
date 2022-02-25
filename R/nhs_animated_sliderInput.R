@@ -46,14 +46,16 @@ nhs_animated_sliderInput <- function(inputId,
       ".irs--round .irs-line { background-color: #E8EDEE; }",
       ".irs--round .irs-bar { background-color: #E8EDEE; }",
       # Make the slider part NHS dark grey
-      ".irs--round .irs-handle { border: 4px solid #768692; box-shadow: 0px 0px 0px}",
+      ".irs--round .irs-handle { border: 4px solid #768692; box-shadow: 0px 0px 0px; }",
       # Make the text black
       ".irs--round .irs-single { background-color: transparent; color: #231f20; line-height: 1.5; }",
       # Put play and slider on the same line
       ".irs.irs--round { width: 85%; float: right; }",
       # Fix Empty form label, visibility:hidden removed Region label so had to change
       # font-size to zero.
-      "label{ color: black; font-size: 0px; }"
+      "label{ color: black; font-size: 0px; }",
+      # Turn off opacity of play button
+      ".slider-animate-button { opacity: 1; }"
     ),
     shinyWidgets::chooseSliderSkin(skin = "Round"),
     nhs_animated_sliderInput
