@@ -1,6 +1,6 @@
 # NHS Low Income Scheme Scrollytell
 
-This R package has been developed by NHS Business Services Authority Data Analytics Learning Lab to use a combination of analytics, user research and customer survey data we explore whether the [NHS Low Income Scheme](https://www.nhsbsa.nhs.uk/nhs-low-income-scheme) in England reaches its intended audience and meets user needs. In this article we consider take-up of the scheme.
+This R package has been developed by NHS Business Services Authority Data Science team to use a combination of analytics, user research and customer survey data we explore whether the [NHS Low Income Scheme](https://www.nhsbsa.nhs.uk/nhs-low-income-scheme) in England reaches its intended audience and meets user needs. In this article we consider take-up of the scheme.
 
 We have used the `golem` framework to developed this scrollytelling article as a `shiny` dashboard taking inspiration from:
 
