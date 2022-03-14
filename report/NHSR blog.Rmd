@@ -83,7 +83,7 @@ scrollytell::scrolly_container(
 
 Our app needed to meet the NHS accessibility standard. Accessibility testing was new to us and was not an easy task. And it seemed that we had less control over the shiny app.
 
-We were recommended to test using three accessibility tools; WAVE, Lighthouse and Axe Devtools. These are all freely available and easily installed through google extension. The idea was to remove any serious or critical errors from these tests. Some of the errors were easy to fix. For example, we needed to declare page language for accessibility reasons. To fix that issue, we just needed to add one html tag `lang = "en"`.
+We were recommended to test using three accessibility tools; [WAVE](https://wave.webaim.org/extension/), [Lighthouse](https://chrome.google.com/webstore/detail/lighthouse/blipmdconlkpinefehnmjammfjpmpbjk?hl=en) and [Axe Devtools](https://www.deque.com/axe/devtools/). These are all freely available and easily installed through google extension. The idea was to remove any serious or critical errors from these tests. Some of the errors were easy to fix. For example, we needed to declare page language for accessibility reasons. To fix that issue, we just needed to add one html tag `lang = "en"`.
 
 However, some of the errors were hard to fix. For example, web page content should be able to resize to 400% without loss of content or functionality. We initially failed the test as some contents overlapped when we zoomed. To solve the more complicated accessibility issues, we used the [NHS.UK frontend site](https://github.com/nhsuk/nhsuk-frontend/releases). We downloaded the zip file, modified it slightly (see this [norem issue](https://github.com/moj-analytical-services/shinyGovstyle/issues/55)), and added it to the `inst/app/www` directory.
 
@@ -131,7 +131,7 @@ nhs_selectInput <- function(inputId,
 
 NHS toolkit select html code
 
-``` {.html}
+``` html
 <div class="nhsuk-form-group">
   <label class="nhsuk-label" for="select-1">
     Label text goes here
@@ -196,7 +196,7 @@ mod_nhs_download_ui <- function(id) {
 
 NHS toolkit action link html code
 
-``` {.html}
+``` html
 <div class="nhsuk-action-link">
   <a class="nhsuk-action-link__link" 
         href="https://www.nhs.uk/service-search/minor-injuries-unit/locationsearch/551">
@@ -220,8 +220,15 @@ Once we applied the NHS.UK frontend toolkit we successfully passed the accessibi
 
 Please take a look at our [shiny scrollytell article](https://nhsbsa-data-analytics.shinyapps.io/take-up-of-the-nhs-low-income-scheme-in-england/) and check out the [code on GitHub.](https://github.com/nhsbsa-data-analytics/lowIncomeSchemeScrollytellR) We also created `{golem}`[shinyR template](https://github.com/nhsbsa-data-analytics/nhsbsaShinyR).
 
-We were grateful to the NHSR community as it always inspires us to improve our code and we hope we can contribute back to the community by sharing our code. Thank you for taking time to read.
+We were grateful to the NHSR community as it always inspires us to improve our code and we hope we can contribute back to the community by sharing our code. Thank you for taking the time to read.
+
+
+\
+\
+\
+\
+
 
 Kayoung Goffe (Data Scientist, NHS Business Services Authority)
 
-Adam Ivison (Data Scientist, NHS Business Services Authority -\> Principal Data Scientist, UK Health Security Agency)
+Adam Ivison (Data Scientist, NHS Business Services Authority -> Principal Data Scientist, UK Health Security Agency)
