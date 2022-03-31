@@ -148,7 +148,6 @@ mod_07_take_up_la_server <- function(id) {
           animation = FALSE
         ) %>%
         theme_nhsbsa(stack = NA, palette = "highlight") %>%
-        highcharter::hc_credits(enabled = FALSE) %>%
         highcharter::hc_legend(reversed = TRUE) %>%
         highcharter::hc_xAxis(
           min = 1,
@@ -189,7 +188,6 @@ mod_07_take_up_la_server <- function(id) {
           animation = FALSE
         ) %>%
         theme_nhsbsa() %>%
-        highcharter::hc_credits(enabled = FALSE) %>%
         highcharter::hc_colorAxis(min = 0, max = 20) %>%
         highcharter::hc_plotOptions(
           map = list(

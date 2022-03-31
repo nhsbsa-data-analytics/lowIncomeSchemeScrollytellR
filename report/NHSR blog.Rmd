@@ -131,7 +131,7 @@ nhs_selectInput <- function(inputId,
 
 NHS toolkit select html code
 
-``` {.html}
+``` html
 <div class="nhsuk-form-group">
   <label class="nhsuk-label" for="select-1">
     Label text goes here
@@ -196,7 +196,7 @@ mod_nhs_download_ui <- function(id) {
 
 NHS toolkit action link html code
 
-``` {.html}
+``` html
 <div class="nhsuk-action-link">
   <a class="nhsuk-action-link__link" 
         href="https://www.nhs.uk/service-search/minor-injuries-unit/locationsearch/551">
@@ -229,4 +229,4 @@ We were grateful to the NHSR community as it always inspires us to improve our c
 
 Kayoung Goffe (Data Scientist, NHS Business Services Authority)
 
-Adam Ivison (Data Scientist, NHS Business Services Authority -\> Principal Data Scientist, UK Health Security Agency)
+Adam Ivison (Data Scientist, NHS Business Services Authority -> Principal Data Scientist, UK Health Security Agency)
