@@ -53,3 +53,16 @@ and prevent them fading in / out) */
 .recalculating {
   opacity: 1.0;
 }
+
+/* Tweak CSS for navpanel to make it sticky when scrolling page */
+.col-sm-2 {
+  position: -webkit-sticky; /* Safari */
+  position:sticky;
+  left:0;
+  top:0;
+}
+@media (max-width:800px){
+    .col-sm-2 {
+      position:inherit;
+}
+}

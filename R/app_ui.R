@@ -73,7 +73,12 @@ app_ui <- function(request) {
             tags$div(
               mod_definitions_ui("definitions_ui_1")
             )
-          )
+          ),
+          tags$script(" $(document).ready(function () {
+         $('#maincontent a[data-toggle=\"tab\"]').on('click', function (e) {
+          window.scrollTo(0, 0)
+               });
+               });")
         )
       )
     ),
