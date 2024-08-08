@@ -121,12 +121,12 @@ mod_08_spotlight_students_ui <- function(id) {
           highcharter::highchartOutput(
             outputId = ns("plot_successful_student_individuals_by_region"),
             height = "500px"
-          ),
-          tags$label(
-            `for` = "play-range",
-            class = "visuallyhidden",
-            "year-range"
-          )
+          )#,
+          # tags$label(
+          #   `for` = "play-range",
+          #   class = "visuallyhidden",
+          #   "year-range"
+          # )
         ),
         DT::DTOutput(
           outputId = ns("table_successful_student_individuals_by_region")
