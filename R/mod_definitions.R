@@ -11,7 +11,7 @@ mod_definitions_ui <- function(id) {
   ns <- NS(id)
   tagList(
     h1("Definitions"),
-    h6("The NHS Low Income Scheme"),
+    h2("The NHS Low Income Scheme"),
     p(
       tags$b("The NHS Low Income Scheme"),
       "provides income related help to people who are not already entitled ",
@@ -19,7 +19,7 @@ mod_definitions_ui <- function(id) {
       "It is broadly the same as a means tested ",
       "benefit but also takes into account council tax and housing costs."
     ),
-    h6("Who can apply?"),
+    h2("Who can apply?"),
     p(
       "Anyone can apply as long as they do not have savings ",
       "or investments over a certain limit.",
@@ -35,7 +35,7 @@ mod_definitions_ui <- function(id) {
         )
       )
     ),
-    h6("Who does not need to apply?"),
+    h2("Who does not need to apply?"),
     p(
       "You do not need to apply if you're already entitled to full help with ",
       "health costs. You already get full help with health costs if you or ",
@@ -58,7 +58,7 @@ mod_definitions_ui <- function(id) {
       "Any dependent children under 20 included on your benefit or ",
       "tax credit claim are also entitled to the same help."
     ),
-    h6("Applications"),
+    h2("Applications"),
     p(
       "Application data is taken from a snapshot copy of the NHSBSA’s ",
       "internal database for processing applications to the ",
@@ -99,7 +99,7 @@ mod_definitions_ui <- function(id) {
       "reference number being created. Application counts throughout ",
       "this report are based on a count of the unique reference numbers."
     ),
-    h6("Applicants"),
+    h2("Applicants"),
     p(
       "NHS Low Income Scheme records only retain the latest applicant ",
       "information against any single case reference ID. "
@@ -128,7 +128,7 @@ mod_definitions_ui <- function(id) {
       "therefore the applicant will not be included in any applicant counts.",
       "There are 0.15% of applicants without composite ID."
     ),
-    h6("Individuals covered by the application"),
+    h2("Individuals covered by the application"),
     p(
       "Applicants can apply either for themselves only or include dependants ",
       "within the same household. The database only includes details of a ",
@@ -136,7 +136,7 @@ mod_definitions_ui <- function(id) {
       "information about the partner. Therefore each certificate has only ",
       "been identified as covering one or two people. "
     ),
-    h6("Client group"),
+    h2("Client group"),
     p(
       "Applicants are allocated a client group by assessors based on the main ",
       "source of household income. This includes:",
@@ -153,7 +153,7 @@ mod_definitions_ui <- function(id) {
         tags$li("Student")
       )
     ),
-    h6("The English Indices of Deprivation"),
+    h2("The English Indices of Deprivation"),
     p(
       tags$b("The English Indices of Deprivation"),
       "are official measures of relative deprivation for areas in England, ",
