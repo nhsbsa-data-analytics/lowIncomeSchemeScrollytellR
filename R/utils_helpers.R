@@ -4,9 +4,8 @@
 #' it to the specific theme for this shiny app.
 #'
 #' @param palette Which colour palette to use from the `nhsbsaR` package.
-#' @param stack Stack option for highcharter.
-#'
-#' @return
+#' @param stack Stack option for highcharter.#'
+
 #' @export
 theme_nhsbsa <- function(hc, palette = NA, stack = "normal") {
 
