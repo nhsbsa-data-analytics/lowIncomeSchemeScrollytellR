@@ -13,10 +13,6 @@ and prevent them fading in / out) */
 
 /* Tippy stuff */
 
-.tippy {
-  text-decoration: underline;
-}
-
 .tippy-content{
 	background: #f0f4f5 none repeat scroll 0% 0%;
 	text-align: left;
