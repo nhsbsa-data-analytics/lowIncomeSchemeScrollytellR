@@ -10,8 +10,9 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Need this for accessibility
     shiny::tags$html(lang = "en"),
-    # Need this for shiny bootstrap dependencies
-    bootstrapLib(),
+    # Need this for shiny bootstrap dependencies TODO: check if needed
+    shiny::bootstrapLib(),
+    shiny::tags$a(id = "skiplink", "Skip to Main Content", href = "#maincontent"),
     # Need this for the play button
     fontawesome::fa_html_dependency(),
     # First level UI elements
@@ -29,44 +30,22 @@ app_ui <- function(request) {
           tabPanel(
             title = "Article",
             mod_01_intro_ui("01_intro_ui_1"),
-            scrollytell::scrolly_container(
-              outputId = "scrolly",
-              scrollytell::scrolly_graph(),
-              scrollytell::scrolly_sections(
-                scrollytell::scrolly_section(
-                  id = "02_what_is_lis",
-                  mod_02_what_is_lis_ui("02_what_is_lis_ui_1")
-                ),
-                scrollytell::scrolly_section(
-                  id = "03_who_applies_to_lis",
-                  mod_03_who_applies_to_lis_ui("03_who_applies_to_lis_ui_1")
-                ),
-                scrollytell::scrolly_section(
-                  id = "04_applications_over_time",
-                  mod_04_applications_over_time_ui("04_applications_over_time_ui_1")
-                ),
-                scrollytell::scrolly_section(
-                  id = "05_what_help_does_lis_provide",
-                  mod_05_what_help_does_lis_provide_ui("05_what_help_does_lis_provide_ui_1")
-                ),
-                scrollytell::scrolly_section(
-                  id = "06_take_up_region",
-                  mod_06_take_up_region_ui("06_take_up_region_ui_1")
-                ),
-                scrollytell::scrolly_section(
-                  id = "07_take_up_la",
-                  mod_07_take_up_la_ui("07_take_up_la_ui_1")
-                ),
-                scrollytell::scrolly_section(
-                  id = "08_spotlight_students",
-                  mod_08_spotlight_students_ui("08_spotlight_students_ui_1")
-                ),
-                scrollytell::scrolly_section(
-                  id = "09_final_thoughts",
-                  mod_09_final_thoughts_ui("09_final_thoughts_ui_1")
-                )
-              )
-            )
+            tags$div(style = "margin-top: 25vh"), # Some buffer space after the chart
+            mod_02_what_is_lis_ui("02_what_is_lis_ui_1"),
+            tags$div(style = "margin-top: 25vh"), # Some buffer space after the chart
+            mod_03_who_applies_to_lis_ui("03_who_applies_to_lis_ui_1"),
+            tags$div(style = "margin-top: 25vh"), 
+            mod_04_applications_over_time_ui("04_applications_over_time_ui_1"),
+            tags$div(style = "margin-top: 25vh"), 
+            mod_05_what_help_does_lis_provide_ui("05_what_help_does_lis_provide_ui_1"),
+            tags$div(style = "margin-top: 25vh"), 
+            mod_06_take_up_region_ui("06_take_up_region_ui_1"),
+            tags$div(style = "margin-top: 25vh"), 
+            mod_07_take_up_la_ui("07_take_up_la_ui_1"),
+            tags$div(style = "margin-top: 25vh"), 
+            mod_08_spotlight_students_ui("08_spotlight_students_ui_1"),
+            tags$div(style = "margin-top: 25vh"), 
+            mod_09_final_thoughts_ui("09_final_thoughts_ui_1")
           ),
           tabPanel(
             title = "Definitions",
