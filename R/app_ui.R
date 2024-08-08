@@ -9,7 +9,7 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Need this for accessibility
-    tags$html(lang = "en"),
+    shiny::tags$html(lang = "en"),
     # Need this for shiny bootstrap dependencies
     bootstrapLib(),
     # Need this for the play button
@@ -73,17 +73,19 @@ app_ui <- function(request) {
             tags$div(
               mod_definitions_ui("definitions_ui_1")
             )
-          ),
-          tags$script(" $(document).ready(function () {
-         $('#maincontent a[data-toggle=\"tab\"]').on('click', function (e) {
-          window.scrollTo(0, 0)
-               });
-               });")
+          )
         )
       )
     ),
     br(),
-    nhs_footer()
+    nhs_footer(),
+    tags$script("
+      $(document).ready(function () {
+        $('#maincontent a[data-toggle=\"tab\"]').on('click', function (e) {
+          window.scrollTo(0, 0);
+        });
+      });
+    ")
   )
 }
 
@@ -99,7 +101,7 @@ golem_add_external_resources <- function() {
   add_resource_path(
     "www", app_sys("app/www")
   )
-
+  
   tags$head(
     favicon(),
     bundle_resources(
