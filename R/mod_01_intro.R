@@ -10,7 +10,7 @@
 mod_01_intro_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    includeMarkdown("inst/app/www/mod_01_intro.md")
+    includeMarkdown("inst/app/www/assets/markdown/mod_01_intro.md")
   )
 }
 

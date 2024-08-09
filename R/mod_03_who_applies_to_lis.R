@@ -23,6 +23,20 @@ mod_03_who_applies_to_lis_ui <- function(id) {
     ),
     nhs_card(
       heading = "Age band of NHS Low Income Scheme lead applicants in England (2015/16 to 2020/21)",
+      nhs_selectInput(
+        inputId = ns("slider_individuals_by_age_band"),
+        label = "Financial year",
+        choices = c(
+          "2015/16",
+          "2016/17",
+          "2017/18",
+          "2018/19",
+          "2019/20",
+          "2020/21"
+        ),
+        selected = "2019/20",
+        full_width = TRUE
+      ),
       highcharter::highchartOutput(
         outputId = ns("plot_individuals_by_age_band"),
         height = "250px"
@@ -32,22 +46,8 @@ mod_03_who_applies_to_lis_ui <- function(id) {
         style = "font-size: 9pt",
         "This excludes lead applicants without an age band."
       ),
-      nhs_grid_2_col(
-        nhs_animated_sliderInput(
-          inputId = ns("slider_individuals_by_age_band"),
-          choices = c(
-            "2015/16",
-            "2016/17",
-            "2017/18",
-            "2018/19",
-            "2019/20",
-            "2020/21"
-          ),
-          selected = "2019/20"
-        ),
-        mod_nhs_download_ui(
-          id = ns("download_individuals_by_age_band")
-        )
+      mod_nhs_download_ui(
+        id = ns("download_individuals_by_age_band")
       )
     ),
     br(),
@@ -90,26 +90,26 @@ mod_03_who_applies_to_lis_ui <- function(id) {
     p("This trend is consistent in each year observed."),
     nhs_card(
       heading = "Deprivation decile of NHS Low Income Scheme individuals in England (2015/16 to 2020/21)",
+      nhs_selectInput(
+        inputId = ns("slider_individuals_by_deprivation"),
+        label = "Financial year",
+        choices = c(
+          "2015/16",
+          "2016/17",
+          "2017/18",
+          "2018/19",
+          "2019/20",
+          "2020/21"
+        ),
+        selected = "2019/20",
+        full_width = TRUE
+      ),
       highcharter::highchartOutput(
         outputId = ns("plot_individuals_by_deprivation"),
         height = "300px"
       ),
-      nhs_grid_2_col(
-        nhs_animated_sliderInput(
-          inputId = ns("slider_individuals_by_deprivation"),
-          choices = c(
-            "2015/16",
-            "2016/17",
-            "2017/18",
-            "2018/19",
-            "2019/20",
-            "2020/21"
-          ),
-          selected = "2019/20"
-        ),
-        mod_nhs_download_ui(
-          id = ns("download_individuals_by_deprivation")
-        )
+      mod_nhs_download_ui(
+        id = ns("download_individuals_by_deprivation")
       )
     )
   )
@@ -185,7 +185,6 @@ mod_03_who_applies_to_lis_server <- function(id) {
 
     # Stacked column plot by client group
     output$plot_individuals_by_client_group <- highcharter::renderHighchart({
-
       # Create plot
       lowIncomeSchemeScrollytellR::individuals_by_client_group_df %>%
         highcharter::hchart(

@@ -10,7 +10,7 @@
 mod_09_final_thoughts_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    includeMarkdown("inst/app/www/mod_09_final_thoughts.md")
+    includeMarkdown("inst/app/www/assets/markdown/mod_09_final_thoughts.md")
   )
 }
 

@@ -1,0 +1,166 @@
+/* NHS front-end toolkit assumes a default font-size of 16px: https://github.com/nhsuk/nhsuk-frontend/issues/879  */
+  html {
+    font-size: 16px!important
+  }
+
+#skiplink {
+position: absolute;
+transform: translateY(-100%);
+}
+
+#skiplink:focus {
+transform: translateY(0%);
+background-color: lightyellow;
+padding: 20px;
+z-index: 9999;
+}
+
+/* Customize selectizeInput appearance to be similar to NHS selectInput */
+  .selectize-input {
+    color: #4c6272;
+      border-radius: 0;
+    border: 2px solid;
+    line-height: 1.2;
+  }
+
+/* Scrolly stuff */
+
+/* Force scrolly sections to be the full width of the container-fluid ^ */
+.scrolly-sections { width: 100% !important; }
+
+/* Fix accessibility issue with scrolly contrast (increase gap between sections
+and prevent them fading in / out) */
+.scrolly-section {
+  margin-bottom: 0px;
+  margin-top: 75vh;
+  opacity: 1;
+}
+
+/* Tweak CSS for navpanel to make it sticky when scrolling page */
+.col-sm-2 {
+  position: -webkit-sticky; /* Safari */
+  position:sticky;
+  left:0;
+  top:0;
+}
+@media (max-width:800px){
+  .col-sm-2 {
+    position:inherit;
+  }
+}
+
+a {
+  text-decoration: underline;
+}
+
+table:not(.dataTable) thead tr{
+  color: white;
+  background-color: #005EB8CC;
+}
+
+table:not(.dataTable) tbody:nth-child(odd){
+  background-color: #005EB81F;
+}
+
+/* Custom classes to help with accessibility */
+
+  /* https://www.w3.org/WAI/tutorials/forms/labels/#note-on-hiding-elements */
+  .visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+/* Stop greying out when an input changes */
+  .recalculating {
+    opacity: 1.0;
+  }
+
+/* Tweak CSS for navpanel to make it sticky when scrolling page */
+  .col-sm-3 {
+    position: -webkit-sticky; /* Safari */
+      position: sticky;
+    left: 0;
+    top: 0;
+  }
+@media (max-width:800px){
+  .col-sm-3 {
+    position:inherit;
+  }
+}
+
+/* Tweak colours to get contrast dead on 4.5:1 */
+  .navbar-default .navbar-brand {
+    color: #717465;
+      background-color: #f8f8f8;
+  }
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
+  color: #717465;
+    background-color: #f8f8f8;
+}
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
+  color: black;
+}
+
+.navbar-default .navbar-nav>li>a {
+  color: #717465;
+}
+
+/* Tippy stuff */
+
+.tippy-content{
+	background: #f0f4f5 none repeat scroll 0% 0%;
+	text-align: left;
+	font-size: 12pt;
+}
+
+.tippy-tooltip{
+    color: #212b32;
+    background-color: #f0f4f5 !important;
+    border: 1px solid #425563;
+    border-radius: 0;
+}
+
+.tippy-backdrop {
+  background-color: #f0f4f5;
+}
+
+
+/* Custom classes to help with accessibility */
+
+/* https://www.w3.org/WAI/tutorials/forms/labels/#note-on-hiding-elements */
+.visuallyhidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+/* Stop greying out when an input changes */
+.recalculating {
+  opacity: 1.0;
+}
+
+/* Tweak CSS for navpanel to make it sticky when scrolling page */
+.col-sm-2 {
+  position: -webkit-sticky; /* Safari */
+  position:sticky;
+  left:0;
+  top:0;
+}
+@media (max-width:800px){
+    .col-sm-2 {
+      position:inherit;
+}
+}

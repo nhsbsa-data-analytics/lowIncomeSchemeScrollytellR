@@ -6,7 +6,6 @@ nhs_selectInput <- function(inputId,
                             choices,
                             selected = NULL,
                             full_width) {
-
   # Create select input
   nhs_selectInput <- shiny::selectInput(
     inputId = inputId,

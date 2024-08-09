@@ -6,7 +6,7 @@ region_map <- sf::read_sf("https://opendata.arcgis.com/api/v3/datasets/bafeb380d
   select(PCD_REGION_NAME = rgn18nm, PCD_REGION_GEOMETRY = geometry) %>%
   sf::st_transform(crs = 27700) %>%
   geojsonsf::sf_geojson() %>%
-  jsonlite::fromJSON(simplifyVector = F)
+  jsonlite::fromJSON(simplifyVector = FALSE)
 
 
 

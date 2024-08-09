@@ -21,22 +21,38 @@ mod_07_take_up_la_ui <- function(id) {
     ),
     nhs_card(
       heading = "Estimated take-up of NHS Low Income Scheme by Index of Multiple Deprivation for English Local Authorities (2015/16 to 2020/21)",
-      nhs_selectInput(
-        inputId = ns("input_region"),
-        label = "Region:",
-        choices = c(
-          "East Midlands",
-          "East of England",
-          "London",
-          "North East",
-          "North West",
-          "South East",
-          "South West",
-          "West Midlands",
-          "Yorkshire and The Humber"
+      nhs_grid_2_col(
+        nhs_selectInput(
+          inputId = ns("input_region"),
+          label = "Region",
+          choices = c(
+            "East Midlands",
+            "East of England",
+            "London",
+            "North East",
+            "North West",
+            "South East",
+            "South West",
+            "West Midlands",
+            "Yorkshire and The Humber"
+          ),
+          selected = "North West",
+          full_width = TRUE
         ),
-        selected = "North West",
-        full_width = FALSE
+        nhs_selectInput(
+          inputId = ns("financial_year"),
+          label = "Financial year",
+          choices = c(
+            "2015/16",
+            "2016/17",
+            "2017/18",
+            "2018/19",
+            "2019/20",
+            "2020/21"
+          ),
+          selected = "2019/20",
+          full_width = TRUE
+        )
       ),
       shiny::htmlOutput(ns("text")),
       highcharter::highchartOutput(
@@ -58,23 +74,7 @@ mod_07_take_up_la_ui <- function(id) {
         style = "font-size: 9pt",
         "Deprivation data uses 2019 estimates. Click map to see IMD decile distribution by selected local authority."
       ),
-      nhs_grid_2_col(
-        nhs_animated_sliderInput(
-          inputId = ns("financial_year"),
-          choices = c(
-            "2015/16",
-            "2016/17",
-            "2017/18",
-            "2018/19",
-            "2019/20",
-            "2020/21"
-          ),
-          selected = "2019/20",
-          # Slow as takes a while to load
-          animate_interval = 1500
-        ),
-        mod_nhs_download_ui(id = ns("la_take_up_download"))
-      )
+      mod_nhs_download_ui(id = ns("la_take_up_download"))
     )
   )
 }
@@ -183,7 +183,8 @@ mod_07_take_up_la_server <- function(id) {
           value = "LA_TAKE_UP_PER_THOUSAND",
           tooltip = list(
             headerFormat = "",
-            pointFormat = "<b>Local Authority: </b> {point.PCD_LAD_NAME}<br><b>Take-up: </b> {point.value:.1f} (per thousand of the general population)"
+            pointFormat = "<b>Local Authority: </b> {point.PCD_LAD_NAME}<br><b>Take-up:
+            </b> {point.value:.1f} (per thousand of the general population)"
           ),
           animation = FALSE
         ) %>%

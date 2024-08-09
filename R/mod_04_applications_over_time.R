@@ -58,7 +58,6 @@ mod_04_applications_over_time_server <- function(id) {
 
     # Time series plot
     output$plot_applications <- highcharter::renderHighchart({
-
       # Create  plot
       lowIncomeSchemeScrollytellR::applications_overall_df %>%
         highcharter::hchart(

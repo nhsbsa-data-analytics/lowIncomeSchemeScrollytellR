@@ -96,7 +96,6 @@ mod_05_what_help_does_lis_provide_server <- function(id) {
 
     # Stacked column plot for outcome
     output$plot_applications_by_outcome <- highcharter::renderHighchart({
-
       # Create  plot
       lowIncomeSchemeScrollytellR::applications_outcome_df %>%
         highcharter::hchart(

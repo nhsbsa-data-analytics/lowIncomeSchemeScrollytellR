@@ -57,6 +57,20 @@ mod_08_spotlight_students_ui <- function(id) {
     ),
     nhs_card(
       heading = "Outcome of NHS Low Income Scheme Student applications in England (2015/16 to 2020/21)",
+      nhs_selectInput(
+        inputId = ns("slider_student_applications_by_outcome"),
+        choices = c(
+          "2015/16",
+          "2016/17",
+          "2017/18",
+          "2018/19",
+          "2019/20",
+          "2020/21"
+        ),
+        selected = "2019/20",
+        label = "Financial year",
+        full_width = TRUE
+      ),
       highcharter::highchartOutput(
         outputId = ns("plot_student_applications_by_outcome"),
         height = "300px"
@@ -66,22 +80,8 @@ mod_08_spotlight_students_ui <- function(id) {
         style = "font-size: 9pt",
         "This excludes ongoing applications."
       ),
-      nhs_grid_2_col(
-        nhs_animated_sliderInput(
-          inputId = ns("slider_student_applications_by_outcome"),
-          choices = c(
-            "2015/16",
-            "2016/17",
-            "2017/18",
-            "2018/19",
-            "2019/20",
-            "2020/21"
-          ),
-          selected = "2019/20"
-        ),
-        mod_nhs_download_ui(
-          id = ns("download_student_applications_by_outcome")
-        )
+      mod_nhs_download_ui(
+        id = ns("download_student_applications_by_outcome")
       )
     ),
     br(),
@@ -116,12 +116,25 @@ mod_08_spotlight_students_ui <- function(id) {
     ),
     nhs_card(
       heading = "Estimated take-up of NHS Low Income Scheme Student individuals by England region 2015/16 to 2019/20",
+      nhs_selectInput(
+        inputId = ns("slider_student_individuals_by_region"),
+        choices = c(
+          "2015/16",
+          "2016/17",
+          "2017/18",
+          "2018/19",
+          "2019/20"
+        ),
+        selected = "2019/20",
+        label = "Financial year",
+        full_width = TRUE
+      ),
       nhs_grid_2_col(
         tags$div(
           highcharter::highchartOutput(
             outputId = ns("plot_successful_student_individuals_by_region"),
             height = "500px"
-          )#,
+          ) # ,
           # tags$label(
           #   `for` = "play-range",
           #   class = "visuallyhidden",
@@ -137,23 +150,8 @@ mod_08_spotlight_students_ui <- function(id) {
         style = "font-size: 9pt",
         "Students were allocated to a region based on the address on the application."
       ),
-      nhs_grid_2_col(
-        nhs_animated_sliderInput(
-          inputId = ns("slider_student_individuals_by_region"),
-          choices = c(
-            "2015/16",
-            "2016/17",
-            "2017/18",
-            "2018/19",
-            "2019/20"
-          ),
-          selected = "2019/20",
-          # Slow as takes a while to load
-          animate_interval = 1500
-        ),
-        mod_nhs_download_ui(
-          id = ns("download_student_individuals_by_region")
-        )
+      mod_nhs_download_ui(
+        id = ns("download_student_individuals_by_region")
       )
     )
   )
@@ -170,7 +168,6 @@ mod_08_spotlight_students_server <- function(id) {
 
     # Create the chart
     output$plot_student_applications <- highcharter::renderHighchart({
-
       # Create plot
       lowIncomeSchemeScrollytellR::applications_student_df %>%
         highcharter::hchart(

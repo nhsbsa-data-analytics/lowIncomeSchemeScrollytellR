@@ -6,7 +6,6 @@ nhs_animated_sliderInput <- function(inputId,
                                      choices,
                                      selected = NULL,
                                      animate_interval = 1000) {
-
   # Pull the play and pause icons
   play <- icon("play", style = "color: #768692; font-size:20px")
   pause <- icon("pause", style = "color: #768692; font-size:20px")

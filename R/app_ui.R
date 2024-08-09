@@ -14,15 +14,16 @@ app_ui <- function(request) {
     shiny::bootstrapLib(),
     shiny::tags$a(id = "skiplink", "Skip to Main Content", href = "#maincontent"),
     # Need this for the play button
-    fontawesome::fa_html_dependency(),
+    # fontawesome::fa_html_dependency(),
     # First level UI elements
-    nhs_header(),
-    br(),
-    tags$div(
+    nhsbsaShinyR::nhs_header(),
+    shiny::br(),
+    shiny::div(id = "maincontent"),
+    shiny::tags$div(
       class = "nhsuk-width-container",
       tags$div(
         class = "nhsuk-main-wrapper",
-        id = "maincontent",
+        # id = "maincontent",
         role = "main",
         nhs_navlistPanel(
           well = FALSE,
@@ -56,15 +57,15 @@ app_ui <- function(request) {
         )
       )
     ),
-    br(),
+    shiny::br(),
     nhs_footer(),
-    tags$script("
-      $(document).ready(function () {
-        $('#maincontent a[data-toggle=\"tab\"]').on('click', function (e) {
-          window.scrollTo(0, 0);
-        });
-      });
-    ")
+    # tags$script("
+    #   $(document).ready(function () {
+    #     $('#maincontent a[data-toggle=\"tab\"]').on('click', function (e) {
+    #       window.scrollTo(0, 0);
+    #     });
+    #   });
+    # ")
   )
 }
 
@@ -77,17 +78,31 @@ app_ui <- function(request) {
 #' @importFrom golem add_resource_path activate_js favicon bundle_resources
 #' @noRd
 golem_add_external_resources <- function() {
-  add_resource_path(
-    "www", app_sys("app/www")
-  )
+  resources <- app_sys("app/www")
+  shiny::addResourcePath("www", resources)
   
-  tags$head(
-    favicon(),
-    bundle_resources(
-      path = app_sys("app/www"),
-      app_title = "Take-up of the NHS Low Income Scheme in England"
-    )
+  shiny::tags$head(
+    golem::favicon("assets/favicons/favicon"),
+    shiny::tags$title(
+      "Take-up of the NHS Low Income Scheme in England"
+    ),
+    
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()
+    
+    # Javascript resources
+    htmltools::htmlDependency(
+      name = "resources",
+      version = "0.0.1",
+      src = resources,
+      script = list.files(resources, pattern = "\\.js$", recursive = TRUE),
+      package = NULL,
+      all_files = TRUE
+    ),
+    # CSS resources
+    lapply(
+      list.files(resources, pattern = "\\.css$", recursive = TRUE),
+      function(x) tags$link(href = file.path("www", x), rel = "stylesheet")
+    )
   )
 }

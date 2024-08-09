@@ -10,7 +10,6 @@ nhs_navlistPanel <- function(...,
                              footer = NULL,
                              fluid = TRUE,
                              widths = c(4, 8)) {
-
   # Create navlist panel
   nhs_navlistPanel <- shiny::navlistPanel(
     ...,

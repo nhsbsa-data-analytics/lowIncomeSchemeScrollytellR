@@ -8,7 +8,6 @@
 
 #' @export
 theme_nhsbsa <- function(hc, palette = NA, stack = "normal") {
-
   # Load theme from nhsbsaR package
   theme_nhsbsa_hc <- nhsbsaR::theme_nhsbsa_hc(family = "Frutiger W01")
 
